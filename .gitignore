@@ -3,6 +3,9 @@
 *.lo
 *.o
 
+build/
+dist/
+
 # Compiled Dynamic libraries
 *.so
 *.dylib
