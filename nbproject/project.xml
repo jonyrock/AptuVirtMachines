@@ -13,6 +13,7 @@
                 <sourceRootElem>include</sourceRootElem>
                 <sourceRootElem>vm</sourceRootElem>
                 <sourceRootElem>libs/AsmJit</sourceRootElem>
+                <sourceRootElem>docs</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>
@@ -25,5 +26,8 @@
                 </confElem>
             </confList>
         </data>
+        <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">
+            <word>bytecodeTranslator</word>
+        </spellchecker-wordlist>
     </configuration>
 </project>

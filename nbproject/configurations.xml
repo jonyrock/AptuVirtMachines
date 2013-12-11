@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configurationDescriptor version="88">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="docs" displayName="docs" projectFiles="true">
+      <itemPath>docs/todo.txt</itemPath>
+    </logicalFolder>
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
@@ -32,6 +35,7 @@
         <itemPath>include/visitors.h</itemPath>
       </logicalFolder>
       <logicalFolder name="vm" displayName="vm" projectFiles="true">
+        <itemPath>vm/bytecodeTranslator.h</itemPath>
         <itemPath>vm/jit.h</itemPath>
         <itemPath>vm/parser.h</itemPath>
         <itemPath>vm/scanner.h</itemPath>
@@ -63,6 +67,7 @@
       </logicalFolder>
       <logicalFolder name="vm" displayName="vm" projectFiles="true">
         <itemPath>vm/ast.cpp</itemPath>
+        <itemPath>vm/bytecodeTranslator.cpp</itemPath>
         <itemPath>vm/interpreter.cpp</itemPath>
         <itemPath>vm/jit.cpp</itemPath>
         <itemPath>vm/mathvm.cpp</itemPath>
@@ -89,6 +94,7 @@
     <Elem>include</Elem>
     <Elem>vm</Elem>
     <Elem>libs/AsmJit</Elem>
+    <Elem>docs</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -105,6 +111,8 @@
           </incDir>
         </ccTool>
       </compileType>
+      <item path="docs/todo.txt" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/ast.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/mathvm.h" ex="false" tool="3" flavor2="0">
@@ -184,6 +192,10 @@
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="vm/ast.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="vm/bytecodeTranslator.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="vm/bytecodeTranslator.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="vm/interpreter.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -225,6 +237,8 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
+      <item path="docs/todo.txt" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/ast.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/mathvm.h" ex="false" tool="3" flavor2="0">
@@ -304,6 +318,10 @@
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="vm/ast.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="vm/bytecodeTranslator.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="vm/bytecodeTranslator.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="vm/interpreter.cpp" ex="false" tool="1" flavor2="0">
       </item>

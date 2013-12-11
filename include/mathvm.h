@@ -570,22 +570,8 @@ class Translator {
     virtual Status* translate(const string& program, Code* *code) = 0;
 };
 
-class InterpreterCodeImpl;
+
 class MachCodeImpl;
-class BytecodeTranslatorImpl : public Translator {
-    Status* translateBytecode(const string& program,
-                              InterpreterCodeImpl* *code);
-
-  public:
-    BytecodeTranslatorImpl() {
-    }
-
-    virtual ~BytecodeTranslatorImpl() {
-    }
-
-    virtual Status* translate(const string& program, Code* *code);
-};
-
 class MachCodeTranslatorImpl : public Translator {
     Status* translateMachCode(const string& program,
                               MachCodeImpl* *code);

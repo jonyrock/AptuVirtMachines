@@ -1,4 +1,10 @@
 *** TODO ***
+* write simple visitor
+* write basic test translator
 * write tasks
 
 *** DONE ***
+* compile bytecodeTranslator
+* get all what done before
+
+
