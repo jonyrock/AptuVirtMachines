@@ -1,9 +1,16 @@
 *** TODO ***
-* write simple visitor
-* write basic test translator
-* write tasks
+* TranslatedFunction stumb
+* TranslatedFunction disassemble
+* Mathvm:Bytecode ?
+* simple visitor
+* print some code
+* basic test translator
 
 *** DONE ***
+* Code::disaasemle ?
+* my code basic imp
+* understand Code** usage
+* NULL status< parseProgramm
 * compile bytecodeTranslator
 * get all what done before
 
