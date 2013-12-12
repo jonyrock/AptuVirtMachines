@@ -51,7 +51,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/libs/AsmJit/Util.o \
 	${OBJECTDIR}/main.o \
 	${OBJECTDIR}/vm/ast.o \
-	${OBJECTDIR}/vm/bytecode.o \
+	${OBJECTDIR}/vm/bytecodeCode.o \
 	${OBJECTDIR}/vm/bytecodeTranslator.o \
 	${OBJECTDIR}/vm/interpreter.o \
 	${OBJECTDIR}/vm/jit.o \
@@ -166,10 +166,10 @@ ${OBJECTDIR}/vm/ast.o: vm/ast.cpp
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/vm/ast.o vm/ast.cpp
 
-${OBJECTDIR}/vm/bytecode.o: vm/bytecode.cpp 
+${OBJECTDIR}/vm/bytecodeCode.o: vm/bytecodeCode.cpp 
 	${MKDIR} -p ${OBJECTDIR}/vm
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/vm/bytecode.o vm/bytecode.cpp
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/vm/bytecodeCode.o vm/bytecodeCode.cpp
 
 ${OBJECTDIR}/vm/bytecodeTranslator.o: vm/bytecodeTranslator.cpp 
 	${MKDIR} -p ${OBJECTDIR}/vm

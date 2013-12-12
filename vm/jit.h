@@ -2,6 +2,7 @@
 #define _MATHVM_JIT_H
 
 #include "mathvm.h"
+#include "bytecodeCode.h"
 
 namespace mathvm {
 

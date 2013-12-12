@@ -35,9 +35,8 @@
         <itemPath>include/visitors.h</itemPath>
       </logicalFolder>
       <logicalFolder name="vm" displayName="vm" projectFiles="true">
-        <itemPath>vm/bytecode.h</itemPath>
         <itemPath>vm/bytecodeAstVisitor.h</itemPath>
-        <itemPath>vm/bytecodeTranslatedFunction.h</itemPath>
+        <itemPath>vm/bytecodeCode.h</itemPath>
         <itemPath>vm/bytecodeTranslator.h</itemPath>
         <itemPath>vm/jit.h</itemPath>
         <itemPath>vm/parser.h</itemPath>
@@ -70,7 +69,7 @@
       </logicalFolder>
       <logicalFolder name="vm" displayName="vm" projectFiles="true">
         <itemPath>vm/ast.cpp</itemPath>
-        <itemPath>vm/bytecode.cpp</itemPath>
+        <itemPath>vm/bytecodeCode.cpp</itemPath>
         <itemPath>vm/bytecodeTranslator.cpp</itemPath>
         <itemPath>vm/interpreter.cpp</itemPath>
         <itemPath>vm/jit.cpp</itemPath>
@@ -197,13 +196,11 @@
       </item>
       <item path="vm/ast.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="vm/bytecode.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="vm/bytecode.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="vm/bytecodeAstVisitor.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="vm/bytecodeTranslatedFunction.h" ex="false" tool="3" flavor2="0">
+      <item path="vm/bytecodeCode.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="vm/bytecodeCode.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="vm/bytecodeTranslator.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -331,13 +328,11 @@
       </item>
       <item path="vm/ast.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="vm/bytecode.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="vm/bytecode.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="vm/bytecodeAstVisitor.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="vm/bytecodeTranslatedFunction.h" ex="false" tool="3" flavor2="0">
+      <item path="vm/bytecodeCode.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="vm/bytecodeCode.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="vm/bytecodeTranslator.cpp" ex="false" tool="1" flavor2="0">
       </item>

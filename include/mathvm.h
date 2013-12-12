@@ -1,5 +1,5 @@
-#ifndef _MATHVM_H
-#define _MATHVM_H
+#ifndef _MATHVM_H_
+#define _MATHVM_H_
 
 #include <stdint.h>
 #include <stdarg.h>
@@ -429,23 +429,6 @@ public:
     virtual void disassemble(ostream& out) const = 0;
 };
 
-class BytecodeFunction : public TranslatedFunction {
-    Bytecode _bytecode;
-
-public:
-    BytecodeFunction(AstFunction* function) :
-        TranslatedFunction(function) {
-    }
-
-    Bytecode* bytecode() {
-        return &_bytecode;
-    }
-
-    virtual void disassemble(ostream& out) const {
-        _bytecode.dump(out);
-    }
-};
-
 class FunctionFilter {
   public:
     virtual bool matches(TranslatedFunction* function) = 0;
@@ -606,4 +589,4 @@ VarType nameToType(const string& typeName);
 const char* bytecodeName(Instruction insn, size_t* length = 0);
 
 }
-#endif // _MATHVM_H
+#endif
