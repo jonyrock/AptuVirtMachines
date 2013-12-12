@@ -14,6 +14,7 @@
                 <sourceRootElem>vm</sourceRootElem>
                 <sourceRootElem>libs/AsmJit</sourceRootElem>
                 <sourceRootElem>docs</sourceRootElem>
+                <sourceRootElem>tests</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

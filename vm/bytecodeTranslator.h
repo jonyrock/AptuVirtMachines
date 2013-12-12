@@ -17,18 +17,16 @@ namespace mathvm {
         BytecodeAstVisitor(BytecodeCode * const code_) : code(code_) {
         }
 
-        void visitTopFunction(const AstFunction*);
-
-    private:
+        void visitTopFunction(AstFunction*);
 
 #define VISITOR_FUNCTION(type, name) \
         virtual void visit##type(type* node);
         FOR_NODES(VISITOR_FUNCTION)
 #undef VISITOR_FUNCTION
-        
-        void visitAstFunction();
-        
-        inline BytecodeFunction* currentFunction(){
+
+        void visitAstFunction(AstFunction*);
+
+        inline BytecodeFunction* currentFunction() {
             return functionsStack.top();
         }
 

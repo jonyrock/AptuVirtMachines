@@ -1,16 +1,21 @@
 *** TODO ***
-* simple visitor
+* get bug with function names collision
+* visitor with bytecodes write
 * print some code
 * basic test translator
-* folder with examples
 * TranslatedFunction disassemble
 
+*** GOOD TODO ***
+* try run tests/run.py
+
 *** DONE ***
+* simple visitor with function names
+* folder with examples
 * TranslatedFunction
 * Mathvm:Bytecode ?
 * Mathvm::BytecodeFunction ?
 * TranslatedFunction stumb
-* Code::disaasemle ?
+* Code::disassemble ?
 * my code basic imp
 * understand Code** usage
 * NULL status< parseProgramm

@@ -81,6 +81,86 @@
       </logicalFolder>
       <itemPath>main.cpp</itemPath>
     </logicalFolder>
+    <logicalFolder name="tests" displayName="tests" projectFiles="true">
+      <logicalFolder name="additional" displayName="additional" projectFiles="true">
+        <logicalFolder name="fail" displayName="fail" projectFiles="true">
+          <itemPath>tests/additional/fail/for_range.mvm</itemPath>
+          <itemPath>tests/additional/fail/for_var.mvm</itemPath>
+          <itemPath>tests/additional/fail/function-cast.mvm</itemPath>
+          <itemPath>tests/additional/fail/function-return-void.mvm</itemPath>
+          <itemPath>tests/additional/fail/if-fun.mvm</itemPath>
+          <itemPath>tests/additional/fail/op_bin.mvm</itemPath>
+          <itemPath>tests/additional/fail/op_not.mvm</itemPath>
+          <itemPath>tests/additional/fail/op_streq.mvm</itemPath>
+          <itemPath>tests/additional/fail/op_sub.mvm</itemPath>
+          <itemPath>tests/additional/fail/range.mvm</itemPath>
+          <itemPath>tests/additional/fail/vars.mvm</itemPath>
+        </logicalFolder>
+        <itemPath>tests/additional/3function.expect</itemPath>
+        <itemPath>tests/additional/ackermann.expect</itemPath>
+        <itemPath>tests/additional/ackermann.mvm</itemPath>
+        <itemPath>tests/additional/ackermann_closure.expect</itemPath>
+        <itemPath>tests/additional/ackermann_closure.mvm</itemPath>
+        <itemPath>tests/additional/casts.expect</itemPath>
+        <itemPath>tests/additional/casts.mvm</itemPath>
+        <itemPath>tests/additional/closure.mvm</itemPath>
+        <itemPath>tests/additional/complex.expect</itemPath>
+        <itemPath>tests/additional/complex.mvm</itemPath>
+        <itemPath>tests/additional/complex2.expect</itemPath>
+        <itemPath>tests/additional/complex2.mvm</itemPath>
+        <itemPath>tests/additional/fib.expect</itemPath>
+        <itemPath>tests/additional/fib.mvm</itemPath>
+        <itemPath>tests/additional/fib_closure.expect</itemPath>
+        <itemPath>tests/additional/fib_closure.mvm</itemPath>
+        <itemPath>tests/additional/function-call.expect</itemPath>
+        <itemPath>tests/additional/function-call.mvm</itemPath>
+        <itemPath>tests/additional/function-cast.expect</itemPath>
+        <itemPath>tests/additional/function-cast.mvm</itemPath>
+        <itemPath>tests/additional/function.expect</itemPath>
+        <itemPath>tests/additional/function.mvm</itemPath>
+        <itemPath>tests/additional/vars.expect</itemPath>
+        <itemPath>tests/additional/vars.mvm</itemPath>
+      </logicalFolder>
+      <logicalFolder name="astprint" displayName="astprint" projectFiles="true">
+        <itemPath>tests/astprint/run.py</itemPath>
+      </logicalFolder>
+      <logicalFolder name="optional" displayName="optional" projectFiles="true">
+        <itemPath>tests/optional/function_native.expect</itemPath>
+        <itemPath>tests/optional/function_native.mvm</itemPath>
+        <itemPath>tests/optional/plot.mvm</itemPath>
+      </logicalFolder>
+      <logicalFolder name="perf" displayName="perf" projectFiles="true">
+        <itemPath>tests/perf/lissajous.mvm</itemPath>
+        <itemPath>tests/perf/plot.mvm</itemPath>
+        <itemPath>tests/perf/prime.mvm</itemPath>
+      </logicalFolder>
+      <itemPath>tests/add.expect</itemPath>
+      <itemPath>tests/add.mvm</itemPath>
+      <itemPath>tests/assign.expect</itemPath>
+      <itemPath>tests/assign.mvm</itemPath>
+      <itemPath>tests/bitwise.expect</itemPath>
+      <itemPath>tests/bitwise.mvm</itemPath>
+      <itemPath>tests/div.expect</itemPath>
+      <itemPath>tests/div.mvm</itemPath>
+      <itemPath>tests/expr.expect</itemPath>
+      <itemPath>tests/expr.mvm</itemPath>
+      <itemPath>tests/for.expect</itemPath>
+      <itemPath>tests/for.mvm</itemPath>
+      <itemPath>tests/function.expect</itemPath>
+      <itemPath>tests/function.mvm</itemPath>
+      <itemPath>tests/if.expect</itemPath>
+      <itemPath>tests/if.mvm</itemPath>
+      <itemPath>tests/literal.expect</itemPath>
+      <itemPath>tests/literal.mvm</itemPath>
+      <itemPath>tests/mul.expect</itemPath>
+      <itemPath>tests/mul.mvm</itemPath>
+      <itemPath>tests/run.py</itemPath>
+      <itemPath>tests/sub.expect</itemPath>
+      <itemPath>tests/sub.mvm</itemPath>
+      <itemPath>tests/var.mvm</itemPath>
+      <itemPath>tests/while.expect</itemPath>
+      <itemPath>tests/while.mvm</itemPath>
+    </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
                    projectFiles="false"
@@ -98,6 +178,7 @@
     <Elem>vm</Elem>
     <Elem>libs/AsmJit</Elem>
     <Elem>docs</Elem>
+    <Elem>tests</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -193,6 +274,169 @@
       <item path="libs/AsmJit/Util_p.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="tests/add.expect" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/add.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/3function.expect" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/ackermann.expect" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/ackermann.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/ackermann_closure.expect"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="tests/additional/ackermann_closure.mvm"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="tests/additional/casts.expect" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/casts.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/closure.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/complex.expect" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/complex.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/complex2.expect" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/complex2.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/fail/for_range.mvm"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="tests/additional/fail/for_var.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/fail/function-cast.mvm"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="tests/additional/fail/function-return-void.mvm"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="tests/additional/fail/if-fun.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/fail/op_bin.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/fail/op_not.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/fail/op_streq.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/fail/op_sub.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/fail/range.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/fail/vars.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/fib.expect" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/fib.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/fib_closure.expect"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="tests/additional/fib_closure.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/function-call.expect"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="tests/additional/function-call.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/function-cast.expect"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="tests/additional/function-cast.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/function.expect" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/function.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/vars.expect" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/vars.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/assign.expect" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/assign.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/astprint/run.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/bitwise.expect" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/bitwise.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/div.expect" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/div.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/expr.expect" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/expr.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/for.expect" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/for.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/function.expect" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/function.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/if.expect" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/if.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/literal.expect" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/literal.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/mul.expect" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/mul.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/optional/function_native.expect"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="tests/optional/function_native.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/optional/plot.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/perf/lissajous.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/perf/plot.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/perf/prime.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/run.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/sub.expect" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/sub.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/var.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/while.expect" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/while.mvm" ex="false" tool="3" flavor2="0">
       </item>
       <item path="vm/ast.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -325,6 +569,169 @@
       <item path="libs/AsmJit/Util_p.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="tests/add.expect" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/add.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/3function.expect" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/ackermann.expect" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/ackermann.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/ackermann_closure.expect"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="tests/additional/ackermann_closure.mvm"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="tests/additional/casts.expect" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/casts.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/closure.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/complex.expect" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/complex.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/complex2.expect" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/complex2.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/fail/for_range.mvm"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="tests/additional/fail/for_var.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/fail/function-cast.mvm"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="tests/additional/fail/function-return-void.mvm"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="tests/additional/fail/if-fun.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/fail/op_bin.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/fail/op_not.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/fail/op_streq.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/fail/op_sub.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/fail/range.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/fail/vars.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/fib.expect" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/fib.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/fib_closure.expect"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="tests/additional/fib_closure.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/function-call.expect"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="tests/additional/function-call.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/function-cast.expect"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="tests/additional/function-cast.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/function.expect" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/function.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/vars.expect" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/additional/vars.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/assign.expect" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/assign.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/astprint/run.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/bitwise.expect" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/bitwise.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/div.expect" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/div.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/expr.expect" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/expr.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/for.expect" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/for.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/function.expect" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/function.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/if.expect" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/if.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/literal.expect" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/literal.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/mul.expect" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/mul.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/optional/function_native.expect"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="tests/optional/function_native.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/optional/plot.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/perf/lissajous.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/perf/plot.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/perf/prime.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/run.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/sub.expect" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/sub.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/var.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/while.expect" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/while.mvm" ex="false" tool="3" flavor2="0">
       </item>
       <item path="vm/ast.cpp" ex="false" tool="1" flavor2="0">
       </item>
