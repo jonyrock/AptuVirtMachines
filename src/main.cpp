@@ -13,7 +13,8 @@ int main(int argc, char** argv) {
     
     string impl = "";
 //    const char* script = "tests/perf/prime.mvm";
-      const char* script = "tests/my_test.mvm";
+//      const char* script = "tests/my_test.mvm";
+      const char* script = "tests/var.mvm";
 //    const char* script = NULL;
     for (int32_t i = 1; i < argc; i++) {
         if (string(argv[i]) == "-j") {
@@ -45,7 +46,8 @@ int main(int argc, char** argv) {
     }
 
     Code* code = 0;
-
+    cout << expr << endl;
+    cout << "-------------" << endl;
     Status* translateStatus = translator->translate(expr, &code);
     if (translateStatus->isError()) {
         uint32_t position = translateStatus->getPosition();

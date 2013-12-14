@@ -2,6 +2,7 @@
 #define	BYTECODE_H
 
 #include "mathvm.h"
+#include "bytecode.h"
 
 namespace mathvm {
 

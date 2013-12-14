@@ -1,4 +1,6 @@
 *** TODO ***
+* constants visitor
+* just arithmetic bytecode
 * bytecode var declaration
 * bytecode for visit function beginning (signature)
 * while, for => jumps ?
@@ -14,6 +16,7 @@
 * native calls
 
 *** GOOD TODO ***
+* use BYTEIDLEN in bytecodes def
 * try run tests/run.py
 
 *** DONE ***

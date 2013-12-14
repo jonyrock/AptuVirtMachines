@@ -32,7 +32,7 @@
         <itemPath>libs/AsmJit/Util_p.h</itemPath>
       </logicalFolder>
       <itemPath>include/ast.h</itemPath>
-      <itemPath>include/bytecodeAstVisitor.h</itemPath>
+      <itemPath>include/bytecode.h</itemPath>
       <itemPath>include/bytecodeCode.h</itemPath>
       <itemPath>include/bytecodeTranslator.h</itemPath>
       <itemPath>include/jit.h</itemPath>
@@ -66,6 +66,7 @@
         <itemPath>libs/AsmJit/Util.cpp</itemPath>
       </logicalFolder>
       <itemPath>src/ast.cpp</itemPath>
+      <itemPath>src/bytecode.cpp</itemPath>
       <itemPath>src/bytecodeCode.cpp</itemPath>
       <itemPath>src/bytecodeTranslator.cpp</itemPath>
       <itemPath>src/interpreter.cpp</itemPath>
@@ -200,7 +201,7 @@
       </item>
       <item path="include/ast.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="include/bytecodeAstVisitor.h" ex="false" tool="3" flavor2="0">
+      <item path="include/bytecode.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/bytecodeCode.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -287,6 +288,8 @@
       <item path="libs/AsmJit/Util_p.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/ast.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/bytecode.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/bytecodeCode.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -501,7 +504,7 @@
       </item>
       <item path="include/ast.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="include/bytecodeAstVisitor.h" ex="false" tool="3" flavor2="0">
+      <item path="include/bytecode.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/bytecodeCode.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -588,6 +591,8 @@
       <item path="libs/AsmJit/Util_p.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/ast.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/bytecode.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/bytecodeCode.cpp" ex="false" tool="1" flavor2="0">
       </item>

@@ -50,6 +50,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/libs/AsmJit/Platform.o \
 	${OBJECTDIR}/libs/AsmJit/Util.o \
 	${OBJECTDIR}/src/ast.o \
+	${OBJECTDIR}/src/bytecode.o \
 	${OBJECTDIR}/src/bytecodeCode.o \
 	${OBJECTDIR}/src/bytecodeTranslator.o \
 	${OBJECTDIR}/src/interpreter.o \
@@ -160,6 +161,11 @@ ${OBJECTDIR}/src/ast.o: src/ast.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
 	$(COMPILE.cc) -g -Iinclude -Ilibs -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/ast.o src/ast.cpp
+
+${OBJECTDIR}/src/bytecode.o: src/bytecode.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} $@.d
+	$(COMPILE.cc) -g -Iinclude -Ilibs -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/bytecode.o src/bytecode.cpp
 
 ${OBJECTDIR}/src/bytecodeCode.o: src/bytecodeCode.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
