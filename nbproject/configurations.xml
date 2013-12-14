@@ -2,6 +2,7 @@
 <configurationDescriptor version="88">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <logicalFolder name="docs" displayName="docs" projectFiles="true">
+      <itemPath>docs/bytecodes.txt</itemPath>
       <itemPath>docs/questions.txt</itemPath>
       <itemPath>docs/todo.txt</itemPath>
     </logicalFolder>
@@ -30,19 +31,15 @@
         <itemPath>libs/AsmJit/Util.h</itemPath>
         <itemPath>libs/AsmJit/Util_p.h</itemPath>
       </logicalFolder>
-      <logicalFolder name="include" displayName="include" projectFiles="true">
-        <itemPath>include/ast.h</itemPath>
-        <itemPath>include/mathvm.h</itemPath>
-        <itemPath>include/visitors.h</itemPath>
-      </logicalFolder>
-      <logicalFolder name="vm" displayName="vm" projectFiles="true">
-        <itemPath>vm/bytecodeAstVisitor.h</itemPath>
-        <itemPath>vm/bytecodeCode.h</itemPath>
-        <itemPath>vm/bytecodeTranslator.h</itemPath>
-        <itemPath>vm/jit.h</itemPath>
-        <itemPath>vm/parser.h</itemPath>
-        <itemPath>vm/scanner.h</itemPath>
-      </logicalFolder>
+      <itemPath>include/ast.h</itemPath>
+      <itemPath>include/bytecodeAstVisitor.h</itemPath>
+      <itemPath>include/bytecodeCode.h</itemPath>
+      <itemPath>include/bytecodeTranslator.h</itemPath>
+      <itemPath>include/jit.h</itemPath>
+      <itemPath>include/mathvm.h</itemPath>
+      <itemPath>include/parser.h</itemPath>
+      <itemPath>include/scanner.h</itemPath>
+      <itemPath>include/visitors.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -68,19 +65,17 @@
         <itemPath>libs/AsmJit/README.txt</itemPath>
         <itemPath>libs/AsmJit/Util.cpp</itemPath>
       </logicalFolder>
-      <logicalFolder name="vm" displayName="vm" projectFiles="true">
-        <itemPath>vm/ast.cpp</itemPath>
-        <itemPath>vm/bytecodeCode.cpp</itemPath>
-        <itemPath>vm/bytecodeTranslator.cpp</itemPath>
-        <itemPath>vm/interpreter.cpp</itemPath>
-        <itemPath>vm/jit.cpp</itemPath>
-        <itemPath>vm/mathvm.cpp</itemPath>
-        <itemPath>vm/parser.cpp</itemPath>
-        <itemPath>vm/scanner.cpp</itemPath>
-        <itemPath>vm/translator.cpp</itemPath>
-        <itemPath>vm/utils.cpp</itemPath>
-      </logicalFolder>
-      <itemPath>main.cpp</itemPath>
+      <itemPath>src/ast.cpp</itemPath>
+      <itemPath>src/bytecodeCode.cpp</itemPath>
+      <itemPath>src/bytecodeTranslator.cpp</itemPath>
+      <itemPath>src/interpreter.cpp</itemPath>
+      <itemPath>src/jit.cpp</itemPath>
+      <itemPath>src/main.cpp</itemPath>
+      <itemPath>src/mathvm.cpp</itemPath>
+      <itemPath>src/parser.cpp</itemPath>
+      <itemPath>src/scanner.cpp</itemPath>
+      <itemPath>src/translator.cpp</itemPath>
+      <itemPath>src/utils.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="tests" displayName="tests" projectFiles="true">
       <logicalFolder name="additional" displayName="additional" projectFiles="true">
@@ -197,13 +192,27 @@
           </incDir>
         </ccTool>
       </compileType>
+      <item path="docs/bytecodes.txt" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="docs/questions.txt" ex="false" tool="3" flavor2="0">
       </item>
       <item path="docs/todo.txt" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/ast.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="include/bytecodeAstVisitor.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/bytecodeCode.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/bytecodeTranslator.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/jit.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/mathvm.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/parser.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/scanner.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/visitors.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -277,7 +286,27 @@
       </item>
       <item path="libs/AsmJit/Util_p.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/ast.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/bytecodeCode.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/bytecodeTranslator.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/interpreter.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/jit.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/mathvm.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/parser.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/scanner.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/translator.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/utils.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="tests/add.expect" ex="false" tool="3" flavor2="0">
       </item>
@@ -443,38 +472,6 @@
       <item path="tests/while.expect" ex="false" tool="3" flavor2="0">
       </item>
       <item path="tests/while.mvm" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="vm/ast.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="vm/bytecodeAstVisitor.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="vm/bytecodeCode.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="vm/bytecodeCode.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="vm/bytecodeTranslator.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="vm/bytecodeTranslator.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="vm/interpreter.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="vm/jit.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="vm/jit.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="vm/mathvm.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="vm/parser.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="vm/parser.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="vm/scanner.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="vm/scanner.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="vm/translator.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="vm/utils.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="1">
@@ -496,13 +493,27 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
+      <item path="docs/bytecodes.txt" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="docs/questions.txt" ex="false" tool="3" flavor2="0">
       </item>
       <item path="docs/todo.txt" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/ast.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="include/bytecodeAstVisitor.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/bytecodeCode.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/bytecodeTranslator.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/jit.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/mathvm.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/parser.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/scanner.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/visitors.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -576,7 +587,27 @@
       </item>
       <item path="libs/AsmJit/Util_p.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/ast.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/bytecodeCode.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/bytecodeTranslator.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/interpreter.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/jit.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/mathvm.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/parser.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/scanner.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/translator.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/utils.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="tests/add.expect" ex="false" tool="3" flavor2="0">
       </item>
@@ -742,38 +773,6 @@
       <item path="tests/while.expect" ex="false" tool="3" flavor2="0">
       </item>
       <item path="tests/while.mvm" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="vm/ast.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="vm/bytecodeAstVisitor.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="vm/bytecodeCode.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="vm/bytecodeCode.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="vm/bytecodeTranslator.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="vm/bytecodeTranslator.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="vm/interpreter.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="vm/jit.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="vm/jit.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="vm/mathvm.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="vm/parser.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="vm/parser.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="vm/scanner.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="vm/scanner.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="vm/translator.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="vm/utils.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
   </confs>

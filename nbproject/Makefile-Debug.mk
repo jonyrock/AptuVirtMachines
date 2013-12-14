@@ -49,17 +49,17 @@ OBJECTFILES= \
 	${OBJECTDIR}/libs/AsmJit/OperandX86X64.o \
 	${OBJECTDIR}/libs/AsmJit/Platform.o \
 	${OBJECTDIR}/libs/AsmJit/Util.o \
-	${OBJECTDIR}/main.o \
-	${OBJECTDIR}/vm/ast.o \
-	${OBJECTDIR}/vm/bytecodeCode.o \
-	${OBJECTDIR}/vm/bytecodeTranslator.o \
-	${OBJECTDIR}/vm/interpreter.o \
-	${OBJECTDIR}/vm/jit.o \
-	${OBJECTDIR}/vm/mathvm.o \
-	${OBJECTDIR}/vm/parser.o \
-	${OBJECTDIR}/vm/scanner.o \
-	${OBJECTDIR}/vm/translator.o \
-	${OBJECTDIR}/vm/utils.o
+	${OBJECTDIR}/src/ast.o \
+	${OBJECTDIR}/src/bytecodeCode.o \
+	${OBJECTDIR}/src/bytecodeTranslator.o \
+	${OBJECTDIR}/src/interpreter.o \
+	${OBJECTDIR}/src/jit.o \
+	${OBJECTDIR}/src/main.o \
+	${OBJECTDIR}/src/mathvm.o \
+	${OBJECTDIR}/src/parser.o \
+	${OBJECTDIR}/src/scanner.o \
+	${OBJECTDIR}/src/translator.o \
+	${OBJECTDIR}/src/utils.o
 
 
 # C Compiler Flags
@@ -156,60 +156,60 @@ ${OBJECTDIR}/libs/AsmJit/Util.o: libs/AsmJit/Util.cpp
 	${RM} $@.d
 	$(COMPILE.cc) -g -Iinclude -Ilibs -MMD -MP -MF $@.d -o ${OBJECTDIR}/libs/AsmJit/Util.o libs/AsmJit/Util.cpp
 
-${OBJECTDIR}/main.o: main.cpp 
-	${MKDIR} -p ${OBJECTDIR}
+${OBJECTDIR}/src/ast.o: src/ast.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.cc) -g -Iinclude -Ilibs -MMD -MP -MF $@.d -o ${OBJECTDIR}/main.o main.cpp
+	$(COMPILE.cc) -g -Iinclude -Ilibs -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/ast.o src/ast.cpp
 
-${OBJECTDIR}/vm/ast.o: vm/ast.cpp 
-	${MKDIR} -p ${OBJECTDIR}/vm
+${OBJECTDIR}/src/bytecodeCode.o: src/bytecodeCode.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.cc) -g -Iinclude -Ilibs -MMD -MP -MF $@.d -o ${OBJECTDIR}/vm/ast.o vm/ast.cpp
+	$(COMPILE.cc) -g -Iinclude -Ilibs -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/bytecodeCode.o src/bytecodeCode.cpp
 
-${OBJECTDIR}/vm/bytecodeCode.o: vm/bytecodeCode.cpp 
-	${MKDIR} -p ${OBJECTDIR}/vm
+${OBJECTDIR}/src/bytecodeTranslator.o: src/bytecodeTranslator.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.cc) -g -Iinclude -Ilibs -MMD -MP -MF $@.d -o ${OBJECTDIR}/vm/bytecodeCode.o vm/bytecodeCode.cpp
+	$(COMPILE.cc) -g -Iinclude -Ilibs -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/bytecodeTranslator.o src/bytecodeTranslator.cpp
 
-${OBJECTDIR}/vm/bytecodeTranslator.o: vm/bytecodeTranslator.cpp 
-	${MKDIR} -p ${OBJECTDIR}/vm
+${OBJECTDIR}/src/interpreter.o: src/interpreter.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.cc) -g -Iinclude -Ilibs -MMD -MP -MF $@.d -o ${OBJECTDIR}/vm/bytecodeTranslator.o vm/bytecodeTranslator.cpp
+	$(COMPILE.cc) -g -Iinclude -Ilibs -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/interpreter.o src/interpreter.cpp
 
-${OBJECTDIR}/vm/interpreter.o: vm/interpreter.cpp 
-	${MKDIR} -p ${OBJECTDIR}/vm
+${OBJECTDIR}/src/jit.o: src/jit.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.cc) -g -Iinclude -Ilibs -MMD -MP -MF $@.d -o ${OBJECTDIR}/vm/interpreter.o vm/interpreter.cpp
+	$(COMPILE.cc) -g -Iinclude -Ilibs -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/jit.o src/jit.cpp
 
-${OBJECTDIR}/vm/jit.o: vm/jit.cpp 
-	${MKDIR} -p ${OBJECTDIR}/vm
+${OBJECTDIR}/src/main.o: src/main.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.cc) -g -Iinclude -Ilibs -MMD -MP -MF $@.d -o ${OBJECTDIR}/vm/jit.o vm/jit.cpp
+	$(COMPILE.cc) -g -Iinclude -Ilibs -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/main.o src/main.cpp
 
-${OBJECTDIR}/vm/mathvm.o: vm/mathvm.cpp 
-	${MKDIR} -p ${OBJECTDIR}/vm
+${OBJECTDIR}/src/mathvm.o: src/mathvm.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.cc) -g -Iinclude -Ilibs -MMD -MP -MF $@.d -o ${OBJECTDIR}/vm/mathvm.o vm/mathvm.cpp
+	$(COMPILE.cc) -g -Iinclude -Ilibs -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/mathvm.o src/mathvm.cpp
 
-${OBJECTDIR}/vm/parser.o: vm/parser.cpp 
-	${MKDIR} -p ${OBJECTDIR}/vm
+${OBJECTDIR}/src/parser.o: src/parser.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.cc) -g -Iinclude -Ilibs -MMD -MP -MF $@.d -o ${OBJECTDIR}/vm/parser.o vm/parser.cpp
+	$(COMPILE.cc) -g -Iinclude -Ilibs -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/parser.o src/parser.cpp
 
-${OBJECTDIR}/vm/scanner.o: vm/scanner.cpp 
-	${MKDIR} -p ${OBJECTDIR}/vm
+${OBJECTDIR}/src/scanner.o: src/scanner.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.cc) -g -Iinclude -Ilibs -MMD -MP -MF $@.d -o ${OBJECTDIR}/vm/scanner.o vm/scanner.cpp
+	$(COMPILE.cc) -g -Iinclude -Ilibs -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/scanner.o src/scanner.cpp
 
-${OBJECTDIR}/vm/translator.o: vm/translator.cpp 
-	${MKDIR} -p ${OBJECTDIR}/vm
+${OBJECTDIR}/src/translator.o: src/translator.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.cc) -g -Iinclude -Ilibs -MMD -MP -MF $@.d -o ${OBJECTDIR}/vm/translator.o vm/translator.cpp
+	$(COMPILE.cc) -g -Iinclude -Ilibs -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/translator.o src/translator.cpp
 
-${OBJECTDIR}/vm/utils.o: vm/utils.cpp 
-	${MKDIR} -p ${OBJECTDIR}/vm
+${OBJECTDIR}/src/utils.o: src/utils.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.cc) -g -Iinclude -Ilibs -MMD -MP -MF $@.d -o ${OBJECTDIR}/vm/utils.o vm/utils.cpp
+	$(COMPILE.cc) -g -Iinclude -Ilibs -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/utils.o src/utils.cpp
 
 # Subprojects
 .build-subprojects:
