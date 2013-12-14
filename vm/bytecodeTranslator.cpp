@@ -21,24 +21,19 @@ namespace mathvm {
 
         BytecodeCode* code = new BytecodeCode();
         BytecodeAstVisitor visitor(code);
-        visitor.visitTopFunction(parser.top());
+        visitor.visitAst(parser.top());
 
         *code_ = code;
         return new Status();
-
     }
 
-    void BytecodeAstVisitor::visitTopFunction(AstFunction* rootFunction) {
-
-        //BlockNode* node = rootFunction->node()->body();
-        cout << "translator started" << endl;
+    void BytecodeAstVisitor::visitAst(AstFunction* rootFunction) {
         visitAstFunction(rootFunction);
-
+        currentBytecode()->addInsn(Instruction.BC_STOP);
     }
 
     void BytecodeAstVisitor::visitAstFunction(AstFunction* function) {
         BytecodeFunction* fun = new BytecodeFunction(function);
-        cout << "visit function " << fun->name() << endl;
         code->addFunction(fun);
         functionsStack.push(fun);
         function->node()->visit(this);
@@ -50,30 +45,69 @@ namespace mathvm {
     }
 
     void BytecodeAstVisitor::visitBlockNode(BlockNode* node) {
+        
+        Scope::VarIterator varIt(node->scope());
+        while (varIt.hasNext()) {
+            AstVar* var = varIt.next();
+            cout << typeToName(var->type()) << " " << var->name() << ";" << endl;
+        }
+        
         Scope::FunctionIterator funIt(node->scope());
         while (funIt.hasNext()) {
             AstFunction* fun = funIt.next();
             visitAstFunction(fun);
         }
-    }
-    
-    void BytecodeAstVisitor::visitBinaryOpNode(BinaryOpNode* node){}
-    void BytecodeAstVisitor::visitCallNode(CallNode* node){}
-    void BytecodeAstVisitor::visitDoubleLiteralNode(DoubleLiteralNode* node){}
-    void BytecodeAstVisitor::visitForNode(ForNode* node){}
-    void BytecodeAstVisitor::visitIfNode(IfNode* node){}
-    void BytecodeAstVisitor::visitIntLiteralNode(IntLiteralNode* node){}
-    void BytecodeAstVisitor::visitLoadNode(LoadNode* node){}
-    void BytecodeAstVisitor::visitNativeCallNode(NativeCallNode* node){}
-    void BytecodeAstVisitor::visitPrintNode(PrintNode* node){}
-    void BytecodeAstVisitor::visitReturnNode(ReturnNode* node){}
-    void BytecodeAstVisitor::visitStoreNode(StoreNode* node){}
-    void BytecodeAstVisitor::visitStringLiteralNode(StringLiteralNode* node){}
-    void BytecodeAstVisitor::visitUnaryOpNode(UnaryOpNode* node){}
-    void BytecodeAstVisitor::visitWhileNode(WhileNode* node){}
 
-    
-    
+        for (uint32_t i = 0; i < node->nodes(); i++) {
+            node->nodeAt(i)->visit(this);
+        }
+
+    }
+
+    void BytecodeAstVisitor::visitBinaryOpNode(BinaryOpNode* node) {
+    }
+
+    void BytecodeAstVisitor::visitCallNode(CallNode* node) {
+    }
+
+    void BytecodeAstVisitor::visitDoubleLiteralNode(DoubleLiteralNode* node) {
+    }
+
+    void BytecodeAstVisitor::visitForNode(ForNode* node) {
+    }
+
+    void BytecodeAstVisitor::visitIfNode(IfNode* node) {
+    }
+
+    void BytecodeAstVisitor::visitIntLiteralNode(IntLiteralNode* node) {
+    }
+
+    void BytecodeAstVisitor::visitLoadNode(LoadNode* node) {
+    }
+
+    void BytecodeAstVisitor::visitNativeCallNode(NativeCallNode* node) {
+    }
+
+    void BytecodeAstVisitor::visitPrintNode(PrintNode* node) {
+    }
+
+    void BytecodeAstVisitor::visitReturnNode(ReturnNode* node) {
+    }
+
+    void BytecodeAstVisitor::visitStoreNode(StoreNode* node) {
+    }
+
+    void BytecodeAstVisitor::visitStringLiteralNode(StringLiteralNode* node) {
+    }
+
+    void BytecodeAstVisitor::visitUnaryOpNode(UnaryOpNode* node) {
+    }
+
+    void BytecodeAstVisitor::visitWhileNode(WhileNode* node) {
+    }
+
+
+
 
 }
 

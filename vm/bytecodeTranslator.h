@@ -17,7 +17,7 @@ namespace mathvm {
         BytecodeAstVisitor(BytecodeCode * const code_) : code(code_) {
         }
 
-        void visitTopFunction(AstFunction*);
+        void visitAst(AstFunction*);
 
 #define VISITOR_FUNCTION(type, name) \
         virtual void visit##type(type* node);
@@ -27,7 +27,11 @@ namespace mathvm {
         void visitAstFunction(AstFunction*);
 
         inline BytecodeFunction* currentFunction() {
-            return functionsStack.top();
+            return functionsStack.top()->;
+        }
+        
+        inline Bytecode* currentBytecode() {
+            return currentFunction()->bytecode();
         }
 
     };

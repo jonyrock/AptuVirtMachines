@@ -1,9 +1,17 @@
 *** TODO ***
-* get bug with function names collision
+* bytecode var declaration
+* bytecode for visit function beginning (signature)
+* while, for => jumps ?
+* check that it is impossible to call function
+  with wrong arguments
 * visitor with bytecodes write
 * print some code
 * basic test translator
 * TranslatedFunction disassemble
+* get bug with function names collision
+* check functions declaration with 
+  other code mix. 
+* native calls
 
 *** GOOD TODO ***
 * try run tests/run.py

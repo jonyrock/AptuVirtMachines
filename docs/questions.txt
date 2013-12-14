@@ -1,0 +1,3 @@
+*** QUESTIONS ***
+* DO(DLOAD, "Load double on TOS, inlined into insn stream.", 9) 
+  what does inlines into stream mean?
