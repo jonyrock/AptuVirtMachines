@@ -15,8 +15,7 @@ namespace mathvm {
         stack<BytecodeFunction*> functionsStack;
     public:
 
-        BytecodeAstVisitor(BytecodeCode& code_) : code(code_),
-        functionsCount(0) {
+        BytecodeAstVisitor(BytecodeCode& code_) : code(code_){
         }
 
         void visitAst(AstFunction*);
@@ -50,19 +49,12 @@ namespace mathvm {
             return currentBytecode()->current();
         }
 
-        inline void addCurrentIndex() {
-            writeIntoBytecode(current());
-        }
+        uint16_t allocateVar(AstVar& var);
 
-        uint32_t allocateVar(const AstVar& var);
+        uint16_t allocate(const string& str);
 
-        void writeIntoBytecode(const string& str);
-        void writeIntoBytecode(const uint32_t& str);
-
-        map<pair<Scope*, string>, uint32_t> scopeVars;
-        map<pair<Scope*, string>, uint32_t> scopeFunctions;
-        uint32_t functionsCount;
-
+        map<const AstVar*, uint16_t> astVarsId;
+        
     };
 
     class BytecodeTranslator : public Translator {

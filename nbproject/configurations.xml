@@ -2,7 +2,6 @@
 <configurationDescriptor version="88">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <logicalFolder name="docs" displayName="docs" projectFiles="true">
-      <itemPath>docs/bytecodes.txt</itemPath>
       <itemPath>docs/questions.txt</itemPath>
       <itemPath>docs/todo.txt</itemPath>
     </logicalFolder>
@@ -193,8 +192,6 @@
           </incDir>
         </ccTool>
       </compileType>
-      <item path="docs/bytecodes.txt" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="docs/questions.txt" ex="false" tool="3" flavor2="0">
       </item>
       <item path="docs/todo.txt" ex="false" tool="3" flavor2="0">
@@ -496,8 +493,6 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
-      <item path="docs/bytecodes.txt" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="docs/questions.txt" ex="false" tool="3" flavor2="0">
       </item>
       <item path="docs/todo.txt" ex="false" tool="3" flavor2="0">

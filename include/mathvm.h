@@ -101,7 +101,9 @@ using namespace std;
         DO(CALL, "Call function, next two bytes - unsigned function id.", 3) \
         DO(CALLNATIVE, "Call native function, next two bytes - id of the native function.", 3)  \
         DO(RETURN, "Return to call location", 1) \
-        DO(BREAK, "Breakpoint for the debugger.", 1)
+        DO(BREAK, "Breakpoint for the debugger.", 1) \
+        DO(STR_BEGIN, "", 1)
+        
         
 
 typedef enum {

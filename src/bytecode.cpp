@@ -23,12 +23,24 @@ namespace mathvm {
     }
 
     void Bytecode::dump(ostream& out) const {
-        for (size_t bci = 0; bci < length();) {
+        size_t len = length();
+        for (size_t bci = 0; bci < len;) {
             size_t length;
             Instruction insn = getInsn(bci);
             out << bci << ": ";
             const char* name = bytecodeName(insn, &length);
             switch (insn) {
+                case BC_STR_BEGIN:
+                    out << name;
+                    while(bci < len) {
+                        uint8_t endByte = (uint8_t) '$';
+                        uint8_t curByte = (uint8_t) getByte(bci + length);
+                        length++;
+                        out << (char)curByte;
+                        if(curByte == endByte) {
+                            break;
+                        }
+                    }
                 case BC_DLOAD:
                     out << name << " " << getDouble(bci + 1);
                     break;

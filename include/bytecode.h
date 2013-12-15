@@ -112,7 +112,6 @@ namespace mathvm {
                 T val;
                 uint8_t bits[sizeof (T)];
             } u;
-
             u.val = d;
             for (uint32_t i = 0; i<sizeof (u.bits); i++) {
                 add(u.bits[i]);
