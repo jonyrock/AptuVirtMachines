@@ -223,9 +223,15 @@ class AstVisitor {
 
 class AstNode : public CustomDataHolder {
     uint32_t _index;
+        
+  protected:
+    int _type;
+    virtual void resolveType() {
+        _type = 0;
+    }
   public:
     AstNode(uint32_t index) :
-        _index(index) {
+        _index(index), _type(-1) {
     }
     virtual ~AstNode() {
     }
@@ -242,7 +248,13 @@ class AstNode : public CustomDataHolder {
 
     FOR_NODES(CHECK_FUNCTION)
 #undef CHECK_FUNCTION
-
+    
+    VarType getType() {
+        if(_type == -1)
+            resolveType();
+        return (VarType)_type;
+    }
+    
 };
 
 class BinaryOpNode : public AstNode {
@@ -266,6 +278,12 @@ class BinaryOpNode : public AstNode {
   virtual void visitChildren(AstVisitor* visitor) const {
     left()->visit(visitor);
     right()->visit(visitor);
+  }
+ protected:
+  virtual void resolveType() {
+      VarType leftType = left()->getType();
+      VarType rightType = right()->getType();
+      _type = (int)castTypes(leftType, rightType);
   }
 
   COMMON_NODE_FUNCTIONS(BinaryOpNode);
@@ -671,6 +689,16 @@ public:
     }
 
     COMMON_NODE_FUNCTIONS(CallNode);
+protected:
+    virtual void resolveType() {
+        _type = getFunctionNode()->returnType();
+    }
+private:
+    FunctionNode* getFunctionNode(){
+//        while(true) {
+//            
+//        }
+    }
 };
 
 class PrintNode : public AstNode {

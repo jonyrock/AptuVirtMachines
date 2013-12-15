@@ -33,8 +33,7 @@ namespace mathvm {
     }
 
     void BytecodeAstVisitor::visitAstFunction(AstFunction* function) {
-        BytecodeFunction* fun = new BytecodeFunction(function);
-        //        scopeFunctions[make_pair(function->owner(), fun->name())] = functionsCount++;
+        BytecodeFunction* fun = new BytecodeFunction(function);        
         code.addFunction(fun);
         functionsStack.push(fun);
         function->node()->visit(this);
@@ -61,7 +60,6 @@ namespace mathvm {
         while (varIt.hasNext()) {
             AstVar* var = varIt.next();
             allocateVar(*var);
-            //            cout << "allocated" << scopeVars[make_pair(node->scope(), var->name())];
         }
 
         Scope::FunctionIterator funIt(node->scope());
@@ -116,9 +114,14 @@ namespace mathvm {
     }
 
     void BytecodeAstVisitor::visitPrintNode(PrintNode* node) {
+        for(size_t i = 0; i < node->operands(); i++){
+            AstNode* on = node->operandAt(i);
+            
+        }
     }
 
     void BytecodeAstVisitor::visitReturnNode(ReturnNode* node) {
+        
     }
 
     void BytecodeAstVisitor::visitStoreNode(StoreNode* node) {
@@ -133,19 +136,23 @@ STORE_TO_VAR:
             addInsn(BC_STOREIVAR);
         if (node->var()->type() == VT_STRING)
             addInsn(BC_STORESVAR);
+        currentBytecode()->addInt16(varId);
     }
     
     void BytecodeAstVisitor::visitDoubleLiteralNode(DoubleLiteralNode* node) {
+        addInsn(BC_DLOAD);
         currentBytecode()->addDouble(node->literal());
     }
     
     void BytecodeAstVisitor::visitIntLiteralNode(IntLiteralNode* node) {
+        addInsn(BC_ILOAD);
         currentBytecode()->addInt64(node->literal());
     }
     
     void BytecodeAstVisitor::visitStringLiteralNode(StringLiteralNode* node) {
         addInsn(BC_STR_BEGIN);
         uint16_t allocatedId = allocate(node->literal());
+        addInsn(BC_SLOAD);
         currentBytecode()->addInt16(allocatedId);
     }
     

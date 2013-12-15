@@ -1,7 +1,6 @@
 *** TODO ***
-* disassemble with string literals
-* visit literals
-* basic assign
+* print node
+* mul.txt test 
 * conversions before assignment
 * constants visitor
 * assert(false); in the end of each visitor
@@ -21,6 +20,9 @@
 * try run tests/run.py
 
 *** DONE ***
+* basic assign
+* visit literals
+* disassemble with string literals
 * TranslatedFunction disassemble
 * basic test translator
 * print some code

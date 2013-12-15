@@ -121,6 +121,19 @@ typedef enum {
     VT_STRING
 } VarType;
 
+inline VarType castTypes(VarType a, VarType b) {
+    if(a == b)
+        return a;
+    if(a == VT_INVALID || b == VT_INVALID)
+        return VT_INVALID;
+    if(a == VT_VOID || b == VT_VOID)
+        return VT_INVALID;
+    if(a == VT_STRING || b == VT_STRING)
+        return VT_STRING;
+    if(a == VT_INT || b == VT_INT)
+        return VT_DOUBLE;
+}
+
 // Element 0 is return type.
 typedef pair<VarType,string> SignatureElement;
 typedef vector<SignatureElement> Signature;
