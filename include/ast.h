@@ -689,16 +689,7 @@ public:
     }
 
     COMMON_NODE_FUNCTIONS(CallNode);
-protected:
-    virtual void resolveType() {
-        _type = getFunctionNode()->returnType();
-    }
-private:
-    FunctionNode* getFunctionNode(){
-//        while(true) {
-//            
-//        }
-    }
+
 };
 
 class PrintNode : public AstNode {

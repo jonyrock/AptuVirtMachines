@@ -15,8 +15,6 @@ namespace mathvm {
 
 using namespace std;
 
-#define BYTEIDLEN 2
-
 #define FOR_BYTECODES(DO)                                               \
         DO(INVALID, "Invalid instruction.", 1)                          \
         DO(DLOAD, "Load double on TOS, inlined into insn stream.", 9)   \

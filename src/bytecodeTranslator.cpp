@@ -46,7 +46,7 @@ namespace mathvm {
 
     uint16_t BytecodeAstVisitor::allocate(const string& str) {
         currentBytecode()->addInsn(BC_STR_BEGIN);
-        uint16_t strIndex = (uint16_t)current() + 1;
+        uint16_t strIndex = (uint16_t)current();
         for (int i = 0; i < str.size(); i++) {
             add((uint8_t) str[i]);
         }
@@ -89,7 +89,7 @@ namespace mathvm {
         }
         if (var.type() == VT_STRING) {
             addInsn(BC_SLOAD);
-            currentBytecode()->addUInt16(0);
+//            currentBytecode()->addUInt16(10);
             return beginIndex;
         }
         assert(false);
@@ -108,6 +108,7 @@ namespace mathvm {
     }
 
     void BytecodeAstVisitor::visitLoadNode(LoadNode* node) {
+        cout << "OADDDDD"  << endl;
     }
 
     void BytecodeAstVisitor::visitNativeCallNode(NativeCallNode* node) {
@@ -115,8 +116,9 @@ namespace mathvm {
 
     void BytecodeAstVisitor::visitPrintNode(PrintNode* node) {
         for(size_t i = 0; i < node->operands(); i++){
-            AstNode* on = node->operandAt(i);
-            
+            AstNode* opn = node->operandAt(i);
+            opn->visit(this);
+            addInsn(BC_SPRINT); // TODO: change to prop type
         }
     }
 

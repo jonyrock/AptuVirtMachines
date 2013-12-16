@@ -1,4 +1,5 @@
 *** TODO ***
+* nodes cope owner
 * print node
 * mul.txt test 
 * conversions before assignment
