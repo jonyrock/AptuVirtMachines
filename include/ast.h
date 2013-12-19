@@ -249,12 +249,6 @@ class AstNode : public CustomDataHolder {
     FOR_NODES(CHECK_FUNCTION)
 #undef CHECK_FUNCTION
     
-    VarType getType() {
-        if(_type == -1)
-            resolveType();
-        return (VarType)_type;
-    }
-    
 };
 
 class BinaryOpNode : public AstNode {
@@ -280,11 +274,6 @@ class BinaryOpNode : public AstNode {
     right()->visit(visitor);
   }
  protected:
-  virtual void resolveType() {
-      VarType leftType = left()->getType();
-      VarType rightType = right()->getType();
-      _type = (int)castTypes(leftType, rightType);
-  }
 
   COMMON_NODE_FUNCTIONS(BinaryOpNode);
 };

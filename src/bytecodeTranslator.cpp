@@ -6,6 +6,7 @@
 #include "AsmJit/Build.h"
 
 #include <iostream>
+#include <stdexcept>
 
 
 using namespace std;
@@ -33,7 +34,7 @@ namespace mathvm {
     }
 
     void BytecodeAstVisitor::visitAstFunction(AstFunction* function) {
-        BytecodeFunction* fun = new BytecodeFunction(function);        
+        BytecodeFunction* fun = new BytecodeFunction(function);
         code.addFunction(fun);
         functionsStack.push(fun);
         function->node()->visit(this);
@@ -79,18 +80,103 @@ namespace mathvm {
         }
         if (var.type() == VT_STRING) {
             addInsn(BC_SLOAD);
-            currentBytecode()->addUInt16(10);
+            currentBytecode()->addUInt16(0);
             return beginIndex;
         }
         assert(false);
     }
 
-    void BytecodeAstVisitor::visitBinaryOpNode(BinaryOpNode* node) {
+    void BytecodeAstVisitor::addTypeInsn(VarType type, TokenKind op) {
+        uint32_t codeLenBefore = currentBytecode()->length();
+        if (op == tADD) {
+            if (type = VT_INT)
+                addInsn(BC_IADD);
+            if (type = VT_DOUBLE)
+                addInsn(BC_DADD);
+        }
+
+        if (op == tSUB) {
+            if (type = VT_INT)
+                addInsn(BC_ISUB);
+            if (type = VT_DOUBLE)
+                addInsn(BC_DSUB);
+        }
+
+        if (op == tMUL) {
+            if (type = VT_INT)
+                addInsn(BC_IMUL);
+            if (type = VT_DOUBLE)
+                addInsn(BC_DMUL);
+        }
+
+        if (op == tDIV) {
+            if (type = VT_INT)
+                addInsn(BC_IDIV);
+            if (type = VT_DOUBLE)
+                addInsn(BC_DDIV);
+        }
+
+        assert((currentBytecode()->length()) != codeLenBefore);
     }
 
-    void BytecodeAstVisitor::visitCallNode(CallNode* node) {
+    int typeAbstract(VarType t) {
+        if (t == VT_INT)
+            return 1;
+        if (t == VT_DOUBLE)
+            return 2;
+        if (t == VT_STRING)
+            return 3;
+        throw invalid_argument("Undefined abstract order for type");
+        return -1;
     }
-   
+
+    bool operator<(VarType a, VarType b) {
+        return typeAbstract(a) < typeAbstract(b);
+    }
+    
+    void BytecodeAstVisitor::ensureType(VarType ts, VarType td){
+        if(ts == td)
+            return;
+        
+        if(ts == VT_INT && td == VT_DOUBLE){
+            addInsn(BC_I2D);
+        }
+        if(ts == VT_DOUBLE && td == VT_INT){
+            addInsn(BC_D2I);
+        }
+        if(ts == VT_STRING && td == VT_INT){
+            addInsn(BC_S2I);
+        }
+            
+            if(ts > td)
+            throw invalid_argument("Can't convert type");
+    }
+
+    void BytecodeAstVisitor::visitBinaryOpNode(BinaryOpNode* node) {
+
+        node->left()->visit(this);
+        VarType leftType = topType();
+
+        node->right()->visit(this);
+        VarType rightType = topType();
+        
+        VarType maxType = max(leftType, rightType);
+//        ensureType(leftType, maxType);
+//        ensureType(rightType, maxType);
+        addTypeInsn(maxType, node->kind());
+        
+        
+        typesStack.push(maxType);
+
+    }
+    
+    
+
+    void BytecodeAstVisitor::visitCallNode(CallNode* node) {
+        // TODO: think about type
+        typesStack.push(VT_INT);
+    }
+
     void BytecodeAstVisitor::visitForNode(ForNode* node) {
     }
 
@@ -98,29 +184,47 @@ namespace mathvm {
     }
 
     void BytecodeAstVisitor::visitLoadNode(LoadNode* node) {
-        cout << "OADDDDD"  << endl;
+        cout << "OADDDDD" << endl;
+        typesStack.push(node->var()->type());
     }
 
     void BytecodeAstVisitor::visitNativeCallNode(NativeCallNode* node) {
+        typesStack.push(node->nativeSignature()[0].first);
     }
 
     void BytecodeAstVisitor::visitPrintNode(PrintNode* node) {
-        for(size_t i = 0; i < node->operands(); i++){
+        for (size_t i = 0; i < node->operands(); i++) {
             AstNode* opn = node->operandAt(i);
             opn->visit(this);
-            addInsn(BC_SPRINT); // TODO: change to prop type
+
+            if (topType() == VT_INT) {
+                addInsn(BC_IPRINT);
+                continue;
+            }
+            if (topType() == VT_DOUBLE) {
+                addInsn(BC_DPRINT);
+                continue;
+            }
+            if (topType() == VT_STRING) {
+                addInsn(BC_SPRINT);
+                continue;
+            }
+
+            assert(false);
+
         }
+        typesStack.push(VT_VOID);
     }
 
     void BytecodeAstVisitor::visitReturnNode(ReturnNode* node) {
-        
+
     }
 
     void BytecodeAstVisitor::visitStoreNode(StoreNode* node) {
         uint16_t varId = astVarsId[node->var()];
         node->value()->visit(this);
         goto STORE_TO_VAR;
-        
+
 STORE_TO_VAR:
         if (node->var()->type() == VT_DOUBLE)
             addInsn(BC_STOREDVAR);
@@ -130,27 +234,32 @@ STORE_TO_VAR:
             addInsn(BC_STORESVAR);
         currentBytecode()->addInt16(varId);
     }
-    
+
     void BytecodeAstVisitor::visitDoubleLiteralNode(DoubleLiteralNode* node) {
         addInsn(BC_DLOAD);
         currentBytecode()->addDouble(node->literal());
+        typesStack.push(VT_DOUBLE);
     }
-    
+
     void BytecodeAstVisitor::visitIntLiteralNode(IntLiteralNode* node) {
         addInsn(BC_ILOAD);
         currentBytecode()->addInt64(node->literal());
+        typesStack.push(VT_INT);
     }
-    
+
     void BytecodeAstVisitor::visitStringLiteralNode(StringLiteralNode* node) {
         addInsn(BC_SLOAD);
         uint16_t strId = code.makeStringConstant(node->literal());
         currentBytecode()->addInt16(strId);
+        typesStack.push(VT_STRING);
     }
-    
+
     void BytecodeAstVisitor::visitUnaryOpNode(UnaryOpNode* node) {
+        
     }
 
     void BytecodeAstVisitor::visitWhileNode(WhileNode* node) {
+        typesStack.push(VT_VOID);
     }
 
 }

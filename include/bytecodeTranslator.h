@@ -15,7 +15,7 @@ namespace mathvm {
         stack<BytecodeFunction*> functionsStack;
     public:
 
-        BytecodeAstVisitor(BytecodeCode& code_) : code(code_){
+        BytecodeAstVisitor(BytecodeCode& code_) : code(code_) {
         }
 
         void visitAst(AstFunction*);
@@ -52,7 +52,17 @@ namespace mathvm {
         uint16_t allocateVar(AstVar& var);
 
         map<const AstVar*, uint16_t> astVarsId;
+
+        stack<VarType> typesStack;
         
+        void addTypeInsn(VarType type, TokenKind op);
+        
+        inline VarType topType() {
+            return typesStack.top();
+        }
+        
+        void ensureType(VarType ts, VarType td);
+
     };
 
     class BytecodeTranslator : public Translator {

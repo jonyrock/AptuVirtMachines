@@ -1,12 +1,14 @@
 *** TODO ***
-* types stack
-* conversions before assignment
-* types casts for binaryOp, print and calls
-* print node
+* types casts for binaryOp
+
 
 *** GOOD TODO ***
 * use BYTEIDLEN in bytecodes def
 * try run tests/run.py
 
 *** DONE ***
+* print node
+* print types
+* conversions before assignment
+* types stack
 * use string constants in code  (Code::_constants)
