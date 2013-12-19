@@ -45,6 +45,10 @@ namespace mathvm {
             currentBytecode()->add(b);
         }
 
+        inline void addId(uint16_t id) {
+            currentBytecode()->addInt16(id);
+        }
+
         inline uint32_t current() {
             return currentBytecode()->current();
         }
@@ -52,16 +56,19 @@ namespace mathvm {
         uint16_t allocateVar(AstVar& var);
 
         map<const AstVar*, uint16_t> astVarsId;
+        map<const AstVar*, uint16_t> astVarsContext;
 
         stack<VarType> typesStack;
-        
+
         void addTypeInsn(VarType type, TokenKind op);
-        
+
         inline VarType topType() {
             return typesStack.top();
         }
-        
+
         void ensureType(VarType ts, VarType td);
+        
+        uint16_t currentContext; // aka function
 
     };
 

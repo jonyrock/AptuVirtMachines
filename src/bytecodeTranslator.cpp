@@ -35,7 +35,7 @@ namespace mathvm {
 
     void BytecodeAstVisitor::visitAstFunction(AstFunction* function) {
         BytecodeFunction* fun = new BytecodeFunction(function);
-        code.addFunction(fun);
+        currentContext = code.addFunction(fun);
         functionsStack.push(fun);
         function->node()->visit(this);
         functionsStack.pop();
@@ -68,6 +68,7 @@ namespace mathvm {
     uint16_t BytecodeAstVisitor::allocateVar(AstVar& var) {
         uint32_t beginIndex = current() + 1;
         astVarsId[&var] = beginIndex;
+        astVarsContext[&var] = currentContext;
         if (var.type() == VT_DOUBLE) {
             addInsn(BC_DLOAD);
             currentBytecode()->addDouble(0);
@@ -80,7 +81,7 @@ namespace mathvm {
         }
         if (var.type() == VT_STRING) {
             addInsn(BC_SLOAD);
-            currentBytecode()->addUInt16(0);
+            addId(0);
             return beginIndex;
         }
         assert(false);
@@ -133,22 +134,22 @@ namespace mathvm {
     bool operator<(VarType a, VarType b) {
         return typeAbstract(a) < typeAbstract(b);
     }
-    
-    void BytecodeAstVisitor::ensureType(VarType ts, VarType td){
-        if(ts == td)
+
+    void BytecodeAstVisitor::ensureType(VarType ts, VarType td) {
+        if (ts == td)
             return;
-        
-        if(ts == VT_INT && td == VT_DOUBLE){
+
+        if (ts == VT_INT && td == VT_DOUBLE) {
             addInsn(BC_I2D);
         }
-        if(ts == VT_DOUBLE && td == VT_INT){
+        if (ts == VT_DOUBLE && td == VT_INT) {
             addInsn(BC_D2I);
         }
-        if(ts == VT_STRING && td == VT_INT){
+        if (ts == VT_STRING && td == VT_INT) {
             addInsn(BC_S2I);
         }
-            
-            if(ts > td)
+
+        if (ts > td)
             throw invalid_argument("Can't convert type");
     }
 
@@ -159,18 +160,16 @@ namespace mathvm {
 
         node->right()->visit(this);
         VarType rightType = topType();
-        
+
         VarType maxType = max(leftType, rightType);
-//        ensureType(leftType, maxType);
-//        ensureType(rightType, maxType);
+        //        ensureType(leftType, maxType);
+        //        ensureType(rightType, maxType);
         addTypeInsn(maxType, node->kind());
-        
-        
+
+
         typesStack.push(maxType);
 
     }
-    
-    
 
     void BytecodeAstVisitor::visitCallNode(CallNode* node) {
         // TODO: think about type
@@ -184,7 +183,17 @@ namespace mathvm {
     }
 
     void BytecodeAstVisitor::visitLoadNode(LoadNode* node) {
-        cout << "OADDDDD" << endl;
+        if (node->var()->type() == VT_DOUBLE) {
+            addInsn(BC_LOADCTXDVAR);
+        }
+        if (node->var()->type() == VT_INT) {
+            addInsn(BC_LOADCTXIVAR);
+        }
+        if (node->var()->type() == VT_STRING) {
+            addInsn(BC_LOADCTXSVAR);
+        }
+        addId(astVarsContext[node->var()]);
+        addId(astVarsId[node->var()]);
         typesStack.push(node->var()->type());
     }
 
@@ -250,12 +259,12 @@ STORE_TO_VAR:
     void BytecodeAstVisitor::visitStringLiteralNode(StringLiteralNode* node) {
         addInsn(BC_SLOAD);
         uint16_t strId = code.makeStringConstant(node->literal());
-        currentBytecode()->addInt16(strId);
+        addId(strId);
         typesStack.push(VT_STRING);
     }
 
     void BytecodeAstVisitor::visitUnaryOpNode(UnaryOpNode* node) {
-        
+
     }
 
     void BytecodeAstVisitor::visitWhileNode(WhileNode* node) {

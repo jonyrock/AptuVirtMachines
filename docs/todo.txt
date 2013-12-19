@@ -1,4 +1,6 @@
 *** TODO ***
+* visitCallNode type
+* IMUL DMUL bug
 * types casts for binaryOp
 
 
@@ -7,6 +9,8 @@
 * try run tests/run.py
 
 *** DONE ***
+* var load
+* var context
 * print node
 * print types
 * conversions before assignment
