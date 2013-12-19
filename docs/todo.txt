@@ -1,14 +1,14 @@
 *** TODO ***
 * visitCallNode type
-* IMUL DMUL bug
 * types casts for binaryOp
-
+* assign cast
 
 *** GOOD TODO ***
 * use BYTEIDLEN in bytecodes def
 * try run tests/run.py
 
 *** DONE ***
+* IMUL DMUL bug
 * var load
 * var context
 * print node

@@ -90,30 +90,31 @@ namespace mathvm {
     void BytecodeAstVisitor::addTypeInsn(VarType type, TokenKind op) {
         uint32_t codeLenBefore = currentBytecode()->length();
         if (op == tADD) {
-            if (type = VT_INT)
+            if (type == VT_INT)
                 addInsn(BC_IADD);
-            if (type = VT_DOUBLE)
+            if (type == VT_DOUBLE)
                 addInsn(BC_DADD);
+            return;
         }
 
         if (op == tSUB) {
-            if (type = VT_INT)
+            if (type == VT_INT)
                 addInsn(BC_ISUB);
-            if (type = VT_DOUBLE)
+            if (type == VT_DOUBLE)
                 addInsn(BC_DSUB);
         }
 
         if (op == tMUL) {
-            if (type = VT_INT)
+            if (type == VT_INT)
                 addInsn(BC_IMUL);
-            if (type = VT_DOUBLE)
+            if (type == VT_DOUBLE)
                 addInsn(BC_DMUL);
         }
 
         if (op == tDIV) {
-            if (type = VT_INT)
+            if (type == VT_INT)
                 addInsn(BC_IDIV);
-            if (type = VT_DOUBLE)
+            if (type == VT_DOUBLE)
                 addInsn(BC_DDIV);
         }
 
