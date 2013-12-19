@@ -30,20 +30,6 @@ namespace mathvm {
             out << bci << ": ";
             const char* name = bytecodeName(insn, &length);
             switch (insn) {
-                case BC_STR_BEGIN:
-                    out << name << ": ";
-                    while(bci < len) {
-                        length++;
-                        uint8_t endByte = (uint8_t) '$';
-                        uint8_t curByte = (uint8_t) getByte(bci + length);
-                        
-                        out << (char)curByte;
-                        if(curByte == endByte) {
-                            break;
-                        }
-                    }
-                    length++;
-                    break;
                 case BC_DLOAD:
                     out << name << " " << getDouble(bci + 1);
                     break;

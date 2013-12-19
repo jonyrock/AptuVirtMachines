@@ -51,8 +51,6 @@ namespace mathvm {
 
         uint16_t allocateVar(AstVar& var);
 
-        uint16_t allocate(const string& str);
-
         map<const AstVar*, uint16_t> astVarsId;
         
     };

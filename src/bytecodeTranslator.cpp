@@ -44,16 +44,6 @@ namespace mathvm {
         node->body()->visit(this);
     }
 
-    uint16_t BytecodeAstVisitor::allocate(const string& str) {
-        currentBytecode()->addInsn(BC_STR_BEGIN);
-        uint16_t strIndex = (uint16_t)current();
-        for (int i = 0; i < str.size(); i++) {
-            add((uint8_t) str[i]);
-        }
-        add((uint8_t)'$');
-        return strIndex;
-    }
-
     void BytecodeAstVisitor::visitBlockNode(BlockNode* node) {
 
         Scope::VarIterator varIt(node->scope());
@@ -89,7 +79,7 @@ namespace mathvm {
         }
         if (var.type() == VT_STRING) {
             addInsn(BC_SLOAD);
-//            currentBytecode()->addUInt16(10);
+            currentBytecode()->addUInt16(10);
             return beginIndex;
         }
         assert(false);
@@ -152,10 +142,9 @@ STORE_TO_VAR:
     }
     
     void BytecodeAstVisitor::visitStringLiteralNode(StringLiteralNode* node) {
-        addInsn(BC_STR_BEGIN);
-        uint16_t allocatedId = allocate(node->literal());
         addInsn(BC_SLOAD);
-        currentBytecode()->addInt16(allocatedId);
+        uint16_t strId = code.makeStringConstant(node->literal());
+        currentBytecode()->addInt16(strId);
     }
     
     void BytecodeAstVisitor::visitUnaryOpNode(UnaryOpNode* node) {
@@ -163,9 +152,6 @@ STORE_TO_VAR:
 
     void BytecodeAstVisitor::visitWhileNode(WhileNode* node) {
     }
-
-
-
 
 }
 

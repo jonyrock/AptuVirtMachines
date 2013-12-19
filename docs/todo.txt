@@ -1,41 +1,12 @@
 *** TODO ***
-* nodes cope owner
-* print node
-* mul.txt test 
+* types stack
 * conversions before assignment
-* constants visitor
-* assert(false); in the end of each visitor
-* just arithmetic bytecode
-* bytecode var declaration
-* bytecode for visit function beginning (signature)
-* while, for => jumps ?
-* check that it is impossible to call function
-  with wrong arguments
-* get bug with function names collision
-* check functions declaration with 
-  other code mix. 
-* native calls
+* types casts for binaryOp, print and calls
+* print node
 
 *** GOOD TODO ***
 * use BYTEIDLEN in bytecodes def
 * try run tests/run.py
 
 *** DONE ***
-* basic assign
-* visit literals
-* disassemble with string literals
-* TranslatedFunction disassemble
-* basic test translator
-* print some code
-* simple visitor with function names
-* folder with examples
-* TranslatedFunction
-* Mathvm:Bytecode ?
-* Mathvm::BytecodeFunction ?
-* TranslatedFunction stumb
-* Code::disassemble ?
-* my code basic imp
-* understand Code** usage
-* NULL status< parseProgramm
-* compile bytecodeTranslator
-* get all what done before
+* use string constants in code  (Code::_constants)

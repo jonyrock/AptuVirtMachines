@@ -186,6 +186,7 @@ namespace mathvm {
         void dump(ostream& out) const;
 
     };
+    
 }
 #endif
 
