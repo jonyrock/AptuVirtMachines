@@ -9,19 +9,44 @@
 #include <map>
 
 namespace mathvm {
+    
+    class BytecodeTranslator : public Translator {
+        Status* translateBytecode(
+                const string& program,
+                Code** code);
+
+    public:
+
+        BytecodeTranslator() {
+        }
+
+        virtual ~BytecodeTranslator() {
+        }
+
+        virtual Status* translate(const string& program, Code** code);
+
+    };
 
     class BytecodeAstVisitor : public AstVisitor {
+        friend BytecodeTranslator;
         BytecodeCode& code;
         stack<BytecodeFunction*> functionsStack;
+        Status* status;
     public:
 
         BytecodeAstVisitor(BytecodeCode& code_) : code(code_) {
         }
 
         void visitAst(AstFunction*);
+        bool beforeVisit();
 
 #define VISITOR_FUNCTION(type, name) \
-        virtual void visit##type(type* node);
+        virtual void visit##type##_(type* node); \
+        inline virtual void visit##type(type* node){ \
+                if(!beforeVisit()) \
+                        return; \
+                visit##type##_(node); \
+        } 
         FOR_NODES(VISITOR_FUNCTION)
 #undef VISITOR_FUNCTION
 
@@ -72,22 +97,7 @@ namespace mathvm {
 
     };
 
-    class BytecodeTranslator : public Translator {
-        Status* translateBytecode(
-                const string& program,
-                Code** code);
-
-    public:
-
-        BytecodeTranslator() {
-        }
-
-        virtual ~BytecodeTranslator() {
-        }
-
-        virtual Status* translate(const string& program, Code** code);
-
-    };
+    
 }
 
 #endif

@@ -1,6 +1,6 @@
 *** TODO ***
 * visitCallNode type
-* types casts for binaryOp
+* types casts for binaryOp (left op)
 * assign cast
 
 *** GOOD TODO ***
@@ -8,6 +8,7 @@
 * try run tests/run.py
 
 *** DONE ***
+* undefined function call error
 * IMUL DMUL bug
 * var load
 * var context
