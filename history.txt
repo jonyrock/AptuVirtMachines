@@ -9,7 +9,6 @@
 * native calls
 
 *** GOOD TODO ***
-* use BYTEIDLEN in bytecodes def
 * try run tests/run.py
 
 *** WONTDO ***

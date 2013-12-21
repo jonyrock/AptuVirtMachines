@@ -87,7 +87,7 @@ namespace mathvm {
         assert(false);
     }
 
-    void BytecodeAstVisitor::addTypeInsn(VarType type, TokenKind op) {
+    void BytecodeAstVisitor::addTypedOpInsn(VarType type, TokenKind op) {
         uint32_t codeLenBefore = currentBytecode()->length();
         if (op == tADD) {
             if (type == VT_INT)
@@ -136,18 +136,18 @@ namespace mathvm {
         return typeAbstract(a) < typeAbstract(b);
     }
 
-    void BytecodeAstVisitor::ensureType(VarType ts, VarType td) {
+    void BytecodeAstVisitor::ensureType(VarType ts, VarType td, uint32_t pos) {
         if (ts == td)
             return;
 
         if (ts == VT_INT && td == VT_DOUBLE) {
-            addInsn(BC_I2D);
+            currentBytecode()->set(pos, BC_I2D);
         }
         if (ts == VT_DOUBLE && td == VT_INT) {
-            addInsn(BC_D2I);
+            currentBytecode()->set(pos, BC_D2I);
         }
         if (ts == VT_STRING && td == VT_INT) {
-            addInsn(BC_S2I);
+            currentBytecode()->set(pos, BC_S2I);
         }
 
         if (ts > td)
@@ -158,14 +158,16 @@ namespace mathvm {
 
         node->left()->visit(this);
         VarType leftType = topType();
+        uint32_t leftCastPos = current();
+        addInsn(BC_INVALID); // there will be type cast
 
         node->right()->visit(this);
         VarType rightType = topType();
 
         VarType maxType = max(leftType, rightType);
-        //        ensureType(leftType, maxType);
-        //        ensureType(rightType, maxType);
-        addTypeInsn(maxType, node->kind());
+        ensureType(leftType, maxType, leftCastPos);
+        ensureType(rightType, maxType);
+        addTypedOpInsn(maxType, node->kind());
 
 
         typesStack.push(maxType);
@@ -175,7 +177,7 @@ namespace mathvm {
     void BytecodeAstVisitor::visitCallNode_(CallNode* node) {
         node->visitChildren(this);
         TranslatedFunction* fun = code.functionByName(node->name());
-        if(fun == NULL) {
+        if (fun == NULL) {
             status = new Status("Undefined function call", node->position());
             return;
         }
@@ -190,19 +192,23 @@ namespace mathvm {
     void BytecodeAstVisitor::visitIfNode_(IfNode* node) {
     }
 
-    void BytecodeAstVisitor::visitLoadNode_(LoadNode* node) {
-        if (node->var()->type() == VT_DOUBLE) {
+    void BytecodeAstVisitor::loadVar(const AstVar* var) {
+        if (var->type() == VT_DOUBLE) {
             addInsn(BC_LOADCTXDVAR);
         }
-        if (node->var()->type() == VT_INT) {
+        if (var->type() == VT_INT) {
             addInsn(BC_LOADCTXIVAR);
         }
-        if (node->var()->type() == VT_STRING) {
+        if (var->type() == VT_STRING) {
             addInsn(BC_LOADCTXSVAR);
         }
-        addId(astVarsContext[node->var()]);
-        addId(astVarsId[node->var()]);
-        typesStack.push(node->var()->type());
+        addId(astVarsContext[var]);
+        addId(astVarsId[var]);
+        typesStack.push(var->type());
+    }
+
+    void BytecodeAstVisitor::visitLoadNode_(LoadNode* node) {
+        loadVar(node->var());
     }
 
     void BytecodeAstVisitor::visitNativeCallNode_(NativeCallNode* node) {
@@ -240,7 +246,23 @@ namespace mathvm {
     void BytecodeAstVisitor::visitStoreNode_(StoreNode* node) {
         uint16_t varId = astVarsId[node->var()];
         node->value()->visit(this);
-        goto STORE_TO_VAR;
+        if (node->op() == tINCRSET || node->op() == tDECRSET) {
+            ensureType(topType(), node->var()->type());
+            loadVar(node->var());
+        }
+        if(node->op() == tINCRSET) {
+            addTypedOpInsn(node->var()->type(), tADD);
+            goto STORE_TO_VAR;
+        }
+        
+        if(node->op() == tDECRSET) {
+            addInsn(BC_SWAP);
+            addTypedOpInsn(node->var()->type(), tSUB);
+            goto STORE_TO_VAR;
+        }
+        
+        if (node->op() == tEQ)
+            goto STORE_TO_VAR;
 
 STORE_TO_VAR:
         if (node->var()->type() == VT_DOUBLE)
@@ -278,9 +300,9 @@ STORE_TO_VAR:
     void BytecodeAstVisitor::visitWhileNode_(WhileNode* node) {
         typesStack.push(VT_VOID);
     }
-    
-    bool BytecodeAstVisitor::beforeVisit(){
-        if(status == NULL)
+
+    bool BytecodeAstVisitor::beforeVisit() {
+        if (status == NULL)
             return false;
         return true;
     }

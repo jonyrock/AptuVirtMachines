@@ -9,7 +9,7 @@
 #include <map>
 
 namespace mathvm {
-    
+
     class BytecodeTranslator : public Translator {
         Status* translateBytecode(
                 const string& program,
@@ -34,7 +34,7 @@ namespace mathvm {
         Status* status;
     public:
 
-        BytecodeAstVisitor(BytecodeCode& code_) : code(code_) {
+        BytecodeAstVisitor(BytecodeCode& code_) : code(code_), status(NULL) {
         }
 
         void visitAst(AstFunction*);
@@ -43,7 +43,7 @@ namespace mathvm {
 #define VISITOR_FUNCTION(type, name) \
         virtual void visit##type##_(type* node); \
         inline virtual void visit##type(type* node){ \
-                if(!beforeVisit()) \
+                if(beforeVisit()) \
                         return; \
                 visit##type##_(node); \
         } 
@@ -85,19 +85,28 @@ namespace mathvm {
 
         stack<VarType> typesStack;
 
-        void addTypeInsn(VarType type, TokenKind op);
+        void addTypedOpInsn(VarType type, TokenKind op);
 
         inline VarType topType() {
             return typesStack.top();
         }
-
-        void ensureType(VarType ts, VarType td);
         
+        void loadVar(const AstVar* var);
+        
+        inline void ensureType(VarType ts, VarType td) {
+            ensureType(ts, td, current());
+            addInsn(BC_INVALID);
+        }
+        
+        void ensureType(VarType ts, VarType td, uint32_t pos);
+            
+        
+
         uint16_t currentContext; // aka function
 
     };
 
-    
+
 }
 
 #endif

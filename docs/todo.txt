@@ -1,13 +1,11 @@
 *** TODO ***
-* visitCallNode type
-* types casts for binaryOp (left op)
-* assign cast
 
-*** GOOD TODO ***
-* use BYTEIDLEN in bytecodes def
-* try run tests/run.py
 
 *** DONE ***
+* assign cast
+* types casts for binaryOp (left op)
+* ensure with position 
+* visitCallNode type
 * undefined function call error
 * IMUL DMUL bug
 * var load
