@@ -118,6 +118,7 @@ namespace mathvm {
                 addInsn(BC_DDIV);
         }
 
+
         assert((currentBytecode()->length()) != codeLenBefore);
     }
 
@@ -154,7 +155,55 @@ namespace mathvm {
             throw invalid_argument("Can't convert type");
     }
 
+    void BytecodeAstVisitor::addTrueFalseJumpRegion(Instruction jumpInsn) {
+        addInsn(jumpInsn);
+        trueIdUnsettedPos = current();
+        addId(0);
+        addInsn(BC_JA);
+        falseIdUnsettedPos = current();
+        addId(0);
+    }
+
+    void BytecodeAstVisitor::visitBinaryLogicOpNode(BinaryOpNode* node) {
+
+        if (node->kind() == tAND || node->kind() == tOR) {
+            node->left()->visit(this);
+            uint16_t leftTrueIdUnsettedPos = trueIdUnsettedPos;
+            uint16_t leftFalseIdUnsettedPos = falseIdUnsettedPos;
+            
+            uint16_t rightBeginId = current();
+            node->right()->visit(this);
+            uint16_t rightTrueIdUnsettedPos = trueIdUnsettedPos;
+            uint16_t rightFalseIdUnsettedPos = falseIdUnsettedPos;
+            
+            addTrueFalseJumpRegion(BC_JA);
+            
+            if(node->kind() == tAND) {
+                setJump(leftTrueIdUnsettedPos, rightBeginId);
+                // jump located before jump id
+                setJump(leftFalseIdUnsettedPos, falseIdUnsettedPos - 1); 
+            } else {
+                setJump(leftTrueIdUnsettedPos, trueIdUnsettedPos - 1);
+                setJump(leftFalseIdUnsettedPos, rightBeginId);
+            }
+            
+            setJump(rightTrueIdUnsettedPos, trueIdUnsettedPos - 1);
+            setJump(rightFalseIdUnsettedPos, falseIdUnsettedPos - 1);
+            return;
+        }
+
+        assert(logicKindToJump.find(node->kind()) != logicKindToJump.end());
+        node->left()->visit(this);
+        node->right()->visit(this);
+        addTrueFalseJumpRegion(logicKindToJump[node->kind()]);
+
+    }
+
     void BytecodeAstVisitor::visitBinaryOpNode_(BinaryOpNode* node) {
+        if (logicKinds.find(node->kind()) != logicKinds.end()) {
+            visitBinaryLogicOpNode(node);
+            return;
+        }
 
         node->left()->visit(this);
         VarType leftType = topType();
@@ -168,10 +217,7 @@ namespace mathvm {
         ensureType(leftType, maxType, leftCastPos);
         ensureType(rightType, maxType);
         addTypedOpInsn(maxType, node->kind());
-
-
         typesStack.push(maxType);
-
     }
 
     void BytecodeAstVisitor::visitCallNode_(CallNode* node) {
@@ -187,9 +233,37 @@ namespace mathvm {
     }
 
     void BytecodeAstVisitor::visitForNode_(ForNode* node) {
+
     }
 
     void BytecodeAstVisitor::visitIfNode_(IfNode* node) {
+
+        addInsn(BC_JA);
+        uint32_t ifBeginId = current();
+        addId(0);
+        node->thenBlock()->visit(this);
+        addInsn(BC_JA);
+        uint32_t thenEndId = current();
+        addId(0);
+        uint32_t elseBeginId = current();
+        if (node->elseBlock() != NULL)
+            node->elseBlock()->visit(this);
+        addInsn(BC_JA);
+        uint32_t elseEndId = current();
+        addId(0);
+
+        uint32_t ifExprBeginId = current();
+        setJump(ifBeginId, ifExprBeginId);
+        
+        node->ifExpr()->visit(this);
+        setTrueJump(ifBeginId + 2);
+        setFalseJump(elseBeginId);
+        
+        uint32_t ifExprEndId = current();
+        setJump(thenEndId, (uint16_t) ifExprEndId);
+        setJump(elseEndId, (uint16_t) ifExprEndId);
+        addInsn(BC_INVALID); // just idle
+
     }
 
     void BytecodeAstVisitor::loadVar(const AstVar* var) {
@@ -240,7 +314,7 @@ namespace mathvm {
     }
 
     void BytecodeAstVisitor::visitReturnNode_(ReturnNode* node) {
-
+        
     }
 
     void BytecodeAstVisitor::visitStoreNode_(StoreNode* node) {
@@ -250,17 +324,17 @@ namespace mathvm {
             ensureType(topType(), node->var()->type());
             loadVar(node->var());
         }
-        if(node->op() == tINCRSET) {
+        if (node->op() == tINCRSET) {
             addTypedOpInsn(node->var()->type(), tADD);
             goto STORE_TO_VAR;
         }
-        
-        if(node->op() == tDECRSET) {
+
+        if (node->op() == tDECRSET) {
             addInsn(BC_SWAP);
             addTypedOpInsn(node->var()->type(), tSUB);
             goto STORE_TO_VAR;
         }
-        
+
         if (node->op() == tEQ)
             goto STORE_TO_VAR;
 
@@ -294,7 +368,12 @@ STORE_TO_VAR:
     }
 
     void BytecodeAstVisitor::visitUnaryOpNode_(UnaryOpNode* node) {
-
+        if(node->kind() == tNOT) {
+            node->visitChildren(this);
+            swap(trueIdUnsettedPos, falseIdUnsettedPos);
+            return;
+        }
+        assert(false);
     }
 
     void BytecodeAstVisitor::visitWhileNode_(WhileNode* node) {

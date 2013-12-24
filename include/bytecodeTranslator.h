@@ -7,6 +7,7 @@
 #include <string>
 #include <stack>
 #include <map>
+#include <set>
 
 namespace mathvm {
 
@@ -32,9 +33,40 @@ namespace mathvm {
         BytecodeCode& code;
         stack<BytecodeFunction*> functionsStack;
         Status* status;
+        set<TokenKind> logicKinds;
+        map<TokenKind, Instruction> logicKindToJump;
     public:
 
         BytecodeAstVisitor(BytecodeCode& code_) : code(code_), status(NULL) {
+            logicKinds.insert(tEQ);
+            logicKinds.insert(tNEQ);
+            logicKinds.insert(tGT);
+            logicKinds.insert(tGE);
+            logicKinds.insert(tLT);
+            logicKinds.insert(tLE);
+            logicKinds.insert(tAND);
+            logicKinds.insert(tOR);
+
+            logicKindToJump[tEQ] = BC_IFICMPE;
+            logicKindToJump[tNEQ] = BC_IFICMPNE;
+            logicKindToJump[tGT] = BC_IFICMPG;
+            logicKindToJump[tGE] = BC_IFICMPGE;
+            logicKindToJump[tLT] = BC_IFICMPL;
+            logicKindToJump[tLE] = BC_IFICMPLE;
+        }
+
+        void addTrueFalseJumpRegion(Instruction jumpInsn);
+
+        inline void setTrueJump(uint16_t to) {
+            setJump(trueIdUnsettedPos, to);
+        }
+
+        inline void setFalseJump(uint16_t to) {
+            setJump(falseIdUnsettedPos, to);
+        }
+        
+        inline void setJump(uint16_t jumpId, uint16_t to) {
+            currentBytecode()->setInt16(jumpId, (uint16_t) to - jumpId);
         }
 
         void visitAst(AstFunction*);
@@ -50,6 +82,7 @@ namespace mathvm {
         FOR_NODES(VISITOR_FUNCTION)
 #undef VISITOR_FUNCTION
 
+        void visitBinaryLogicOpNode(BinaryOpNode* node);
         void visitAstFunction(AstFunction*);
 
     private:
@@ -90,21 +123,25 @@ namespace mathvm {
         inline VarType topType() {
             return typesStack.top();
         }
-        
+
         void loadVar(const AstVar* var);
-        
+
         inline void ensureType(VarType ts, VarType td) {
             ensureType(ts, td, current());
             addInsn(BC_INVALID);
         }
-        
+
         void ensureType(VarType ts, VarType td, uint32_t pos);
-            
-        
+
+
 
         uint16_t currentContext; // aka function
+        uint16_t trueIdUnsettedPos;
+        uint16_t falseIdUnsettedPos;
 
     };
+
+
 
 
 }

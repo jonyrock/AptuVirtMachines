@@ -1,17 +1,10 @@
 *** TODO ***
-
+* Arithmetic AND 
+* Arithmetic OR 
+* Arithmetic XOR 
+* while, for => jumps ?
+* for
+* while
 
 *** DONE ***
-* assign cast
-* types casts for binaryOp (left op)
-* ensure with position 
-* visitCallNode type
-* undefined function call error
-* IMUL DMUL bug
-* var load
-* var context
-* print node
-* print types
-* conversions before assignment
-* types stack
-* use string constants in code  (Code::_constants)
+* if

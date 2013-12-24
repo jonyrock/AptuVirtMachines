@@ -1,7 +1,7 @@
 *** TODO ***
+* unary operations
+* arithmetic binary operations
 * assert(false); in the end of each visitor
-* just arithmetic bytecode
-* while, for => jumps ?
 * check that it is impossible to call function
   with wrong arguments
 * check functions declaration with 
@@ -16,6 +16,22 @@
 * get bug with function names collision
 
 *** DONE ***
+
+* assign cast
+* types casts for binaryOp (left op)
+* ensure with position 
+* visitCallNode type
+* undefined function call error
+* IMUL DMUL bug
+* var load
+* var context
+* print node
+* print types
+* conversions before assignment
+* types stack
+* use string constants in code  (Code::_constants)
+
+* just arithmetic bytecode
 * bytecode var declaration
 * review code 
 * use string constants in code  (Code::_constants)
