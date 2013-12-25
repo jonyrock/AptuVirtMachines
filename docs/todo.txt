@@ -1,10 +1,10 @@
 *** TODO ***
+
+*** DONE ***
 * Arithmetic AND 
 * Arithmetic OR 
 * Arithmetic XOR 
 * while
-
-*** DONE ***
 * while, for => jumps ?
 * for
 * range

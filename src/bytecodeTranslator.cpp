@@ -94,7 +94,6 @@ namespace mathvm {
                 addInsn(BC_IADD);
             if (type == VT_DOUBLE)
                 addInsn(BC_DADD);
-            return;
         }
 
         if (op == tSUB) {
@@ -117,9 +116,21 @@ namespace mathvm {
             if (type == VT_DOUBLE)
                 addInsn(BC_DDIV);
         }
-
-
-
+        
+        if (op == tAAND) {
+            if (type == VT_INT)
+                addInsn(BC_IAAND);
+        }
+        
+        if (op == tAXOR) {
+            if (type == VT_INT)
+                addInsn(BC_IAXOR);
+        }
+        
+        if (op == tAOR) {
+            if (type == VT_INT)
+                addInsn(BC_IAOR);
+        }
 
         assert((currentBytecode()->length()) != codeLenBefore);
     }
