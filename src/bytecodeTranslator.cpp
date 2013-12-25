@@ -246,18 +246,18 @@ namespace mathvm {
             topVar = current();
             currentBytecode()->addInt64(0);
         }
-        
+
         if (node->var()->type() == VT_DOUBLE) {
             addInsn(BC_DLOAD);
             topVar = current();
             currentBytecode()->addDouble(0);
         }
-        
+
         assert(topVar != 0);
-        
+
         // TODO: check if var type and expression different
         node->inExpr()->visit(this);
-        
+
         if (node->var()->type() == VT_INT) {
             addInsn(BC_STOREIVAR);
             addId(topVar);
@@ -270,10 +270,10 @@ namespace mathvm {
         }
         //        addId(astVarsContext[node->var()]);
         addId(astVarsId[node->var()]);
-        
+
 
         uint16_t forConditionId = current();
-        
+
         if (node->var()->type() == VT_INT) {
             addInsn(BC_LOADCTXIVAR);
             addId(currentContext);
@@ -282,7 +282,7 @@ namespace mathvm {
             addId(currentContext);
             addId(topVar);
         }
-        
+
         if (node->var()->type() == VT_DOUBLE) {
             addInsn(BC_LOADCTXDVAR);
             addId(currentContext);
@@ -291,12 +291,12 @@ namespace mathvm {
             addId(currentContext);
             addId(topVar);
         }
-        
+
         addTrueFalseJumpRegion(BC_IFICMPL);
 
         uint16_t bodyBegin = current();
         node->body()->visit(this);
-        
+
         if (node->var()->type() == VT_INT) {
             addInsn(BC_LOADCTXIVAR);
             addId(currentContext);
@@ -323,6 +323,24 @@ namespace mathvm {
         setFalseJump(current());
         addInsn(BC_INVALID);
 
+    }
+
+    void BytecodeAstVisitor::visitWhileNode_(WhileNode* node) {
+
+        uint16_t whileCondition = current();
+        node->whileExpr()->visit(this);
+
+        uint16_t bodyBegin = current();
+        node->loopBlock()->visit(this);
+        addInsn(BC_JA);
+        addId(0);
+        setJump(current() - 2, whileCondition);
+
+        setTrueJump(bodyBegin);
+        setFalseJump(current());
+        addInsn(BC_INVALID);
+
+        typesStack.push(VT_VOID);
     }
 
     void BytecodeAstVisitor::visitIfNode_(IfNode* node) {
@@ -479,10 +497,6 @@ STORE_TO_VAR:
         }
 
         assert(false);
-    }
-
-    void BytecodeAstVisitor::visitWhileNode_(WhileNode* node) {
-        typesStack.push(VT_VOID);
     }
 
     bool BytecodeAstVisitor::beforeVisit() {
