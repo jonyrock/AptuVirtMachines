@@ -2,9 +2,11 @@
 * Arithmetic AND 
 * Arithmetic OR 
 * Arithmetic XOR 
-* while, for => jumps ?
-* for
 * while
 
 *** DONE ***
+* while, for => jumps ?
+* for
+* range
+* Unary minus
 * if

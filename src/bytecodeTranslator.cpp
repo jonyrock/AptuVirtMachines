@@ -119,6 +119,8 @@ namespace mathvm {
         }
 
 
+
+
         assert((currentBytecode()->length()) != codeLenBefore);
     }
 
@@ -170,23 +172,23 @@ namespace mathvm {
             node->left()->visit(this);
             uint16_t leftTrueIdUnsettedPos = trueIdUnsettedPos;
             uint16_t leftFalseIdUnsettedPos = falseIdUnsettedPos;
-            
+
             uint16_t rightBeginId = current();
             node->right()->visit(this);
             uint16_t rightTrueIdUnsettedPos = trueIdUnsettedPos;
             uint16_t rightFalseIdUnsettedPos = falseIdUnsettedPos;
-            
+
             addTrueFalseJumpRegion(BC_JA);
-            
-            if(node->kind() == tAND) {
+
+            if (node->kind() == tAND) {
                 setJump(leftTrueIdUnsettedPos, rightBeginId);
                 // jump located before jump id
-                setJump(leftFalseIdUnsettedPos, falseIdUnsettedPos - 1); 
+                setJump(leftFalseIdUnsettedPos, falseIdUnsettedPos - 1);
             } else {
                 setJump(leftTrueIdUnsettedPos, trueIdUnsettedPos - 1);
                 setJump(leftFalseIdUnsettedPos, rightBeginId);
             }
-            
+
             setJump(rightTrueIdUnsettedPos, trueIdUnsettedPos - 1);
             setJump(rightFalseIdUnsettedPos, falseIdUnsettedPos - 1);
             return;
@@ -202,6 +204,11 @@ namespace mathvm {
     void BytecodeAstVisitor::visitBinaryOpNode_(BinaryOpNode* node) {
         if (logicKinds.find(node->kind()) != logicKinds.end()) {
             visitBinaryLogicOpNode(node);
+            return;
+        }
+        if (node->kind() == tRANGE) {
+            node->left()->visit(this);
+            node->right()->visit(this);
             return;
         }
 
@@ -233,6 +240,88 @@ namespace mathvm {
     }
 
     void BytecodeAstVisitor::visitForNode_(ForNode* node) {
+        uint16_t topVar = 0;
+        if (node->var()->type() == VT_INT) {
+            addInsn(BC_ILOAD);
+            topVar = current();
+            currentBytecode()->addInt64(0);
+        }
+        
+        if (node->var()->type() == VT_DOUBLE) {
+            addInsn(BC_DLOAD);
+            topVar = current();
+            currentBytecode()->addDouble(0);
+        }
+        
+        assert(topVar != 0);
+        
+        // TODO: check if var type and expression different
+        node->inExpr()->visit(this);
+        
+        if (node->var()->type() == VT_INT) {
+            addInsn(BC_STOREIVAR);
+            addId(topVar);
+            addInsn(BC_STOREIVAR);
+        }
+        if (node->var()->type() == VT_DOUBLE) {
+            addInsn(BC_STOREDVAR);
+            addId(topVar);
+            addInsn(BC_STOREDVAR);
+        }
+        //        addId(astVarsContext[node->var()]);
+        addId(astVarsId[node->var()]);
+        
+
+        uint16_t forConditionId = current();
+        
+        if (node->var()->type() == VT_INT) {
+            addInsn(BC_LOADCTXIVAR);
+            addId(currentContext);
+            addId(astVarsId[node->var()]);
+            addInsn(BC_LOADCTXIVAR);
+            addId(currentContext);
+            addId(topVar);
+        }
+        
+        if (node->var()->type() == VT_DOUBLE) {
+            addInsn(BC_LOADCTXDVAR);
+            addId(currentContext);
+            addId(astVarsId[node->var()]);
+            addInsn(BC_LOADCTXDVAR);
+            addId(currentContext);
+            addId(topVar);
+        }
+        
+        addTrueFalseJumpRegion(BC_IFICMPL);
+
+        uint16_t bodyBegin = current();
+        node->body()->visit(this);
+        
+        if (node->var()->type() == VT_INT) {
+            addInsn(BC_LOADCTXIVAR);
+            addId(currentContext);
+            addId(astVarsId[node->var()]);
+            addInsn(BC_ILOAD1);
+            addInsn(BC_IADD);
+            addInsn(BC_STOREIVAR);
+            addId(astVarsId[node->var()]);
+        }
+        if (node->var()->type() == VT_DOUBLE) {
+            addInsn(BC_LOADCTXDVAR);
+            addId(currentContext);
+            addId(astVarsId[node->var()]);
+            addInsn(BC_DLOAD1);
+            addInsn(BC_DADD);
+            addInsn(BC_STOREDVAR);
+            addId(astVarsId[node->var()]);
+        }
+        addInsn(BC_JA);
+        addId(0);
+        setJump(current() - 2, forConditionId);
+
+        setTrueJump(bodyBegin);
+        setFalseJump(current());
+        addInsn(BC_INVALID);
 
     }
 
@@ -254,11 +343,11 @@ namespace mathvm {
 
         uint32_t ifExprBeginId = current();
         setJump(ifBeginId, ifExprBeginId);
-        
+
         node->ifExpr()->visit(this);
         setTrueJump(ifBeginId + 2);
         setFalseJump(elseBeginId);
-        
+
         uint32_t ifExprEndId = current();
         setJump(thenEndId, (uint16_t) ifExprEndId);
         setJump(elseEndId, (uint16_t) ifExprEndId);
@@ -314,7 +403,7 @@ namespace mathvm {
     }
 
     void BytecodeAstVisitor::visitReturnNode_(ReturnNode* node) {
-        
+
     }
 
     void BytecodeAstVisitor::visitStoreNode_(StoreNode* node) {
@@ -368,11 +457,27 @@ STORE_TO_VAR:
     }
 
     void BytecodeAstVisitor::visitUnaryOpNode_(UnaryOpNode* node) {
-        if(node->kind() == tNOT) {
+        if (node->kind() == tNOT) {
             node->visitChildren(this);
             swap(trueIdUnsettedPos, falseIdUnsettedPos);
             return;
         }
+        if (node->kind() == tSUB) {
+            node->visitChildren(this);
+            if (topType() == VT_INT) {
+                addInsn(BC_ILOAD);
+                currentBytecode()->addInt64(-1);
+                addInsn(BC_IMUL);
+                return;
+            }
+            if (topType() == VT_DOUBLE) {
+                addInsn(BC_DLOAD);
+                currentBytecode()->addDouble(-1.0);
+                addInsn(BC_DMUL);
+                return;
+            }
+        }
+
         assert(false);
     }
 

@@ -126,6 +126,10 @@ namespace mathvm {
 
         void loadVar(const AstVar* var);
 
+        inline void ensureType(VarType td){
+            ensureType(topType(), td);
+        }
+        
         inline void ensureType(VarType ts, VarType td) {
             ensureType(ts, td, current());
             addInsn(BC_INVALID);
