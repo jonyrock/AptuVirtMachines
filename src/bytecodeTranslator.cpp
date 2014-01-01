@@ -116,17 +116,17 @@ namespace mathvm {
             if (type == VT_DOUBLE)
                 addInsn(BC_DDIV);
         }
-        
+
         if (op == tAAND) {
             if (type == VT_INT)
                 addInsn(BC_IAAND);
         }
-        
+
         if (op == tAXOR) {
             if (type == VT_INT)
                 addInsn(BC_IAXOR);
         }
-        
+
         if (op == tAOR) {
             if (type == VT_INT)
                 addInsn(BC_IAOR);
@@ -236,18 +236,6 @@ namespace mathvm {
         ensureType(rightType, maxType);
         addTypedOpInsn(maxType, node->kind());
         typesStack.push(maxType);
-    }
-
-    void BytecodeAstVisitor::visitCallNode_(CallNode* node) {
-        node->visitChildren(this);
-        TranslatedFunction* fun = code.functionByName(node->name());
-        if (fun == NULL) {
-            status = new Status("Undefined function call", node->position());
-            return;
-        }
-        assert(fun);
-        addInsn(BC_CALL);
-        typesStack.push(fun->returnType());
     }
 
     void BytecodeAstVisitor::visitForNode_(ForNode* node) {
@@ -403,6 +391,22 @@ namespace mathvm {
         loadVar(node->var());
     }
 
+    void BytecodeAstVisitor::visitCallNode_(CallNode* node) {
+        TranslatedFunction* fun = code.functionByName(node->name());
+        if (fun == NULL) {
+            status = new Status("Undefined function call", node->position());
+            return;
+        }
+        assert(fun);
+        for(uint32_t i = 0; i < node->parametersNumber(); i++) {
+            node->parameterAt(i)->visit(this);
+            ensureType();
+        }
+        addInsn(BC_CALL);
+        typesStack.push(fun->returnType());
+    }
+
+    // TODO: 
     void BytecodeAstVisitor::visitNativeCallNode_(NativeCallNode* node) {
         typesStack.push(node->nativeSignature()[0].first);
     }

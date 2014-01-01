@@ -21,7 +21,7 @@ int main(int argc, char** argv) {
     for (int32_t i = 1; i < argc; i++) {
         if (string(argv[i]) == "-j") {
             impl = "jit";
-        } else {
+        } else {main
             script = argv[i];
         }
     }

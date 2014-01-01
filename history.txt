@@ -1,7 +1,4 @@
 *** TODO ***
-* unary operations
-* arithmetic binary operations
-* assert(false); in the end of each visitor
 * check that it is impossible to call function
   with wrong arguments
 * check functions declaration with 
@@ -10,12 +7,24 @@
 
 *** GOOD TODO ***
 * try run tests/run.py
+* native call
 
 *** WONTDO ***
 * bytecode for visit function beginning (signature)
 * get bug with function names collision
+* assert(false); in the end of each visitor
 
 *** DONE ***
+* Arithmetic AND 
+* Arithmetic OR 
+* Arithmetic XOR 
+* while
+* while, for => jumps ?
+* for
+* range
+* Unary minus
+* if
+* unary operations
 
 * assign cast
 * types casts for binaryOp (left op)

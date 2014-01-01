@@ -1,12 +1,7 @@
 *** TODO ***
 
 *** DONE ***
-* Arithmetic AND 
-* Arithmetic OR 
-* Arithmetic XOR 
-* while
-* while, for => jumps ?
-* for
-* range
-* Unary minus
-* if
+* function arguments cast 
+* function call
+* basic function call (stumb)
+* function agruments
