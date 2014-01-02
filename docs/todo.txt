@@ -1,13 +1,6 @@
 *** TODO ***
+* basic test. Function 0 exec
+* providing values from main
 
 *** DONE ***
-* bind vars from arguments
-* type cast assign
-* types cast set
-* return
-* calls is fix
-* casts order in mathvm.h
-* function arguments cast 
-* function call
-* basic function call (stumb)
-* function agruments
+* code stumps

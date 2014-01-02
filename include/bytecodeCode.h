@@ -1,6 +1,7 @@
 #ifndef BYTECODE_H
 #define	BYTECODE_H
 
+
 #include "mathvm.h"
 #include "bytecode.h"
 
@@ -24,11 +25,10 @@ namespace mathvm {
         }
     };
 
-    class BytecodeCode : public Code {
+    class BytecodeCode : public Code {        
     public:
-        virtual Status* execute(vector<Var*>& vars) {
-            return NULL;
-        }
+        virtual Status* execute(vector<Var*>& vars);
+        
     };
 }
 

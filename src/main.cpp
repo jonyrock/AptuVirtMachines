@@ -14,10 +14,11 @@ int main(int argc, char** argv) {
     string impl = "";
 //    const char* script = "tests/perf/prime.mvm";
 //      const char* script = "tests/my_test.mvm";
-//      const char* script = "tests/mul.mvm";
+      const char* script = "tests/mul.mvm";
 //    const char* script = "tests/assign.mvm";
 //    const char* script = "tests/additional/function-cast.mvm";
-    const char* script = "tests/for.mvm";
+//      const char* script = "tests/additional/fib.mvm";
+//    const char* script = "tests/for.mvm";
 //    const char* script = NULL;
     for (int32_t i = 1; i < argc; i++) {
         if (string(argv[i]) == "-j") {
@@ -72,20 +73,20 @@ int main(int argc, char** argv) {
             xVar->setDoubleValue(42.0);
         }
         code->disassemble();
-//        Status* execStatus = code->execute(vars);
-//        if (execStatus->isError()) {
-//            printf("Cannot execute expression: error: %s\n",
-//                    execStatus->getError().c_str());
-//        } else {
-//            if (isDefaultExpr) {
-//                printf("x evaluated to %f\n", vars[0]->getDoubleValue());
-//                for (uint32_t i = 0; i < vars.size(); i++) {
-//                    delete vars[i];
-//                }
-//            }
-//        }
+        Status* execStatus = code->execute(vars);
+        if (execStatus != NULL && execStatus->isError()) {
+            printf("Cannot execute expression: error: %s\n",
+                    execStatus->getError().c_str());
+        } else {
+            if (isDefaultExpr) {
+                printf("x evaluated to %f\n", vars[0]->getDoubleValue());
+                for (uint32_t i = 0; i < vars.size(); i++) {
+                    delete vars[i];
+                }
+            }
+        }
         delete code;
-//        delete execStatus;
+        delete execStatus;
     }
     delete translateStatus;
     delete translator;

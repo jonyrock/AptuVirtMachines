@@ -52,6 +52,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/ast.o \
 	${OBJECTDIR}/src/bytecode.o \
 	${OBJECTDIR}/src/bytecodeCode.o \
+	${OBJECTDIR}/src/bytecodeInterpretator.o \
 	${OBJECTDIR}/src/bytecodeTranslator.o \
 	${OBJECTDIR}/src/interpreter.o \
 	${OBJECTDIR}/src/jit.o \
@@ -171,6 +172,11 @@ ${OBJECTDIR}/src/bytecodeCode.o: src/bytecodeCode.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/bytecodeCode.o src/bytecodeCode.cpp
+
+${OBJECTDIR}/src/bytecodeInterpretator.o: src/bytecodeInterpretator.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/bytecodeInterpretator.o src/bytecodeInterpretator.cpp
 
 ${OBJECTDIR}/src/bytecodeTranslator.o: src/bytecodeTranslator.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
