@@ -31,10 +31,13 @@ namespace mathvm {
     class BytecodeAstVisitor : public AstVisitor {
         friend BytecodeTranslator;
         BytecodeCode& code;
-        stack<BytecodeFunction*> functionsStack;
+        vector<uint16_t> functionsStack;
+        vector<uint16_t> contextsStack;
+        BytecodeFunction* currentFunction;
         Status* status;
         set<TokenKind> logicKinds;
         map<TokenKind, Instruction> logicKindToJump;
+        
     public:
 
         BytecodeAstVisitor(BytecodeCode& code_) : code(code_), status(NULL) {
@@ -87,12 +90,8 @@ namespace mathvm {
 
     private:
 
-        inline BytecodeFunction* currentFunction() {
-            return functionsStack.top();
-        }
-
         inline Bytecode* currentBytecode() {
-            return currentFunction()->bytecode();
+            return currentFunction->bytecode();
         }
 
         inline void addInsn(Instruction insn) {
@@ -113,8 +112,8 @@ namespace mathvm {
 
         uint16_t allocateVar(AstVar& var);
 
-        map<const AstVar*, uint16_t> astVarsId;
-        map<const AstVar*, uint16_t> astVarsContext;
+        map<uint16_t, map<string, uint16_t> > contextVarIds;
+        map<uint16_t, map<string, uint16_t> > functionParamIds;
 
         stack<VarType> typesStack;
 
@@ -123,10 +122,16 @@ namespace mathvm {
         inline VarType topType() {
             return typesStack.top();
         }
+        
+        inline uint16_t findVarLocal(const string& name){
+            return findVar(name, true).second;
+        }
+        
+        pair<uint16_t, uint16_t> findVar(const string& name, bool onlyCurrentContext = false);
 
         void loadVar(const AstVar* var);
 
-        inline void ensureType(VarType td){
+        inline void ensureType(VarType td) {
             ensureType(topType(), td);
         }
         
@@ -136,8 +141,9 @@ namespace mathvm {
         }
 
         void ensureType(VarType ts, VarType td, uint32_t pos);
-
-
+        
+        
+        
         uint16_t currentContext; // aka function
         uint16_t trueIdUnsettedPos;
         uint16_t falseIdUnsettedPos;

@@ -35,11 +35,48 @@ namespace mathvm {
 
     void BytecodeAstVisitor::visitAstFunction(AstFunction* function) {
         BytecodeFunction* fun = new BytecodeFunction(function);
+
+        map<string, uint16_t> paramIds;
+        
+        BytecodeFunction* prevFunction = currentFunction;
+        uint16_t prevContext = currentContext;
         
         currentContext = code.addFunction(fun);
-        functionsStack.push(fun);
+        currentFunction = fun;
+        
+        functionsStack.push_back(currentContext);
+        contextsStack.push_back(currentContext);
+
+        for (int i = 0; i < function->parametersNumber(); i++) {
+            if (function->parameterType(i) == VT_DOUBLE) {
+                addInsn(BC_DLOAD);
+                paramIds[function->parameterName(i)] = current();
+                currentBytecode()->addDouble(0);
+
+            }
+            if (function->parameterType(i) == VT_INT) {
+                addInsn(BC_ILOAD);
+                paramIds[function->parameterName(i)] = current();
+                currentBytecode()->addInt64(0);
+            }
+            if (function->parameterType(i) == VT_STRING) {
+                addInsn(BC_SLOAD);
+                paramIds[function->parameterName(i)] = current();
+                addId(0);
+            }
+        }
+
+        functionParamIds[currentContext] = paramIds;
+        contextVarIds[currentContext] = map<string, uint16_t>();
+
         function->node()->visit(this);
-        functionsStack.pop();
+        
+        currentFunction = prevFunction;
+        currentContext = prevContext;
+        
+        functionsStack.pop_back();
+        contextsStack.pop_back();
+
     }
 
     void BytecodeAstVisitor::visitFunctionNode_(FunctionNode* node) {
@@ -68,8 +105,7 @@ namespace mathvm {
 
     uint16_t BytecodeAstVisitor::allocateVar(AstVar& var) {
         uint32_t beginIndex = current() + 1;
-        astVarsId[&var] = beginIndex;
-        astVarsContext[&var] = currentContext;
+        contextVarIds[currentContext][var.name()] = beginIndex;
         if (var.type() == VT_DOUBLE) {
             addInsn(BC_DLOAD);
             currentBytecode()->addDouble(0);
@@ -140,7 +176,7 @@ namespace mathvm {
         if (ts == td || td == VT_VOID)
             return;
         if (ts == VT_INT && td == VT_DOUBLE) {
-            int funId = currentFunction()->id();
+            int funId = currentFunction->id();
             int vv = currentBytecode()->get(pos);
             currentBytecode()->set(pos, BC_I2D);
             vv = currentBytecode()->get(pos);
@@ -232,6 +268,7 @@ namespace mathvm {
         if (node->var()->type() == VT_INT) {
             addInsn(BC_ILOAD);
             topVar = current();
+//            cout << "top var: " << topVar << endl;
             currentBytecode()->addInt64(0);
         }
 
@@ -257,7 +294,7 @@ namespace mathvm {
             addInsn(BC_STOREDVAR);
         }
         //        addId(astVarsContext[node->var()]);
-        addId(astVarsId[node->var()]);
+        addId(findVarLocal(node->var()->name()));
 
 
         uint16_t forConditionId = current();
@@ -265,7 +302,7 @@ namespace mathvm {
         if (node->var()->type() == VT_INT) {
             addInsn(BC_LOADCTXIVAR);
             addId(currentContext);
-            addId(astVarsId[node->var()]);
+            addId(findVarLocal(node->var()->name()));
             addInsn(BC_LOADCTXIVAR);
             addId(currentContext);
             addId(topVar);
@@ -274,7 +311,7 @@ namespace mathvm {
         if (node->var()->type() == VT_DOUBLE) {
             addInsn(BC_LOADCTXDVAR);
             addId(currentContext);
-            addId(astVarsId[node->var()]);
+            addId(findVarLocal(node->var()->name()));
             addInsn(BC_LOADCTXDVAR);
             addId(currentContext);
             addId(topVar);
@@ -288,20 +325,20 @@ namespace mathvm {
         if (node->var()->type() == VT_INT) {
             addInsn(BC_LOADCTXIVAR);
             addId(currentContext);
-            addId(astVarsId[node->var()]);
+            addId(findVarLocal(node->var()->name()));
             addInsn(BC_ILOAD1);
             addInsn(BC_IADD);
             addInsn(BC_STOREIVAR);
-            addId(astVarsId[node->var()]);
+            addId(findVarLocal(node->var()->name()));
         }
         if (node->var()->type() == VT_DOUBLE) {
             addInsn(BC_LOADCTXDVAR);
             addId(currentContext);
-            addId(astVarsId[node->var()]);
+            addId(findVarLocal(node->var()->name()));
             addInsn(BC_DLOAD1);
             addInsn(BC_DADD);
             addInsn(BC_STOREDVAR);
-            addId(astVarsId[node->var()]);
+            addId(findVarLocal(node->var()->name()));
         }
         addInsn(BC_JA);
         addId(0);
@@ -361,7 +398,41 @@ namespace mathvm {
 
     }
 
+    pair<uint16_t, uint16_t> BytecodeAstVisitor::findVar(const string& name, bool onlyCurrentContext) {
+
+        size_t stackI = contextsStack.size() - 1;
+
+        while (true) {
+            uint16_t cctx = contextsStack[stackI];
+            if (contextVarIds[cctx].find(name) != contextVarIds[cctx].end()) {
+                return make_pair(cctx, contextVarIds[cctx][name]);
+            }
+            if (functionParamIds[cctx].find(name) != functionParamIds[cctx].end()) {
+                return make_pair(cctx, functionParamIds[cctx][name]);
+            }
+
+            if (onlyCurrentContext)
+                break;
+
+            if (stackI == 0)
+                break;
+            stackI--;
+
+        }
+        
+        if(onlyCurrentContext)
+            throw logic_error("cant find name " + name + "[local]");
+        throw logic_error("cant find name " + name);
+
+        return make_pair(0, 0);
+
+    }
+
     void BytecodeAstVisitor::loadVar(const AstVar* var) {
+
+//        cout << "load var " << var->name() << " :: " << (void*) var << endl;
+//        cout << "owner " << (void*) var->owner() << endl;
+
         if (var->type() == VT_DOUBLE) {
             addInsn(BC_LOADCTXDVAR);
         }
@@ -371,8 +442,11 @@ namespace mathvm {
         if (var->type() == VT_STRING) {
             addInsn(BC_LOADCTXSVAR);
         }
-        addId(astVarsContext[var]);
-        addId(astVarsId[var]);
+        pair<uint16_t, uint16_t> ids = findVar(var->name());
+        
+        addId(ids.first);
+        addId(ids.second);
+
         typesStack.push(var->type());
     }
 
@@ -435,14 +509,14 @@ namespace mathvm {
     void BytecodeAstVisitor::visitReturnNode_(ReturnNode* node) {
         if (node->returnExpr() != NULL) {
             node->returnExpr()->visit(this);
-            if (currentFunction()->returnType() != VT_VOID)
-                ensureType(currentFunction()->returnType());
+            if (currentFunction->returnType() != VT_VOID)
+                ensureType(currentFunction->returnType());
         }
         addInsn(BC_RETURN);
     }
 
     void BytecodeAstVisitor::visitStoreNode_(StoreNode* node) {
-        uint16_t varId = astVarsId[node->var()];
+        uint16_t varId = findVarLocal(node->var()->name());
         node->value()->visit(this);
         if (node->op() == tINCRSET || node->op() == tDECRSET) {
             ensureType(topType(), node->var()->type());
