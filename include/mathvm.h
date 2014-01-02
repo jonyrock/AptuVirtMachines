@@ -110,12 +110,14 @@ typedef enum {
     BC_LAST
 } Instruction;
 
+// there is the sense in order
+// low order type casts to higher one
 typedef enum {
-    VT_INVALID = 0,
-    VT_VOID,
-    VT_DOUBLE,
-    VT_INT,
-    VT_STRING
+    VT_INT      = 1,
+    VT_DOUBLE   = 2,
+    VT_STRING   = 3,
+    VT_VOID     = 4,
+    VT_INVALID  = 5
 } VarType;
 
 inline VarType castTypes(VarType a, VarType b) {

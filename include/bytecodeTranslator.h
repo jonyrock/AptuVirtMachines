@@ -131,17 +131,17 @@ namespace mathvm {
         }
         
         inline void ensureType(VarType ts, VarType td) {
-            ensureType(ts, td, current());
             addInsn(BC_INVALID);
+            ensureType(ts, td, current() - 1);
         }
 
         void ensureType(VarType ts, VarType td, uint32_t pos);
 
 
-
         uint16_t currentContext; // aka function
         uint16_t trueIdUnsettedPos;
         uint16_t falseIdUnsettedPos;
+        
 
     };
 

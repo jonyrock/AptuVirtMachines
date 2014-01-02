@@ -8,6 +8,7 @@
 *** GOOD TODO ***
 * try run tests/run.py
 * native call
+* types check. void -> int
 
 *** WONTDO ***
 * bytecode for visit function beginning (signature)

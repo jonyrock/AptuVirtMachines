@@ -1,6 +1,12 @@
 *** TODO ***
+* bind vars from arguments
 
 *** DONE ***
+* type cast assign
+* types cast set
+* return
+* calls is fix
+* casts order in mathvm.h
 * function arguments cast 
 * function call
 * basic function call (stumb)

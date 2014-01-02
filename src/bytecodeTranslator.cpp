@@ -7,7 +7,7 @@
 
 #include <iostream>
 #include <stdexcept>
-
+#include <sstream>
 
 using namespace std;
 
@@ -35,6 +35,7 @@ namespace mathvm {
 
     void BytecodeAstVisitor::visitAstFunction(AstFunction* function) {
         BytecodeFunction* fun = new BytecodeFunction(function);
+        
         currentContext = code.addFunction(fun);
         functionsStack.push(fun);
         function->node()->visit(this);
@@ -135,37 +136,25 @@ namespace mathvm {
         assert((currentBytecode()->length()) != codeLenBefore);
     }
 
-    int typeAbstract(VarType t) {
-        if (t == VT_INT)
-            return 1;
-        if (t == VT_DOUBLE)
-            return 2;
-        if (t == VT_STRING)
-            return 3;
-        throw invalid_argument("Undefined abstract order for type");
-        return -1;
-    }
-
-    bool operator<(VarType a, VarType b) {
-        return typeAbstract(a) < typeAbstract(b);
-    }
-
     void BytecodeAstVisitor::ensureType(VarType ts, VarType td, uint32_t pos) {
-        if (ts == td)
+        if (ts == td || td == VT_VOID)
             return;
-
         if (ts == VT_INT && td == VT_DOUBLE) {
+            int funId = currentFunction()->id();
+            int vv = currentBytecode()->get(pos);
             currentBytecode()->set(pos, BC_I2D);
+            vv = currentBytecode()->get(pos);
+            return;
         }
         if (ts == VT_DOUBLE && td == VT_INT) {
             currentBytecode()->set(pos, BC_D2I);
+            return;
         }
         if (ts == VT_STRING && td == VT_INT) {
             currentBytecode()->set(pos, BC_S2I);
+            return;
         }
-
-        if (ts > td)
-            throw invalid_argument("Can't convert type");
+        throw invalid_argument("Can't convert type");
     }
 
     void BytecodeAstVisitor::addTrueFalseJumpRegion(Instruction jumpInsn) {
@@ -397,16 +386,26 @@ namespace mathvm {
             status = new Status("Undefined function call", node->position());
             return;
         }
+        if (node->parametersNumber() != fun->parametersNumber()) {
+            stringstream ss;
+            ss << "Parameters number mismatch: " << node->parametersNumber()
+                    << " vs " << fun->parametersNumber();
+            status = new Status(ss.str());
+            return;
+        }
         assert(fun);
-        for(uint32_t i = 0; i < node->parametersNumber(); i++) {
+
+        for (uint32_t i = 0; i < node->parametersNumber(); i++) {
             node->parameterAt(i)->visit(this);
-            ensureType();
+            ensureType(fun->parameterType(i));
         }
         addInsn(BC_CALL);
+        addId(fun->id());
         typesStack.push(fun->returnType());
     }
 
     // TODO: 
+
     void BytecodeAstVisitor::visitNativeCallNode_(NativeCallNode* node) {
         typesStack.push(node->nativeSignature()[0].first);
     }
@@ -428,15 +427,18 @@ namespace mathvm {
                 addInsn(BC_SPRINT);
                 continue;
             }
-
             assert(false);
-
         }
         typesStack.push(VT_VOID);
     }
 
     void BytecodeAstVisitor::visitReturnNode_(ReturnNode* node) {
-
+        if (node->returnExpr() != NULL) {
+            node->returnExpr()->visit(this);
+            if (currentFunction()->returnType() != VT_VOID)
+                ensureType(currentFunction()->returnType());
+        }
+        addInsn(BC_RETURN);
     }
 
     void BytecodeAstVisitor::visitStoreNode_(StoreNode* node) {
@@ -461,6 +463,7 @@ namespace mathvm {
             goto STORE_TO_VAR;
 
 STORE_TO_VAR:
+        ensureType(node->var()->type());
         if (node->var()->type() == VT_DOUBLE)
             addInsn(BC_STOREDVAR);
         if (node->var()->type() == VT_INT)
