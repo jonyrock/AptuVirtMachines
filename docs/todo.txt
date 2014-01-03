@@ -1,8 +1,24 @@
 *** TODO ***
-* create function map
-* create constant map
+* write to Igotti about implementation and founded bugs
+
+* pop from stack
 * basic test. Function 0 exec
+
+* drop dstack after function exec
+* jumps
+* read arguments by function
 * providing values from main
 
+* provide outer function contexts ass map: [id] -> context (versions)
+
+* TRANSLATOR check if for use BC_STOREIVAR / BC_LOADSVAR
+* TRANSLATOR outer vars assign
+
+*** GOOD TODO ***
+* pop/push as template function
+
 *** DONE ***
+* vars location
+* create function map
+* create constant map
 * code stumps

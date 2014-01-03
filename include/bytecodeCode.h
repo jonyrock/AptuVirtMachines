@@ -19,6 +19,10 @@ namespace mathvm {
         Bytecode* bytecode() {
             return &_bytecode;
         }
+        
+        const Bytecode* bytecode() const {
+            return &_bytecode;
+        }
 
         virtual void disassemble(ostream& out) const {
             _bytecode.dump(out);

@@ -50,8 +50,8 @@ int main(int argc, char** argv) {
     }
 
     Code* code = 0;
-    cout << expr << endl;
-    cout << "-------------" << endl;
+//    cout << expr << endl;
+//    cout << "-------------" << endl;
     Status* translateStatus = translator->translate(expr, &code);
     if (translateStatus != NULL && translateStatus->isError()) {
         uint32_t position = translateStatus->getPosition();
@@ -62,6 +62,7 @@ int main(int argc, char** argv) {
                 line, offset,
                 translateStatus->getError().c_str());
     } else {
+        
         assert(code != 0);
         vector<Var*> vars;
 
@@ -73,6 +74,8 @@ int main(int argc, char** argv) {
             xVar->setDoubleValue(42.0);
         }
         code->disassemble();
+        
+        cout << "-------" << endl;
         Status* execStatus = code->execute(vars);
         if (execStatus != NULL && execStatus->isError()) {
             printf("Cannot execute expression: error: %s\n",
