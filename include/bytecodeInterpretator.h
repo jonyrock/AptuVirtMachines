@@ -12,7 +12,18 @@
 #include "bytecodeCode.h"
 
 namespace mathvm {
+    
+    class DataBytecode : public Bytecode {
+    };
+    
     class BytecodeInterpretator {
+        
+        void execFunction(const BytecodeFunction& fun);  
+        DataBytecode dstack;
+        
+        vector<const BytecodeFunction*> functions;
+        vector<const string*> constants;
+        
     public:
         Status* interpretate(const BytecodeCode& code, vector<Var*>& vars);
     };

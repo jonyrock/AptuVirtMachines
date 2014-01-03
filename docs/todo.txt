@@ -1,4 +1,6 @@
 *** TODO ***
+* create function map
+* create constant map
 * basic test. Function 0 exec
 * providing values from main
 

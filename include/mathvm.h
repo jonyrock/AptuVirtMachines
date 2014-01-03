@@ -335,10 +335,10 @@ public:
     virtual void disassemble(ostream& out = cout, FunctionFilter* filter = 0);
 
     class FunctionIterator {
-        Code* _code;
-        vector<TranslatedFunction*>::iterator _it;
+        const Code* _code;
+        vector<TranslatedFunction*>::const_iterator _it;
     public:
-        FunctionIterator(Code* code) : _code(code) {
+        FunctionIterator(const Code* code) : _code(code) {
             _it = _code->_functions.begin();
         }
 
@@ -351,28 +351,28 @@ public:
             return *_it++;
         }
     };
-    class NativeFunctionIterator {
-        Code* _code;
-        vector<NativeFunctionDescriptor>::iterator _it;
-    public:
-        NativeFunctionIterator(Code* code) : _code(code) {
-            _it = _code->_natives.begin();
-        }
-
-        bool hasNext() { return _it != _code->_natives.end(); }
-
-        NativeFunctionDescriptor& next() {
-            if (!hasNext()) {
-                return *_it;
-            }
-            return *_it++;
-        }
-    };
+//    class NativeFunctionIterator {
+//        const Code* _code;
+//        vector<NativeFunctionDescriptor>::const_iterator _it;
+//    public:
+//        NativeFunctionIterator(const Code* code) : _code(code) {
+//            _it = _code->_natives.begin();
+//        }
+//
+//        bool hasNext() { return _it != _code->_natives.end(); }
+//
+//        NativeFunctionDescriptor& next() {
+//            if (!hasNext()) {
+//                return *_it;
+//            }
+//            return *_it++;
+//        }
+//    };
     class ConstantIterator {
-        Code* _code;
-        vector<string>::iterator _it;
+        const Code* _code;
+        vector<string>::const_iterator _it;
     public:
-        ConstantIterator(Code* code) : _code(code) {
+        ConstantIterator(const Code* code) : _code(code) {
             _it = _code->_constants.begin() + 1;
         }
 
