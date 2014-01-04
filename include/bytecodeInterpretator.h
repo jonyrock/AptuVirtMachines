@@ -18,23 +18,42 @@ namespace mathvm {
 
     class DataBytecode : public Bytecode {
     public:
-        inline uint8_t popInsn() {
-//            uint
+
+        int64_t popi() {
+            return pop<int64_t>();
+        }
+        void pushi(int64_t v) {
+            push<int64_t>(v);
         }
 
-        inline uint16_t popUInt16() {
-        }
-
-        inline int64_t popInt64() {
+        double popd() {
+            return pop<double>();
         }
         
-        inline uint64_t popUInt64() {
+        void pushd(double v) {
+            push<double>(v);
         }
 
-        inline double popDouble() {
+        uint16_t popid() {
+            return pop<uint16_t>();
+        }
+        
+        void pushid(uint16_t v){
+            push<uint16_t>(v);
         }
 
-        inline void dropTo(size_t to) {
+        template<class T> T pop() {
+            T value = getTyped<T>(length() - (uint32_t)sizeof (T));
+            _data.resize(length() - (uint32_t)sizeof (T));
+            return value;
+        }
+
+        template<class T> void push(T value) {
+            addTyped(value);
+        }
+
+        inline void dropToSize(size_t to) {
+            _data.resize(to);
         }
 
     };

@@ -75,6 +75,8 @@
       <itemPath>src/jit.cpp</itemPath>
       <itemPath>src/main.cpp</itemPath>
       <itemPath>src/mathvm.cpp</itemPath>
+      <itemPath>src/newfile</itemPath>
+      <itemPath>src/newfile1</itemPath>
       <itemPath>src/parser.cpp</itemPath>
       <itemPath>src/scanner.cpp</itemPath>
       <itemPath>src/translator.cpp</itemPath>
@@ -154,6 +156,7 @@
       <itemPath>tests/mul.expect</itemPath>
       <itemPath>tests/mul.mvm</itemPath>
       <itemPath>tests/my_test.mvm</itemPath>
+      <itemPath>tests/newfile</itemPath>
       <itemPath>tests/run.py</itemPath>
       <itemPath>tests/sub.expect</itemPath>
       <itemPath>tests/sub.mvm</itemPath>
@@ -309,6 +312,10 @@
       </item>
       <item path="src/mathvm.cpp" ex="false" tool="1" flavor2="0">
       </item>
+      <item path="src/newfile" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/newfile1" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/parser.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/scanner.cpp" ex="false" tool="1" flavor2="0">
@@ -454,6 +461,8 @@
       <item path="tests/mul.mvm" ex="false" tool="3" flavor2="0">
       </item>
       <item path="tests/my_test.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/newfile" ex="false" tool="3" flavor2="0">
       </item>
       <item path="tests/optional/function_native.expect"
             ex="false"
@@ -616,6 +625,10 @@
       </item>
       <item path="src/mathvm.cpp" ex="false" tool="1" flavor2="0">
       </item>
+      <item path="src/newfile" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/newfile1" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/parser.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/scanner.cpp" ex="false" tool="1" flavor2="0">
@@ -761,6 +774,8 @@
       <item path="tests/mul.mvm" ex="false" tool="3" flavor2="0">
       </item>
       <item path="tests/my_test.mvm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/newfile" ex="false" tool="3" flavor2="0">
       </item>
       <item path="tests/optional/function_native.expect"
             ex="false"

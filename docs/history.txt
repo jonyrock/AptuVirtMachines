@@ -1,9 +1,6 @@
 *** TODO ***
 * TRANSLATOR check that no expr like int x = y++ (load on stack what stored)
-* check that it is impossible to call function
-  with wrong arguments
-* check functions declaration with 
-  other code mix. 
+* check functions declaration with other code mix. 
 * native calls
 
 *** GOOD TODO ***
@@ -18,6 +15,8 @@
 * assert(false); in the end of each visitor
 
 *** DONE ***
+* check that it is impossible to call function
+  with wrong arguments
 * bind vars from arguments
 * type cast assign
 * types cast set

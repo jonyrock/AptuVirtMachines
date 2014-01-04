@@ -2,10 +2,18 @@
 #include "bytecodeInterpretator.h"
 
 #include <iostream>
+#include <stdlib.h>
+
+#include <inttypes.h>
+#include <stdlib.h>   
 
 using namespace std;
 
 namespace mathvm {
+
+    int64_t S64(const char *s) {
+        return (int64_t) strtoll(s, NULL, 0);
+    }
 
     Status* BytecodeInterpretator::interpretate(const BytecodeCode& code,
             vector<Var*>& vars) {
@@ -32,6 +40,8 @@ namespace mathvm {
 
     void BytecodeInterpretator::execFunction(const BytecodeFunction* fun) {
 
+        size_t beforeBci = dstack.length();
+
         const Bytecode& b = *(fun->bytecode());
         DataBytecode& d = dstack;
 
@@ -40,7 +50,9 @@ namespace mathvm {
         FunctionContex context;
 
         double dv;
+        double dv2;
         int64_t iv;
+        int64_t iv2;
         uint16_t idv;
         uint16_t idv2;
 
@@ -49,25 +61,38 @@ namespace mathvm {
             Instruction insn = b.getInsn(bci);
             const char* name = bytecodeName(insn, &length);
             switch (insn) {
+                case BC_INVALID:
+                    break;
+
+                    // CASTS
+                case BC_I2D:
+                    iv = d.popi();
+                    d.pushd((double) iv);
+                    break;
+                case BC_D2I:
+                    dv = d.popd();
+                    d.pushi((int64_t) iv);
+                    break;
+                case BC_S2I:
+                    idv = d.popid();
+                    d.pushd(S64(constants[iv]->c_str()));
+                    break;
 
                     // STACK LOAD (new vars)
                 case BC_DLOAD:
                     dv = b.getDouble(bci + 1);
-                    d.addDouble(dv);
+                    d.pushd(dv);
                     context.dvars[bci + 1] = dv;
-                    dstack.addDouble(dv);
                     break;
                 case BC_ILOAD:
                     iv = b.getInt64(bci + 1);
-                    d.addInt64(iv);
+                    d.pushi(iv);
                     context.ivars[bci + 1] = iv;
-                    dstack.addInt64(iv);
                     break;
                 case BC_SLOAD:
                     idv = b.getUInt16(bci + 1);
-                    d.addUInt16(idv);
+                    d.pushid(idv);
                     context.svars[bci + 1] = idv;
-                    dstack.addUInt16(idv);
                     break;
 
                     // VAR  LOADS
@@ -79,7 +104,6 @@ namespace mathvm {
                     idv = b.getUInt16(bci + 1);
                     dstack.addDouble(context.dvars[idv]);
                     break;
-
                 case BC_LOADSVAR:
                     idv = b.getUInt16(bci + 1);
                     dstack.addUInt16(context.svars[idv]);
@@ -88,27 +112,25 @@ namespace mathvm {
                     // VAR STORES
                 case BC_STOREDVAR:
                     idv = b.getUInt16(bci + 1);
-                    dv = dstack.popDouble();
+                    dv = dstack.popd();
                     context.dvars[idv] = dv;
                     break;
-
                 case BC_STOREIVAR:
                     idv = b.getUInt16(bci + 1);
-                    iv = dstack.popInt64();
+                    iv = dstack.popi();
                     context.ivars[idv] = iv;
                     break;
-                    
                 case BC_STORESVAR:
                     idv = b.getUInt16(bci + 1);
-                    idv2 = dstack.popUInt16();
+                    idv2 = dstack.popid();
                     context.svars[idv] = idv2;
                     break;
-                    
+
                     // VAR LOAD (outer context)
                 case BC_LOADCTXDVAR:
                 case BC_LOADCTXIVAR:
                 case BC_LOADCTXSVAR:
-                    
+
                     // VAR STORE (outer context)
                 case BC_STORECTXDVAR:
                 case BC_STORECTXIVAR:
@@ -126,6 +148,78 @@ namespace mathvm {
                     cout << name << " " << b.getInt16(bci + 1) + bci + 1;
                     break;
 
+                    // ARITHMETIC
+                case BC_DADD:
+                    dv = d.popd();
+                    dv2 = d.popd();
+                    d.pushd(dv + dv2);
+                    break;
+                case BC_DSUB:
+                    dv = d.popd();
+                    dv2 = d.popd();
+                    d.pushd(dv - dv2);
+                    break;
+                case BC_DMUL:
+                    dv = d.popd();
+                    dv2 = d.popd();
+                    d.pushd(dv * dv2);
+                    break;
+                case BC_DDIV:
+                    dv = d.popd();
+                    dv2 = d.popd();
+                    d.pushd(dv / dv2);
+                    break;
+
+                case BC_IADD:
+                    iv = d.popi();
+                    iv2 = d.popi();
+                    d.pushi(iv + iv2);
+                    break;
+                case BC_ISUB:
+                    iv = d.popi();
+                    iv2 = d.popi();
+                    d.pushi(iv - iv2);
+                    break;
+                case BC_IMUL:
+                    iv = d.popi();
+                    iv2 = d.popi();
+                    d.pushi(iv * iv2);
+                    break;
+                case BC_IDIV:
+                    iv = d.popi();
+                    iv2 = d.popi();
+                    d.pushi(iv / iv2);
+                    break;
+                case BC_IAAND:
+                    iv = d.popi();
+                    iv2 = d.popi();
+                    d.pushi(iv & iv2);
+                    break;
+                case BC_IAOR:
+                    iv = d.popi();
+                    iv2 = d.popi();
+                    d.pushi(iv | iv2);
+                    break;
+                case BC_IAXOR:
+                    iv = d.popi();
+                    iv2 = d.popi();
+                    d.pushi(iv ^ iv2);
+                    break;
+
+                    // PRINT
+                case BC_DPRINT:
+                    dv = d.popd();
+                    cout << dv;
+                    break;
+                case BC_IPRINT:
+                    iv = d.popi();
+                    cout << iv;
+                    break;
+                case BC_SPRINT:
+                    idv = d.popid() - 1;
+                    cout << *constants[idv];
+                    break;
+
                 case BC_CALL:
                     idv = b.getUInt16(bci + 1);
                     execFunction(functions[idv]);
@@ -140,13 +234,13 @@ namespace mathvm {
                     break;
                 default:
                     cout << name << endl;
-//                    assert(false);
+                    // assert(false);
             }
-            cout << endl;
             bci += length;
         }
 
 RETURN:
+        dstack.dropToSize(beforeBci);
         return;
 
     }

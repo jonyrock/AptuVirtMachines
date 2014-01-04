@@ -50,8 +50,8 @@ int main(int argc, char** argv) {
     }
 
     Code* code = 0;
-//    cout << expr << endl;
-//    cout << "-------------" << endl;
+    cout << expr << endl;
+    cout << "-------------" << endl;
     Status* translateStatus = translator->translate(expr, &code);
     if (translateStatus != NULL && translateStatus->isError()) {
         uint32_t position = translateStatus->getPosition();

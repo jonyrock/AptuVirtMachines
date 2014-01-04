@@ -1,21 +1,23 @@
 *** TODO ***
 * write to Igotti about implementation and founded bugs
 
-* pop from stack
-* basic test. Function 0 exec
-
 * drop dstack after function exec
 * jumps
 * read arguments by function
 * providing values from main
 
-* provide outer function contexts ass map: [id] -> context (versions)
-
+* provide outer function contexts as map: [id] -> context (versions)
 
 *** GOOD TODO ***
-* pop/push as template function
+
 
 *** DONE ***
+* basic test. 
+* arithmetic ops
+* casts
+* pop/push as template function
+* pop from stack
+* Function 0 exec
 * TRANSLATOR outer vars assign
 * vars location
 * create function map
