@@ -59,10 +59,6 @@ namespace mathvm {
 
         for (size_t bci = 0; bci < len;) {
             
-            if(bci == 79){
-                int kkk = 10;
-            }
-            
             size_t length;
             Instruction insn = b.getInsn(bci);
             const char* name = bytecodeName(insn, &length);
@@ -225,59 +221,59 @@ namespace mathvm {
 
                     // ARITHMETIC
                 case BC_DADD:
-                    dv = d.popd();
                     dv2 = d.popd();
+                    dv = d.popd();
                     d.pushd(dv + dv2);
                     break;
                 case BC_DSUB:
-                    dv = d.popd();
                     dv2 = d.popd();
+                    dv = d.popd();
                     d.pushd(dv - dv2);
                     break;
                 case BC_DMUL:
-                    dv = d.popd();
                     dv2 = d.popd();
+                    dv = d.popd();
                     d.pushd(dv * dv2);
                     break;
                 case BC_DDIV:
-                    dv = d.popd();
                     dv2 = d.popd();
+                    dv = d.popd();
                     d.pushd(dv / dv2);
                     break;
 
                 case BC_IADD:
-                    iv = d.popi();
                     iv2 = d.popi();
+                    iv = d.popi();
                     d.pushi(iv + iv2);
                     break;
                 case BC_ISUB:
-                    iv = d.popi();
                     iv2 = d.popi();
+                    iv = d.popi();
                     d.pushi(iv - iv2);
                     break;
                 case BC_IMUL:
-                    iv = d.popi();
                     iv2 = d.popi();
+                    iv = d.popi();
                     d.pushi(iv * iv2);
                     break;
                 case BC_IDIV:
-                    iv = d.popi();
                     iv2 = d.popi();
+                    iv = d.popi();
                     d.pushi(iv / iv2);
                     break;
                 case BC_IAAND:
-                    iv = d.popi();
                     iv2 = d.popi();
+                    iv = d.popi();
                     d.pushi(iv & iv2);
                     break;
                 case BC_IAOR:
-                    iv = d.popi();
                     iv2 = d.popi();
+                    iv = d.popi();
                     d.pushi(iv | iv2);
                     break;
                 case BC_IAXOR:
-                    iv = d.popi();
                     iv2 = d.popi();
+                    iv = d.popi();
                     d.pushi(iv ^ iv2);
                     break;
 
