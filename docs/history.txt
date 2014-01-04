@@ -1,4 +1,5 @@
 *** TODO ***
+* TRANSLATOR check that no expr like int x = y++ (load on stack what stored)
 * check that it is impossible to call function
   with wrong arguments
 * check functions declaration with 

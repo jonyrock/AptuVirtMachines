@@ -140,7 +140,7 @@ namespace mathvm {
                     break;
                 default:
                     cout << name << endl;
-                    assert(false);
+//                    assert(false);
             }
             cout << endl;
             bci += length;

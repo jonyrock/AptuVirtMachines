@@ -11,13 +11,12 @@
 
 * provide outer function contexts ass map: [id] -> context (versions)
 
-* TRANSLATOR check if for use BC_STOREIVAR / BC_LOADSVAR
-* TRANSLATOR outer vars assign
 
 *** GOOD TODO ***
 * pop/push as template function
 
 *** DONE ***
+* TRANSLATOR outer vars assign
 * vars location
 * create function map
 * create constant map

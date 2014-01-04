@@ -37,13 +37,13 @@ namespace mathvm {
         BytecodeFunction* fun = new BytecodeFunction(function);
 
         map<string, uint16_t> paramIds;
-        
+
         BytecodeFunction* prevFunction = currentFunction;
         uint16_t prevContext = currentContext;
-        
+
         currentContext = code.addFunction(fun);
         currentFunction = fun;
-        
+
         functionsStack.push_back(currentContext);
         contextsStack.push_back(currentContext);
 
@@ -70,10 +70,10 @@ namespace mathvm {
         contextVarIds[currentContext] = map<string, uint16_t>();
 
         function->node()->visit(this);
-        
+
         currentFunction = prevFunction;
         currentContext = prevContext;
-        
+
         functionsStack.pop_back();
         contextsStack.pop_back();
 
@@ -268,7 +268,7 @@ namespace mathvm {
         if (node->var()->type() == VT_INT) {
             addInsn(BC_ILOAD);
             topVar = current();
-//            cout << "top var: " << topVar << endl;
+            //            cout << "top var: " << topVar << endl;
             currentBytecode()->addInt64(0);
         }
 
@@ -419,8 +419,8 @@ namespace mathvm {
             stackI--;
 
         }
-        
-        if(onlyCurrentContext)
+
+        if (onlyCurrentContext)
             throw logic_error("cant find name " + name + "[local]");
         throw logic_error("cant find name " + name);
 
@@ -430,21 +430,32 @@ namespace mathvm {
 
     void BytecodeAstVisitor::loadVar(const AstVar* var) {
 
-//        cout << "load var " << var->name() << " :: " << (void*) var << endl;
-//        cout << "owner " << (void*) var->owner() << endl;
+        //        cout << "load var " << var->name() << " :: " << (void*) var << endl;
+        //        cout << "owner " << (void*) var->owner() << endl;
+
+        pair<uint16_t, uint16_t> ids = findVar(var->name());
 
         if (var->type() == VT_DOUBLE) {
-            addInsn(BC_LOADCTXDVAR);
+            if (ids.first != contextsStack.back())
+                addInsn(BC_LOADCTXDVAR);
+            else
+                addInsn(BC_LOADDVAR);
         }
         if (var->type() == VT_INT) {
-            addInsn(BC_LOADCTXIVAR);
+            if (ids.first != contextsStack.back())
+                addInsn(BC_LOADCTXIVAR);
+            else
+                addInsn(BC_LOADIVAR);
         }
         if (var->type() == VT_STRING) {
-            addInsn(BC_LOADCTXSVAR);
+            if (ids.first != contextsStack.back())
+                addInsn(BC_LOADCTXSVAR);
+            else
+                addInsn(BC_LOADSVAR);
         }
-        pair<uint16_t, uint16_t> ids = findVar(var->name());
-        
-        addId(ids.first);
+
+        if (ids.first != contextsStack.back())
+            addId(ids.first);
         addId(ids.second);
 
         typesStack.push(var->type());
@@ -516,7 +527,7 @@ namespace mathvm {
     }
 
     void BytecodeAstVisitor::visitStoreNode_(StoreNode* node) {
-        uint16_t varId = findVarLocal(node->var()->name());
+        pair<uint16_t, uint16_t> ids = findVar(node->var()->name());
         node->value()->visit(this);
         if (node->op() == tINCRSET || node->op() == tDECRSET) {
             ensureType(topType(), node->var()->type());
@@ -538,13 +549,28 @@ namespace mathvm {
 
 STORE_TO_VAR:
         ensureType(node->var()->type());
-        if (node->var()->type() == VT_DOUBLE)
-            addInsn(BC_STOREDVAR);
-        if (node->var()->type() == VT_INT)
-            addInsn(BC_STOREIVAR);
-        if (node->var()->type() == VT_STRING)
-            addInsn(BC_STORESVAR);
-        currentBytecode()->addInt16(varId);
+        const AstVar* var = node->var();
+        if (var->type() == VT_DOUBLE) {
+            if (ids.first != contextsStack.back())
+                addInsn(BC_STORECTXDVAR);
+            else
+                addInsn(BC_STOREDVAR);
+        }
+        if (var->type() == VT_INT) {
+            if (ids.first != contextsStack.back())
+                addInsn(BC_STORECTXIVAR);
+            else
+                addInsn(BC_STOREIVAR);
+        }
+        if (var->type() == VT_STRING) {
+            if (ids.first != contextsStack.back())
+                addInsn(BC_STORECTXSVAR);
+            else
+                addInsn(BC_STORESVAR);
+        }
+        if (ids.first != contextsStack.back())
+            currentBytecode()->addInt16(ids.first);
+        currentBytecode()->addInt16(ids.second);
     }
 
     void BytecodeAstVisitor::visitDoubleLiteralNode_(DoubleLiteralNode* node) {
