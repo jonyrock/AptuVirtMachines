@@ -268,7 +268,6 @@ namespace mathvm {
         if (node->var()->type() == VT_INT) {
             addInsn(BC_ILOAD);
             topVar = current();
-            //            cout << "top var: " << topVar << endl;
             currentBytecode()->addInt64(0);
         }
 
@@ -300,31 +299,26 @@ namespace mathvm {
         uint16_t forConditionId = current();
 
         if (node->var()->type() == VT_INT) {
-            addInsn(BC_LOADCTXIVAR);
-            addId(currentContext);
+            addInsn(BC_LOADIVAR);
             addId(findVarLocal(node->var()->name()));
-            addInsn(BC_LOADCTXIVAR);
-            addId(currentContext);
+            addInsn(BC_LOADIVAR);
             addId(topVar);
         }
 
         if (node->var()->type() == VT_DOUBLE) {
-            addInsn(BC_LOADCTXDVAR);
-            addId(currentContext);
+            addInsn(BC_LOADDVAR);
             addId(findVarLocal(node->var()->name()));
-            addInsn(BC_LOADCTXDVAR);
-            addId(currentContext);
+            addInsn(BC_LOADDVAR);
             addId(topVar);
         }
 
-        addTrueFalseJumpRegion(BC_IFICMPL);
+        addTrueFalseJumpRegion(BC_IFICMPLE);
 
         uint16_t bodyBegin = current();
         node->body()->visit(this);
 
         if (node->var()->type() == VT_INT) {
-            addInsn(BC_LOADCTXIVAR);
-            addId(currentContext);
+            addInsn(BC_LOADIVAR);
             addId(findVarLocal(node->var()->name()));
             addInsn(BC_ILOAD1);
             addInsn(BC_IADD);
@@ -332,8 +326,7 @@ namespace mathvm {
             addId(findVarLocal(node->var()->name()));
         }
         if (node->var()->type() == VT_DOUBLE) {
-            addInsn(BC_LOADCTXDVAR);
-            addId(currentContext);
+            addInsn(BC_LOADDVAR);
             addId(findVarLocal(node->var()->name()));
             addInsn(BC_DLOAD1);
             addInsn(BC_DADD);

@@ -14,11 +14,12 @@ int main(int argc, char** argv) {
     string impl = "";
     //    const char* script = "tests/perf/prime.mvm";
     //      const char* script = "tests/my_test.mvm";
-    const char* script = "tests/mul.mvm";
+//    const char* script = "tests/mul.mvm";
     //    const char* script = "tests/assign.mvm";
-    //    const char* script = "tests/additional/function-cast.mvm";
+//        const char* script = "tests/additional/function-cast.mvm";
     //      const char* script = "tests/additional/fib.mvm";
-    //    const char* script = "tests/for.mvm";
+        const char* script = "tests/for.mvm";
+//        const char* script = "tests/while.mvm";
     //    const char* script = NULL;
     for (int32_t i = 1; i < argc; i++) {
         if (string(argv[i]) == "-j") {

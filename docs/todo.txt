@@ -1,25 +1,13 @@
 *** TODO ***
-* write to Igotti about implementation and founded bugs
-
-* drop dstack after function exec
-* jumps
 * read arguments by function
 * providing values from main
-
 * provide outer function contexts as map: [id] -> context (versions)
 
 *** GOOD TODO ***
 
 
 *** DONE ***
-* basic test. 
-* arithmetic ops
-* casts
-* pop/push as template function
-* pop from stack
-* Function 0 exec
-* TRANSLATOR outer vars assign
-* vars location
-* create function map
-* create constant map
-* code stumps
+* fix dstack growing 
+* jumps
+* for.mvm test
+* unexpected context load in for

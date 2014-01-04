@@ -2,6 +2,8 @@
 * TRANSLATOR check that no expr like int x = y++ (load on stack what stored)
 * check functions declaration with other code mix. 
 * native calls
+* TRANSLATOR for with outer var
+* TRANSLATOR IMOD operation check
 
 *** GOOD TODO ***
 * try run tests/run.py
@@ -15,6 +17,19 @@
 * assert(false); in the end of each visitor
 
 *** DONE ***
+* drop dstack after function exec
+* basic test. 
+* arithmetic ops
+* casts
+* pop/push as template function
+* pop from stack
+* Function 0 exec
+* TRANSLATOR outer vars assign
+* vars location
+* create function map
+* create constant map
+* code stumps
+
 * check that it is impossible to call function
   with wrong arguments
 * bind vars from arguments

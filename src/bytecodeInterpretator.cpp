@@ -60,6 +60,7 @@ namespace mathvm {
             size_t length;
             Instruction insn = b.getInsn(bci);
             const char* name = bytecodeName(insn, &length);
+            bool jumpCase = false;
             switch (insn) {
                 case BC_INVALID:
                     break;
@@ -75,6 +76,7 @@ namespace mathvm {
                     break;
                 case BC_S2I:
                     idv = d.popid();
+                    idv = b.getInt16(bci + 1) + bci + 1;
                     d.pushd(S64(constants[iv]->c_str()));
                     break;
 
@@ -95,18 +97,32 @@ namespace mathvm {
                     context.svars[bci + 1] = idv;
                     break;
 
+                    // STACK LOAD
+                case BC_ILOAD0:
+                    d.pushi(0);
+                    break;
+                case BC_ILOAD1:
+                    d.pushi(1);
+                    break;
+                case BC_DLOAD0:
+                    d.pushd(0);
+                    break;
+                case BC_DLOAD1:
+                    d.pushd(1);
+                    break;
+
                     // VAR  LOADS
                 case BC_LOADIVAR:
                     idv = b.getUInt16(bci + 1);
-                    dstack.addInt64(context.ivars[idv]);
+                    dstack.pushi(context.ivars[idv]);
                     break;
                 case BC_LOADDVAR:
                     idv = b.getUInt16(bci + 1);
-                    dstack.addDouble(context.dvars[idv]);
+                    dstack.pushd(context.dvars[idv]);
                     break;
                 case BC_LOADSVAR:
                     idv = b.getUInt16(bci + 1);
-                    dstack.addUInt16(context.svars[idv]);
+                    dstack.pushid(context.svars[idv]);
                     break;
 
                     // VAR STORES
@@ -138,14 +154,67 @@ namespace mathvm {
                     cout << name << " @" << b.getUInt16(bci + 1)
                             << ":" << b.getUInt16(bci + 3);
                     break;
-                case BC_IFICMPNE:
-                case BC_IFICMPE:
-                case BC_IFICMPG:
-                case BC_IFICMPGE:
-                case BC_IFICMPL:
-                case BC_IFICMPLE:
+
+                    // JUMPS
                 case BC_JA:
-                    cout << name << " " << b.getInt16(bci + 1) + bci + 1;
+                    idv = b.getInt16(bci + 1) + bci + 1;
+                    bci = idv;
+                    jumpCase = true;
+                    break;
+
+                case BC_IFICMPNE:
+                    idv = b.getInt16(bci + 1) + bci + 1;
+                    iv2 = d.popi();
+                    iv = d.popi();
+                    if (iv != iv2){
+                        bci = idv;
+                        jumpCase = true;
+                    }
+                    break;
+                case BC_IFICMPE:
+                    idv = b.getInt16(bci + 1) + bci + 1;
+                    iv2 = d.popi();
+                    iv = d.popi();
+                    if (iv == iv2){
+                        bci = idv;
+                        jumpCase = true;
+                    }
+                    break;
+                case BC_IFICMPG:
+                    idv = b.getInt16(bci + 1) + bci + 1;
+                    iv2 = d.popi();
+                    iv = d.popi();
+                    if (iv > iv2){
+                        bci = idv;
+                        jumpCase = true;
+                    }
+                    break;
+                case BC_IFICMPGE:
+                    idv = b.getInt16(bci + 1) + bci + 1;
+                    iv2 = d.popi();
+                    iv = d.popi();
+                    if (iv >= iv2){
+                        bci = idv;
+                        jumpCase = true;
+                    }
+                    break;
+                case BC_IFICMPL:
+                    idv = b.getInt16(bci + 1) + bci + 1;
+                    iv2 = d.popi();
+                    iv = d.popi();
+                    if (iv < iv2){
+                        bci = idv;
+                        jumpCase = true;
+                    }
+                    break;
+                case BC_IFICMPLE:
+                    idv = b.getInt16(bci + 1) + bci + 1;
+                    iv2 = d.popi();
+                    iv = d.popi();
+                    if (iv <= iv2){
+                        bci = idv;
+                        jumpCase = true;
+                    }
                     break;
 
                     // ARITHMETIC
@@ -236,7 +305,8 @@ namespace mathvm {
                     cout << name << endl;
                     // assert(false);
             }
-            bci += length;
+            if (!jumpCase)
+                bci += length;
         }
 
 RETURN:

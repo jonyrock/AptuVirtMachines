@@ -1,10 +1,11 @@
 int i;
-double d;
+int j;
 
-d = 7.0;
-i = 3;
+j = 3;
 
-print ('i*6=', i*6,'\n');
-print ('d*3=', d*3.0,'\n');
-print ('i*123456789012345=', i*123456789012345,'\n');
-print ('d*1e15=',d*1e15,'\n');
+print ('Begin.\n');
+for (i in -3..4)  {
+    j += i; print(i, ' ');
+}
+print('\n', j, '\n');
+print ('The end.\n');

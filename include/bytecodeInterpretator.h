@@ -11,6 +11,7 @@
 #include "mathvm.h"
 #include "bytecodeCode.h"
 #include <map>
+#include <typeinfo>
 
 namespace mathvm {
 
@@ -25,7 +26,15 @@ namespace mathvm {
         void pushi(int64_t v) {
             push<int64_t>(v);
         }
-
+        
+        int64_t getTopI() {
+            return getTyped<int64_t>(length() - (uint32_t)sizeof (int64_t));
+        }
+        int64_t getTopI2() {
+            return getTyped<int64_t>(length() - 
+                    2 * ((uint32_t)sizeof (int64_t)));
+        }
+        
         double popd() {
             return pop<double>();
         }
@@ -43,13 +52,21 @@ namespace mathvm {
         }
 
         template<class T> T pop() {
+            
             T value = getTyped<T>(length() - (uint32_t)sizeof (T));
             _data.resize(length() - (uint32_t)sizeof (T));
+            
+//            cout << "stack after pop:  " << length() << endl;
+            
             return value;
         }
 
         template<class T> void push(T value) {
             addTyped(value);
+//            cout << "stack after push: " << length() << endl;
+            if(length() == 32){
+                int kkk = 10;
+            }
         }
 
         inline void dropToSize(size_t to) {
