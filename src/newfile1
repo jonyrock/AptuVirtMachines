@@ -1,11 +1,17 @@
-int i;
-int j;
+int x;
+int y;
 
-j = 3;
+x = 3;
 
-print ('Begin.\n');
-for (i in -3..4)  {
-    j += i; print(i, ' ');
+while (x < 19) {
+    print(x,'\n');
+    x += 1;
 }
-print('\n', j, '\n');
-print ('The end.\n');
+
+y = 4;
+
+while (x > 0 && (x + 1) > y) {
+    print(x,'\n');
+    x -= 1;
+}
+

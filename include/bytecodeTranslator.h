@@ -71,6 +71,15 @@ namespace mathvm {
         inline void setJump(uint16_t jumpId, uint16_t to) {
             currentBytecode()->setInt16(jumpId, (uint16_t) to - jumpId);
         }
+        
+        inline void addTypedSwap(VarType type) {
+            if(type == VT_INT)
+                addInsn(BC_ISWAP);
+            if(type == VT_DOUBLE)
+                addInsn(BC_DSWAP);
+            if(type == VT_STRING)
+                addInsn(BC_SSWAP);
+        }
 
         void visitAst(AstFunction*);
         bool beforeVisit();

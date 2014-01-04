@@ -532,7 +532,7 @@ namespace mathvm {
         }
 
         if (node->op() == tDECRSET) {
-            addInsn(BC_SWAP);
+            addTypedSwap(node->var()->type());
             addTypedOpInsn(node->var()->type(), tSUB);
             goto STORE_TO_VAR;
         }

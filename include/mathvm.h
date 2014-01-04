@@ -47,7 +47,9 @@ using namespace std;
         DO(I2D,  "Convert int on TOS to double.", 1)                    \
         DO(D2I,  "Convert double on TOS to int.", 1)                    \
         DO(S2I,  "Convert string on TOS to int.", 1)                    \
-        DO(SWAP, "Swap 2 topmost values.", 1)                           \
+        DO(ISWAP, "Swap 2 topmost ints on TOP.", 1)                           \
+        DO(DSWAP, "Swap 2 topmost doubles on TOP.", 1)                           \
+        DO(SSWAP, "Swap 2 topmost values.", 1)                           \
         DO(POP, "Remove topmost value.", 1)                             \
         DO(LOADDVAR0, "Load double from variable 0, push on TOS.", 1)   \
         DO(LOADDVAR1, "Load double from variable 1, push on TOS.", 1)   \

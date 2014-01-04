@@ -1,0 +1,2 @@
+* Compare and jump does pop values
+* I use my own variables resolving

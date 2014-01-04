@@ -1,10 +1,12 @@
 *** TODO ***
+* while test bug fix
 * read arguments by function
 * providing values from main
 * provide outer function contexts as map: [id] -> context (versions)
+* typed swap
 
 *** GOOD TODO ***
-
+* remove dump load in the function beginning
 
 *** DONE ***
 * fix dstack growing 

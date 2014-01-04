@@ -40,6 +40,7 @@ namespace mathvm {
 
     void BytecodeInterpretator::execFunction(const BytecodeFunction* fun) {
 
+        // TODO: check this after params reading
         size_t beforeBci = dstack.length();
 
         const Bytecode& b = *(fun->bytecode());
@@ -57,6 +58,11 @@ namespace mathvm {
         uint16_t idv2;
 
         for (size_t bci = 0; bci < len;) {
+            
+            if(bci == 79){
+                int kkk = 10;
+            }
+            
             size_t length;
             Instruction insn = b.getInsn(bci);
             const char* name = bytecodeName(insn, &length);
@@ -166,7 +172,7 @@ namespace mathvm {
                     idv = b.getInt16(bci + 1) + bci + 1;
                     iv2 = d.popi();
                     iv = d.popi();
-                    if (iv != iv2){
+                    if (iv != iv2) {
                         bci = idv;
                         jumpCase = true;
                     }
@@ -175,7 +181,7 @@ namespace mathvm {
                     idv = b.getInt16(bci + 1) + bci + 1;
                     iv2 = d.popi();
                     iv = d.popi();
-                    if (iv == iv2){
+                    if (iv == iv2) {
                         bci = idv;
                         jumpCase = true;
                     }
@@ -184,7 +190,7 @@ namespace mathvm {
                     idv = b.getInt16(bci + 1) + bci + 1;
                     iv2 = d.popi();
                     iv = d.popi();
-                    if (iv > iv2){
+                    if (iv > iv2) {
                         bci = idv;
                         jumpCase = true;
                     }
@@ -193,7 +199,7 @@ namespace mathvm {
                     idv = b.getInt16(bci + 1) + bci + 1;
                     iv2 = d.popi();
                     iv = d.popi();
-                    if (iv >= iv2){
+                    if (iv >= iv2) {
                         bci = idv;
                         jumpCase = true;
                     }
@@ -202,7 +208,7 @@ namespace mathvm {
                     idv = b.getInt16(bci + 1) + bci + 1;
                     iv2 = d.popi();
                     iv = d.popi();
-                    if (iv < iv2){
+                    if (iv < iv2) {
                         bci = idv;
                         jumpCase = true;
                     }
@@ -211,7 +217,7 @@ namespace mathvm {
                     idv = b.getInt16(bci + 1) + bci + 1;
                     iv2 = d.popi();
                     iv = d.popi();
-                    if (iv <= iv2){
+                    if (iv <= iv2) {
                         bci = idv;
                         jumpCase = true;
                     }
@@ -273,6 +279,26 @@ namespace mathvm {
                     iv = d.popi();
                     iv2 = d.popi();
                     d.pushi(iv ^ iv2);
+                    break;
+
+                    // SWAP
+                case BC_ISWAP:
+                    iv = d.popi();
+                    iv2 = d.popi();
+                    d.pushi(iv);
+                    d.pushi(iv2);
+                    break;
+                case BC_DSWAP:
+                    dv = d.popd();
+                    dv2 = d.popd();
+                    d.pushi(dv);
+                    d.pushi(dv2);
+                    break;
+                case BC_SSWAP:
+                    idv = d.popid();
+                    idv2 = d.popid();
+                    d.pushid(idv);
+                    d.pushid(idv2);
                     break;
 
                     // PRINT
