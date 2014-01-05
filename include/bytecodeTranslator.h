@@ -25,12 +25,14 @@ namespace mathvm {
         }
 
         virtual Status* translate(const string& program, Code** code);
+        
+        
 
     };
 
     class BytecodeAstVisitor : public AstVisitor {
         friend BytecodeTranslator;
-        BytecodeCode& code;
+        BytecodeCode* code;
         vector<uint16_t> functionsStack;
         vector<uint16_t> contextsStack;
         BytecodeFunction* currentFunction;
@@ -40,7 +42,7 @@ namespace mathvm {
         
     public:
 
-        BytecodeAstVisitor(BytecodeCode& code_) : code(code_), status(NULL) {
+        BytecodeAstVisitor(BytecodeCode* code_) : code(code_), status(NULL) {
             logicKinds.insert(tEQ);
             logicKinds.insert(tNEQ);
             logicKinds.insert(tGT);

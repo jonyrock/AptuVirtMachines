@@ -22,15 +22,32 @@ namespace mathvm {
         }
 
         BytecodeCode* code = new BytecodeCode();
-        BytecodeAstVisitor visitor(*code);
-        visitor.visitAst(parser.top());
-
+        
         *code_ = code;
+        
+        BytecodeAstVisitor visitor(code);
+        visitor.visitAst(parser.top());
+        
+        cout << "size::" << code->globalVars()->size() << endl;
+        
         return visitor.status;
     }
 
-    void BytecodeAstVisitor::visitAst(AstFunction* rootFunction) {
-        visitAstFunction(rootFunction);
+    void BytecodeAstVisitor::visitAst(AstFunction* fun) {
+        size_t bci = 0;
+        Scope::VarIterator varIt(fun->node()->body()->scope());
+        
+        while (varIt.hasNext()) {
+            AstVar* var = varIt.next();
+            bci++; // load instruction
+            string name(var->name());
+            code->globalVars()->insert(make_pair(name, bci));
+            bci += typeToSize(var->type());
+        }
+        cout << "my size:" << code->globalVars()->size() << endl;
+        
+        
+        visitAstFunction(fun);
     }
 
     void BytecodeAstVisitor::visitAstFunction(AstFunction* function) {
@@ -41,7 +58,7 @@ namespace mathvm {
         BytecodeFunction* prevFunction = currentFunction;
         uint16_t prevContext = currentContext;
 
-        currentContext = code.addFunction(fun);
+        currentContext = code->addFunction(fun);
         currentFunction = fun;
 
         functionsStack.push_back(currentContext);
@@ -52,7 +69,6 @@ namespace mathvm {
                 addInsn(BC_DLOAD);
                 paramIds[function->parameterName(i)] = current();
                 currentBytecode()->addDouble(0);
-
             }
             if (function->parameterType(i) == VT_INT) {
                 addInsn(BC_ILOAD);
@@ -459,7 +475,7 @@ namespace mathvm {
     }
 
     void BytecodeAstVisitor::visitCallNode_(CallNode* node) {
-        TranslatedFunction* fun = code.functionByName(node->name());
+        TranslatedFunction* fun = code->functionByName(node->name());
         if (fun == NULL) {
             status = new Status("Undefined function call", node->position());
             return;
@@ -580,7 +596,7 @@ STORE_TO_VAR:
 
     void BytecodeAstVisitor::visitStringLiteralNode_(StringLiteralNode* node) {
         addInsn(BC_SLOAD);
-        uint16_t strId = code.makeStringConstant(node->literal());
+        uint16_t strId = code->makeStringConstant(node->literal());
         addId(strId);
         typesStack.push(VT_STRING);
     }

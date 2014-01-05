@@ -5,7 +5,8 @@
 #include <stdlib.h>
 
 #include <inttypes.h>
-#include <stdlib.h>   
+#include <stdlib.h>
+#include "mathvm.h"
 
 using namespace std;
 
@@ -32,10 +33,33 @@ namespace mathvm {
         }
 
         execStatus = NULL;
-
+        
+        setRootVars(code, vars);
         execFunction(functions[0]);
 
         return execStatus;
+    }
+
+    void BytecodeInterpretator::setRootVars(const BytecodeCode& code, vector<Var*>& vars) {
+        BytecodeFunction* fun = new BytecodeFunction(*functions[0]);
+        functions[0] = fun;
+
+        for (size_t i = 0; i < vars.size(); i++) {
+            string name(vars[i]->name());
+            assert(code.globalVars()->find(name) != code.globalVars()->end());
+            uint16_t pos = code.globalVars()->find(name)->second;
+            if (vars[i]->type() == VT_INT) {
+                fun->bytecode()->setTyped<int64_t>(pos, vars[i]->getIntValue());
+            }
+            if (vars[i]->type() == VT_DOUBLE) {
+                fun->bytecode()->setTyped<double>(pos, vars[i]->getDoubleValue());
+            }
+            if (vars[i]->type() == VT_STRING) {
+                constants.push_back(new string(vars[i]->getStringValue()));
+                uint16_t id = constants.size();
+                fun->bytecode()->setTyped<uint16_t>(pos, id);
+            }
+        }
     }
 
     void BytecodeInterpretator::execFunction(const BytecodeFunction* fun) {
@@ -383,4 +407,8 @@ RETURN:
     }
 
 
+    BytecodeInterpretator::~BytecodeInterpretator(){
+        delete functions[0];
+    }
+    
 }

@@ -14,8 +14,9 @@ int main(int argc, char** argv) {
     string impl = "";
     //    const char* script = "tests/perf/prime.mvm";
     //      const char* script = "tests/my_test.mvm";
-    //    const char* script = "tests/while.mvm";
-    const char* script = "tests/function.mvm";
+        const char* script = "tests/while.mvm";
+//        const char* script = "tests/function.mvm";
+//    const char* script = NULL;
     //    const char* script = "tests/assign.mvm";
     //        const char* script = "tests/additional/function-cast.mvm";
     //      const char* script = "tests/additional/fib.mvm";
@@ -31,15 +32,9 @@ int main(int argc, char** argv) {
     }
     Translator* translator = Translator::create(impl);
 
-    if (translator == 0) {
-        cout << "TODO: Implement translator factory in translator.cpp!!!!" << endl;
-        return 1;
-    }
-
     const char* expr = "double x; double y;"
             "x += 8.0; y = 2.0;"
-            "print('Hello, x=',x,' y=',y,'\n');"
-            ;
+            "print('Hello, x=',x,' y=',y,'\n');";
     bool isDefaultExpr = true;
 
     if (script != NULL) {

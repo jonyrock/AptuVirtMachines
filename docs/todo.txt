@@ -1,11 +1,11 @@
 *** TODO ***
-* providing values from main
 * provide outer function contexts as map: [id] -> context (versions)
 
 *** GOOD TODO ***
 * remove dump load in the function beginning
 
 *** DONE ***
+* providing values from main
 * typed swap
 * read arguments by function
 * calls node check

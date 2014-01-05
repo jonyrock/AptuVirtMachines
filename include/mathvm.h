@@ -432,6 +432,6 @@ void positionToLineOffset(const string& text,
 const char* typeToName(VarType type);
 VarType nameToType(const string& typeName);
 const char* bytecodeName(Instruction insn, size_t* length = 0);
-
+uint8_t typeToSize(VarType type);
 }
 #endif

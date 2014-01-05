@@ -10,6 +10,7 @@
 * native call
 * types check. void -> int
 * remove unused code
+* remove dump load in the function beginning
 
 *** WONTDO ***
 * bytecode for visit function beginning (signature)
@@ -17,6 +18,17 @@
 * assert(false); in the end of each visitor
 
 *** DONE ***
+* providing values from main
+* typed swap
+* read arguments by function
+* calls node check
+* function.mvm test
+* while test bug fix
+* fix dstack growing 
+* jumps
+* for.mvm test
+* unexpected context load in for
+
 * drop dstack after function exec
 * basic test. 
 * arithmetic ops

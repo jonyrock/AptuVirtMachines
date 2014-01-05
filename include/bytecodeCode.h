@@ -29,10 +29,20 @@ namespace mathvm {
         }
     };
 
-    class BytecodeCode : public Code {        
+    class BytecodeCode : public Code {
+        map<string, uint16_t> globalVars_;
     public:
         virtual Status* execute(vector<Var*>& vars);
         
+        
+        inline map<string, uint16_t>* globalVars() {
+            return &globalVars_;
+        }
+        
+        inline const map<string, uint16_t>* globalVars() const {
+            return &globalVars_;
+        }
+                
     };
 }
 

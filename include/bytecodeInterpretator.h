@@ -54,29 +54,19 @@ namespace mathvm {
         }
 
         template<class T> T pop() {
-
             T value = getTyped<T>(length() - (uint32_t)sizeof (T));
             _data.resize(length() - (uint32_t)sizeof (T));
-
-            //            cout << "stack after pop:  " << length() << endl;
-
             return value;
         }
 
         template<class T> void push(T value) {
             addTyped(value);
-            //            cout << "stack after push: " << length() << endl;
-            if (length() == 32) {
-                int kkk = 10;
-            }
         }
 
         inline void dropToSize(size_t to) {
             _data.resize(to);
         }
         
-        
-
     };
 
     struct FunctionContex {
@@ -91,23 +81,13 @@ namespace mathvm {
         vector<const string*> constants;
 
         void execFunction(const BytecodeFunction* fun);
+        void setRootVars(const BytecodeCode& code, vector<Var*>& vars);
 
         Status* execStatus;
-        
-        inline uint8_t typeToSize(VarType type){
-            if(type == VT_INT)
-                return sizeof(int64_t);
-            if(type == VT_DOUBLE)
-                return sizeof(double);
-            if(type == VT_STRING)
-                return sizeof(uint16_t);
-            if(type == VT_VOID)
-                return 0;
-            assert(false);
-        }
 
     public:
         Status* interpretate(const BytecodeCode& code, vector<Var*>& vars);
+        ~BytecodeInterpretator();
     };
 }
 
