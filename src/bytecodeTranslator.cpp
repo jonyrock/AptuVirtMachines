@@ -472,8 +472,8 @@ namespace mathvm {
             return;
         }
         assert(fun);
-
-        for (uint32_t i = 0; i < node->parametersNumber(); i++) {
+        
+        for (int i = node->parametersNumber() - 1; i >= 0; i--) {
             node->parameterAt(i)->visit(this);
             ensureType(fun->parameterType(i));
         }

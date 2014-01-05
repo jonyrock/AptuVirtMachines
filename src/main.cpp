@@ -14,12 +14,13 @@ int main(int argc, char** argv) {
     string impl = "";
     //    const char* script = "tests/perf/prime.mvm";
     //      const char* script = "tests/my_test.mvm";
-//    const char* script = "tests/mul.mvm";
+    //    const char* script = "tests/while.mvm";
+    const char* script = "tests/function.mvm";
     //    const char* script = "tests/assign.mvm";
-//        const char* script = "tests/additional/function-cast.mvm";
+    //        const char* script = "tests/additional/function-cast.mvm";
     //      const char* script = "tests/additional/fib.mvm";
-//        const char* script = "tests/for.mvm";
-        const char* script = "tests/while.mvm";
+    //        const char* script = "tests/for.mvm";
+    //        const char* script = "tests/while.mvm";
     //    const char* script = NULL;
     for (int32_t i = 1; i < argc; i++) {
         if (string(argv[i]) == "-j") {
@@ -63,7 +64,7 @@ int main(int argc, char** argv) {
                 line, offset,
                 translateStatus->getError().c_str());
     } else {
-        
+
         assert(code != 0);
         vector<Var*> vars;
 
@@ -75,7 +76,7 @@ int main(int argc, char** argv) {
             xVar->setDoubleValue(42.0);
         }
         code->disassemble();
-        
+
         cout << "-------" << endl;
         Status* execStatus = code->execute(vars);
         if (execStatus != NULL && execStatus->isError()) {
@@ -92,8 +93,8 @@ int main(int argc, char** argv) {
         if (code != NULL) delete code;
         if (execStatus != NULL) delete execStatus;
     }
-    if(translateStatus != NULL) delete translateStatus;
-    if(translator != NULL) delete translator;
+    if (translateStatus != NULL) delete translateStatus;
+    if (translator != NULL) delete translator;
 
     if (!isDefaultExpr) {
         delete [] expr;

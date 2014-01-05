@@ -23,22 +23,24 @@ namespace mathvm {
         int64_t popi() {
             return pop<int64_t>();
         }
+
         void pushi(int64_t v) {
             push<int64_t>(v);
         }
-        
+
         int64_t getTopI() {
             return getTyped<int64_t>(length() - (uint32_t)sizeof (int64_t));
         }
+
         int64_t getTopI2() {
-            return getTyped<int64_t>(length() - 
+            return getTyped<int64_t>(length() -
                     2 * ((uint32_t)sizeof (int64_t)));
         }
-        
+
         double popd() {
             return pop<double>();
         }
-        
+
         void pushd(double v) {
             push<double>(v);
         }
@@ -46,25 +48,25 @@ namespace mathvm {
         uint16_t popid() {
             return pop<uint16_t>();
         }
-        
-        void pushid(uint16_t v){
+
+        void pushid(uint16_t v) {
             push<uint16_t>(v);
         }
 
         template<class T> T pop() {
-            
+
             T value = getTyped<T>(length() - (uint32_t)sizeof (T));
             _data.resize(length() - (uint32_t)sizeof (T));
-            
-//            cout << "stack after pop:  " << length() << endl;
-            
+
+            //            cout << "stack after pop:  " << length() << endl;
+
             return value;
         }
 
         template<class T> void push(T value) {
             addTyped(value);
-//            cout << "stack after push: " << length() << endl;
-            if(length() == 32){
+            //            cout << "stack after push: " << length() << endl;
+            if (length() == 32) {
                 int kkk = 10;
             }
         }
@@ -72,6 +74,8 @@ namespace mathvm {
         inline void dropToSize(size_t to) {
             _data.resize(to);
         }
+        
+        
 
     };
 
@@ -89,6 +93,18 @@ namespace mathvm {
         void execFunction(const BytecodeFunction* fun);
 
         Status* execStatus;
+        
+        inline uint8_t typeToSize(VarType type){
+            if(type == VT_INT)
+                return sizeof(int64_t);
+            if(type == VT_DOUBLE)
+                return sizeof(double);
+            if(type == VT_STRING)
+                return sizeof(uint16_t);
+            if(type == VT_VOID)
+                return 0;
+            assert(false);
+        }
 
     public:
         Status* interpretate(const BytecodeCode& code, vector<Var*>& vars);

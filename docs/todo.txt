@@ -1,14 +1,16 @@
 *** TODO ***
-* while test bug fix
-* read arguments by function
 * providing values from main
 * provide outer function contexts as map: [id] -> context (versions)
-* typed swap
 
 *** GOOD TODO ***
 * remove dump load in the function beginning
 
 *** DONE ***
+* typed swap
+* read arguments by function
+* calls node check
+* function.mvm test
+* while test bug fix
 * fix dstack growing 
 * jumps
 * for.mvm test

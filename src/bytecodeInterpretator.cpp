@@ -40,16 +40,6 @@ namespace mathvm {
 
     void BytecodeInterpretator::execFunction(const BytecodeFunction* fun) {
 
-        // TODO: check this after params reading
-        size_t beforeBci = dstack.length();
-
-        const Bytecode& b = *(fun->bytecode());
-        DataBytecode& d = dstack;
-
-        size_t len = b.length();
-
-        FunctionContex context;
-
         double dv;
         double dv2;
         int64_t iv;
@@ -57,8 +47,43 @@ namespace mathvm {
         uint16_t idv;
         uint16_t idv2;
 
-        for (size_t bci = 0; bci < len;) {
-            
+        size_t bci = 0;
+        FunctionContex context;
+        const Bytecode& b = *(fun->bytecode());
+        DataBytecode& d = dstack;
+
+
+        // read params 
+        for (uint16_t i = 0; i < fun->parametersNumber(); i++) {
+            bci++; // load instruction
+            VarType type = fun->parameterType(i);
+            if (type == VT_DOUBLE) {
+                dv = d.popd();
+                context.dvars[bci] = dv;
+            }
+            if (type == VT_INT) {
+                iv = d.popi();
+                context.ivars[bci] = iv;
+            }
+            if (type == VT_STRING) {
+                idv = d.popid();
+                context.svars[bci] = idv;
+            }
+            bci += typeToSize(type);
+        }
+        // end read params
+
+        size_t len = b.length();
+        size_t beforeBci = dstack.length();
+
+        //        cout << "stack before" << dstack.length() << endl;
+
+        while (bci < len) {
+
+            if (bci == 281) {
+                int kkk = 10;
+            }
+
             size_t length;
             Instruction insn = b.getInsn(bci);
             const char* name = bytecodeName(insn, &length);
@@ -120,6 +145,7 @@ namespace mathvm {
                     break;
                 case BC_LOADDVAR:
                     idv = b.getUInt16(bci + 1);
+                    dv = context.dvars[idv];
                     dstack.pushd(context.dvars[idv]);
                     break;
                 case BC_LOADSVAR:
@@ -332,7 +358,26 @@ namespace mathvm {
         }
 
 RETURN:
+        //        cout << "stack after" << dstack.length() << endl;
+
+        // dropping everything except return value
+
+        if (fun->returnType() == VT_DOUBLE)
+            dv = d.popd();
+        if (fun->returnType() == VT_INT)
+            iv = d.popi();
+        if (fun->returnType() == VT_STRING)
+            idv = d.popid();
+
         dstack.dropToSize(beforeBci);
+
+        if (fun->returnType() == VT_DOUBLE)
+            d.pushd(dv);
+        if (fun->returnType() == VT_INT)
+            d.pushi(iv);
+        if (fun->returnType() == VT_STRING)
+            d.pushid(idv);
+
         return;
 
     }
