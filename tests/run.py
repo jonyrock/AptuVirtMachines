@@ -5,7 +5,17 @@ import sys
 import os
 import optparse
 
-options = None
+class Options:
+  pass
+
+options = Options()
+options.executable = "./dist/Debug/GNU-Linux-x86/mymathvm"
+options.kind = 'debug'
+options.testdir = './tests'
+options.doublerun = False
+
+print options.executable
+
 
 def runProg(bin, arg, stdin = None):
     pipe = subprocess.Popen([bin, arg],
@@ -58,6 +68,7 @@ def runTest(mvm, root, test, doublerun):
             result = runProg(mvm, expectFile)
         else:
             expectFile = os.path.join(root, test+'.expect')
+            print("run mvm: " + mvm)
             result = runProg(mvm, testFile)
         expect = readFile(expectFile)
 
@@ -79,24 +90,16 @@ def runTest(mvm, root, test, doublerun):
             print out
     except Exception, e:
         print "Failed to execute the test " + test
-        print e
+        exit(1)
 
 def main(argv):
   global options
   import glob
   import re
     
-  parser = buildOptions()
-  (options, args) = parser.parse_args()
   kind = options.kind
-  if kind is None:
-    kind = 'debug'
   testdir = options.testdir
-  if testdir is None:
-    testdir = './tests'
   mvm = options.executable
-  if mvm is None:
-    mvm = os.path.join('./build', kind, 'mvm')
   tests = glob.glob(os.path.join(testdir, '*.mvm'))
   for t in tests:
     m = re.search(r"([\w]+)\.mvm", t)

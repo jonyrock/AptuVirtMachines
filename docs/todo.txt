@@ -1,17 +1,10 @@
 *** TODO ***
+* function-cast
+* all possible test from additional (without contexts)
 * provide outer function contexts as map: [id] -> context (versions)
 
 *** GOOD TODO ***
-* remove dump load in the function beginning
+
 
 *** DONE ***
-* providing values from main
-* typed swap
-* read arguments by function
-* calls node check
-* function.mvm test
-* while test bug fix
-* fix dstack growing 
-* jumps
-* for.mvm test
-* unexpected context load in for
+* try run tests/run.py

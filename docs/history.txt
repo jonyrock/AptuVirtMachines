@@ -6,7 +6,7 @@
 * TRANSLATOR IMOD operation check
 
 *** GOOD TODO ***
-* try run tests/run.py
+
 * native call
 * types check. void -> int
 * remove unused code

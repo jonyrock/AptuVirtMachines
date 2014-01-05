@@ -28,7 +28,7 @@ namespace mathvm {
         BytecodeAstVisitor visitor(code);
         visitor.visitAst(parser.top());
         
-        cout << "size::" << code->globalVars()->size() << endl;
+//        cout << "size::" << code->globalVars()->size() << endl;
         
         return visitor.status;
     }
@@ -44,7 +44,7 @@ namespace mathvm {
             code->globalVars()->insert(make_pair(name, bci));
             bci += typeToSize(var->type());
         }
-        cout << "my size:" << code->globalVars()->size() << endl;
+//        cout << "my size:" << code->globalVars()->size() << endl;
         
         
         visitAstFunction(fun);
