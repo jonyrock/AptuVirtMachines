@@ -4,11 +4,12 @@
 * additional/complex2.mvm fail
 * double output, see additional/function-cast.mvm
 * all possible test from additional (without contexts)
-* provide outer function contexts as map: [id] -> context (versions)
+
 
 *** GOOD TODO ***
 
 *** DONE ***
+* provide outer function contexts as map: [id] -> context (versions)
 * remove INVALID after else (not necessary)
 * remove triple invalid
 * fail additional/casts.mvm

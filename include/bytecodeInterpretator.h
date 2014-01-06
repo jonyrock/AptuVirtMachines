@@ -75,7 +75,7 @@ namespace mathvm {
         }
 
     };
-
+    
     class FunctionContex {
         vector<double> ddata;
         vector<int64_t> idata;
@@ -120,13 +120,15 @@ namespace mathvm {
 //        }
 
     };
-
+    
+    typedef map<uint16_t, FunctionContex*> OuterContexts;
+    
     class BytecodeInterpretator {
         DataBytecode dstack;
         vector<const BytecodeFunction*> functions;
         vector<const string*> constants;
 
-        void execFunction(const BytecodeFunction* fun);
+        void execFunction(const BytecodeFunction* fun, OuterContexts contexts);
         void setRootVars(const BytecodeCode& code, vector<Var*>& vars);
 
         Status* execStatus;

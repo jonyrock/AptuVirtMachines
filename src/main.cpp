@@ -10,7 +10,7 @@
 using namespace mathvm;
 using namespace std;
 
-#define PROD
+//#define PROD
 
 int main(int argc, char** argv) {
 
@@ -25,8 +25,8 @@ int main(int argc, char** argv) {
     // const char* script = "tests/assign.mvm";
     // const char* script = NULL;
 
-
-//     const char* script = "tests/additional/function.mvm";
+    // non-context tests
+    // const char* script = "tests/additional/function.mvm";
     // const char* script = "tests/additional/function-call.mvm";
     // const char* script = "tests/additional/fib.mvm";
     // const char* script = "tests/additional/ackermann.mvm";
@@ -34,9 +34,11 @@ int main(int argc, char** argv) {
     // const char* script = "tests/additional/function-cast.mvm";
     // const char* script = "tests/additional/function-call.mvm";
 
-
+    // context tests
+//    const char* script = "tests/additional/closure.mvm";
+     const char* script = "tests/additional/fib_closure.mvm";
     // const char* script = "tests/additional/complex.mvm";
-     const char* script = "tests/additional/vars7400.mvm";    
+    
 
 #else
     const char* script = NULL;
@@ -67,7 +69,7 @@ int main(int argc, char** argv) {
 
     Code* code = 0;
 #ifndef PROD
-    //    cout << expr << endl;
+    cout << expr << endl;
     cout << "-------------" << endl;
 #endif
     Status* translateStatus = translator->translate(expr, &code);
@@ -92,8 +94,7 @@ int main(int argc, char** argv) {
             xVar->setDoubleValue(42.0);
         }
 #ifndef PROD
-        //        code->disassemble();
-
+        code->disassemble();
         cout << "-------" << endl;
 #endif
         Status* execStatus = code->execute(vars);

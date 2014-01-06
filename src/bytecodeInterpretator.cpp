@@ -36,7 +36,7 @@ namespace mathvm {
         execStatus = NULL;
 
         setRootVars(code, vars);
-        execFunction(functions[0]);
+        execFunction(functions[0], OuterContexts());
 
         return execStatus;
     }
@@ -63,7 +63,7 @@ namespace mathvm {
         }
     }
 
-    void BytecodeInterpretator::execFunction(const BytecodeFunction* fun) {
+    void BytecodeInterpretator::execFunction(const BytecodeFunction* fun, OuterContexts contexts) {
 
         double dv;
         double dv2;
@@ -73,9 +73,11 @@ namespace mathvm {
         uint16_t idv2;
 
         size_t bci = 0;
-        
+
         FunctionContex context(fun->bytecode()->length());
-        
+        OuterContexts deeperContexts(contexts);
+        deeperContexts[fun->id()] = &context;
+
         const Bytecode& b = *(fun->bytecode());
         DataBytecode& d = dstack;
 
@@ -143,10 +145,10 @@ namespace mathvm {
                 case BC_ILOAD:
                     iv = b.getInt64(bci + 1);
                     d.pushi(iv);
-                    {
-                    if(bci + 1 == 1)
+                {
+                    if (bci + 1 == 1)
                         int kkkk = 12;
-                    }
+                }
                     context.seti(bci + 1, iv);
                     break;
                 case BC_SLOAD:
@@ -190,14 +192,7 @@ namespace mathvm {
                     context.setd(idv, dv);
                     break;
                 case BC_STOREIVAR:
-
                     idv = b.getUInt16(bci + 1);
-                    if (idv == 1) {
-                        int jjj = 10;
-                    }
-
-//                    cout << "----> 1 : " << (int) context.geti((uint16_t) 1) << endl;
-
                     iv = dstack.popi();
                     context.seti(idv, iv);
                     break;
@@ -209,15 +204,54 @@ namespace mathvm {
 
                     // VAR LOAD (outer context)
                 case BC_LOADCTXDVAR:
+                {
+                    uint16_t idContext = b.getUInt16(bci + 1);
+                    uint16_t idVar = b.getUInt16(bci + 3);
+                    dv = contexts[idContext]->getd(idVar);
+                }
+                    d.pushd(dv);
+                    break;
                 case BC_LOADCTXIVAR:
+                {
+                    uint16_t idContext = b.getUInt16(bci + 1);
+                    uint16_t idVar = b.getUInt16(bci + 3);
+                    iv = contexts[idContext]->geti(idVar);
+                }
+                    d.pushi(iv);
+                    break;
                 case BC_LOADCTXSVAR:
+                {
+                    uint16_t idContext = b.getUInt16(bci + 1);
+                    uint16_t idVar = b.getUInt16(bci + 3);
+                    idv = contexts[idContext]->gets(idVar);
+                }
+                    d.pushid(idv);
+                    break;
 
                     // VAR STORE (outer context)
                 case BC_STORECTXDVAR:
+                    dv = d.popd();
+                {
+                    uint16_t idContext = b.getUInt16(bci + 1);
+                    uint16_t idVar = b.getUInt16(bci + 3);
+                    contexts[idContext]->setd(idVar, dv);
+                }
+                    break;
                 case BC_STORECTXIVAR:
+                    iv = d.popi();
+                {
+                    uint16_t idContext = b.getUInt16(bci + 1);
+                    uint16_t idVar = b.getUInt16(bci + 3);
+                    contexts[idContext]->seti(idVar, iv);
+                }
+                    break;
                 case BC_STORECTXSVAR:
-                    cout << name << " @" << b.getUInt16(bci + 1)
-                            << ":" << b.getUInt16(bci + 3);
+                    idv = d.popid();
+                {
+                    uint16_t idContext = b.getUInt16(bci + 1);
+                    uint16_t idVar = b.getUInt16(bci + 3);
+                    contexts[idContext]->sets(idVar, idv);
+                }
                     break;
 
                     // JUMPS
@@ -397,7 +431,8 @@ namespace mathvm {
 
                 case BC_CALL:
                     idv = b.getUInt16(bci + 1);
-                    execFunction(functions[idv]);
+
+                    execFunction(functions[idv], deeperContexts);
                     break;
                 case BC_CALLNATIVE:
                     execStatus = new Status("Can't call a native function", 0);
