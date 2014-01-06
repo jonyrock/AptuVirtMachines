@@ -54,6 +54,7 @@ namespace mathvm {
                 _data.resize(index + 1);
             }
             _data[index] = b;
+            
         }
 
         void add(uint8_t b) {
@@ -119,7 +120,7 @@ namespace mathvm {
         }
 
         template<class T> void setTyped(uint32_t index, T d) {
-
+            
             union {
                 T val;
                 uint8_t bits[sizeof (T)];

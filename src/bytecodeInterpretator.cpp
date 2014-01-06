@@ -74,7 +74,7 @@ namespace mathvm {
 
         size_t bci = 0;
         
-        FunctionContex context;
+        FunctionContex context(fun->bytecode()->length());
         
         const Bytecode& b = *(fun->bytecode());
         DataBytecode& d = dstack;
@@ -143,6 +143,10 @@ namespace mathvm {
                 case BC_ILOAD:
                     iv = b.getInt64(bci + 1);
                     d.pushi(iv);
+                    {
+                    if(bci + 1 == 1)
+                        int kkkk = 12;
+                    }
                     context.seti(bci + 1, iv);
                     break;
                 case BC_SLOAD:

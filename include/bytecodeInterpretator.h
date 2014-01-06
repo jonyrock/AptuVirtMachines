@@ -20,6 +20,13 @@ namespace mathvm {
     class DataBytecode : public Bytecode {
     public:
 
+        DataBytecode() {
+        }
+
+        DataBytecode(size_t size) {
+            _data.resize(size);
+        }
+
         int64_t popi() {
             return pop<int64_t>();
         }
@@ -70,39 +77,51 @@ namespace mathvm {
     };
 
     class FunctionContex {
-        map<uint16_t, double> dvars;
-        map<uint16_t, int64_t> ivars;
-        map<uint16_t, uint16_t> svars;
+        vector<double> ddata;
+        vector<int64_t> idata;
+        vector<uint16_t> sdata;
     public:
 
-        inline void setd(uint16_t id, double v) {
-            dvars[id] = v;
+        inline FunctionContex(size_t size) {
+            ddata = vector<double>();
+            idata = vector<int64_t>();
+            sdata = vector<uint16_t>();
+            ddata.resize(size);
+            idata.resize(size);
+            sdata.resize(size);
         }
 
-        inline void seti(uint16_t id, int64_t v) {
-            ivars[id] = v;
+        inline void setd(uint32_t id, double v) {
+            ddata[id] = v;
         }
 
-        inline void sets(uint16_t id, uint16_t v) {
-            svars[id] = v;
+        inline void seti(uint32_t id, int64_t v) {
+            idata[id] = v;
         }
 
-        inline double getd(uint16_t id) {
-            return dvars[id];
+        inline void sets(uint32_t id, uint16_t v) {
+            sdata[id] = v;
         }
 
-        inline int64_t geti(uint16_t id) {
-            return ivars[id];
+        inline double getd(uint32_t id) {
+            return ddata[id];
         }
 
-        inline uint16_t gets(uint16_t id) {
-            return svars[id];
+        inline int64_t geti(uint32_t id) {
+            return idata[id];
         }
+
+        inline uint16_t gets(uint32_t id) {
+            return sdata[id];
+        }
+
+//        inline ~FunctionContex() {
+//            delete _data;
+//        }
 
     };
 
     class BytecodeInterpretator {
-        
         DataBytecode dstack;
         vector<const BytecodeFunction*> functions;
         vector<const string*> constants;
