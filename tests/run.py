@@ -12,6 +12,7 @@ options = Options()
 options.executable = "./dist/Debug/GNU-Linux-x86/mymathvm"
 options.kind = 'debug'
 options.testdir = './tests'
+# options.testdir = './tests/tt'
 # options.testdir = './tests/additional'
 options.doublerun = False
 

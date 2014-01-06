@@ -66,16 +66,43 @@ namespace mathvm {
         inline void dropToSize(size_t to) {
             _data.resize(to);
         }
-        
+
     };
 
-    struct FunctionContex {
+    class FunctionContex {
         map<uint16_t, double> dvars;
         map<uint16_t, int64_t> ivars;
         map<uint16_t, uint16_t> svars;
+    public:
+
+        inline void setd(uint16_t id, double v) {
+            dvars[id] = v;
+        }
+
+        inline void seti(uint16_t id, int64_t v) {
+            ivars[id] = v;
+        }
+
+        inline void sets(uint16_t id, uint16_t v) {
+            svars[id] = v;
+        }
+
+        inline double getd(uint16_t id) {
+            return dvars[id];
+        }
+
+        inline int64_t geti(uint16_t id) {
+            return ivars[id];
+        }
+
+        inline uint16_t gets(uint16_t id) {
+            return svars[id];
+        }
+
     };
 
     class BytecodeInterpretator {
+        
         DataBytecode dstack;
         vector<const BytecodeFunction*> functions;
         vector<const string*> constants;

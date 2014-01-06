@@ -8,4 +8,4 @@ function int ack(int m, int n) {
     return ack(m - 1, ack(m, n - 1));
 }
 
-print(ack(3, 10), '\n');
+print(ack(3, 6), '\n');

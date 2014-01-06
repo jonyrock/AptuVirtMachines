@@ -7,4 +7,4 @@ function int fib(int x) {
     return r + fib(x - 2);
 }
 
-print(fib(35), '\n');
+print(fib(23), '\n');

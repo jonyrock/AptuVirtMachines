@@ -525,9 +525,13 @@ namespace mathvm {
     }
 
     void BytecodeAstVisitor::visitCallNode_(CallNode* node) {
+        
         TranslatedFunction* fun = code->functionByName(node->name());
         if (fun == NULL) {
-            status = new Status("Undefined function call", node->position());
+            stringstream ss;
+            ss << "Undefined function call ";
+            ss << "with name " << node->name();
+            status = new Status(ss.str(), node->position());
             return;
         }
         if (node->parametersNumber() != fun->parametersNumber()) {

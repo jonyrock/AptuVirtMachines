@@ -73,7 +73,9 @@ namespace mathvm {
         uint16_t idv2;
 
         size_t bci = 0;
+        
         FunctionContex context;
+        
         const Bytecode& b = *(fun->bytecode());
         DataBytecode& d = dstack;
 
@@ -84,15 +86,15 @@ namespace mathvm {
             VarType type = fun->parameterType(i);
             if (type == VT_DOUBLE) {
                 dv = d.popd();
-                context.dvars[bci] = dv;
+                context.setd(bci, dv);
             }
             if (type == VT_INT) {
                 iv = d.popi();
-                context.ivars[bci] = iv;
+                context.seti(bci, iv);
             }
             if (type == VT_STRING) {
                 idv = d.popid();
-                context.svars[bci] = idv;
+                context.seti(bci, idv);
             }
             bci += typeToSize(type);
         }
@@ -105,7 +107,7 @@ namespace mathvm {
 
         while (bci < len) {
 
-            if (bci == 62) {
+            if (bci == 1820022) {
                 int kkk = 10;
             }
 
@@ -136,17 +138,17 @@ namespace mathvm {
                 case BC_DLOAD:
                     dv = b.getDouble(bci + 1);
                     d.pushd(dv);
-                    context.dvars[bci + 1] = dv;
+                    context.setd(bci + 1, dv);
                     break;
                 case BC_ILOAD:
                     iv = b.getInt64(bci + 1);
                     d.pushi(iv);
-                    context.ivars[bci + 1] = iv;
+                    context.seti(bci + 1, iv);
                     break;
                 case BC_SLOAD:
                     idv = b.getUInt16(bci + 1);
                     d.pushid(idv);
-                    context.svars[bci + 1] = idv;
+                    context.sets(bci + 1, idv);
                     break;
 
                     // STACK LOAD
@@ -166,33 +168,39 @@ namespace mathvm {
                     // VAR  LOADS
                 case BC_LOADIVAR:
                     idv = b.getUInt16(bci + 1);
-                    dstack.pushi(context.ivars[idv]);
+                    dstack.pushi(context.geti(idv));
                     break;
                 case BC_LOADDVAR:
                     idv = b.getUInt16(bci + 1);
-                    dv = context.dvars[idv];
-                    dstack.pushd(context.dvars[idv]);
+                    dstack.pushd(context.getd(idv));
                     break;
                 case BC_LOADSVAR:
                     idv = b.getUInt16(bci + 1);
-                    dstack.pushid(context.svars[idv]);
+                    dstack.pushid(context.gets(idv));
                     break;
 
                     // VAR STORES
                 case BC_STOREDVAR:
                     idv = b.getUInt16(bci + 1);
                     dv = dstack.popd();
-                    context.dvars[idv] = dv;
+                    context.setd(idv, dv);
                     break;
                 case BC_STOREIVAR:
+
                     idv = b.getUInt16(bci + 1);
+                    if (idv == 1) {
+                        int jjj = 10;
+                    }
+
+//                    cout << "----> 1 : " << (int) context.geti((uint16_t) 1) << endl;
+
                     iv = dstack.popi();
-                    context.ivars[idv] = iv;
+                    context.seti(idv, iv);
                     break;
                 case BC_STORESVAR:
                     idv = b.getUInt16(bci + 1);
                     idv2 = dstack.popid();
-                    context.svars[idv] = idv2;
+                    context.sets(idv, idv2);
                     break;
 
                     // VAR LOAD (outer context)
