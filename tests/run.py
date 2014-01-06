@@ -12,10 +12,8 @@ options = Options()
 options.executable = "./dist/Debug/GNU-Linux-x86/mymathvm"
 options.kind = 'debug'
 options.testdir = './tests'
+# options.testdir = './tests/additional'
 options.doublerun = False
-
-print options.executable
-
 
 def runProg(bin, arg, stdin = None):
     pipe = subprocess.Popen([bin, arg],
@@ -88,6 +86,7 @@ def runTest(mvm, root, test, doublerun):
                                     stdin=subprocess.PIPE, stdout=subprocess.PIPE)
             (out, err) = pipe.communicate(result)
             print out
+            exit(1)
     except Exception, e:
         print "Failed to execute the test " + test
         exit(1)

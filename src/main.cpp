@@ -5,32 +5,34 @@
 #include <sys/stat.h>
 
 #include <iostream>
+#include <iomanip>
 
 using namespace mathvm;
 using namespace std;
 
+#define PROD
+
 int main(int argc, char** argv) {
-    
-    double ddd = 1.0;
-    cout << ddd;
-    return 0;
-
+     
     string impl = "";
-
-
+#ifndef PROD
     // const char* script = "tests/while.mvm";
     // const char* script = "tests/function.mvm";
     // const char* script = "tests/for.mvm";
-     const char* script = "tests/mul.mvm";
-    // const char* script = "tests/while.mvm";
+//    const char* script = "tests/expr.mvm";
+//         const char* script = "tests/mul.mvm";
+     const char* script = "tests/while.mvm";
     // const char* script = "tests/assign.mvm";
-    // const char* script = NULL;
+//     const char* script = NULL;
 
-//    const char* script = "tests/additional/function-cast.mvm";
-    // const char* script = "tests/additional/ackermann.mvm";
+//        const char* script = "tests/additional/function-cast.mvm";
+//     const char* script = "tests/additional/ackermann.mvm";
+//     const char* script = "tests/additional/casts.mvm";
     // const char* script = "tests/additional/fib.mvm";
-    // const char* script = NULL;
-    
+#else
+     const char* script = NULL;
+#endif
+
     for (int32_t i = 1; i < argc; i++) {
         if (string(argv[i]) == "-j") {
             impl = "jit";
@@ -55,8 +57,10 @@ int main(int argc, char** argv) {
     }
 
     Code* code = 0;
+#ifndef PROD
     cout << expr << endl;
     cout << "-------------" << endl;
+#endif
     Status* translateStatus = translator->translate(expr, &code);
     if (translateStatus != NULL && translateStatus->isError()) {
         uint32_t position = translateStatus->getPosition();
@@ -78,9 +82,11 @@ int main(int argc, char** argv) {
             vars.push_back(yVar);
             xVar->setDoubleValue(42.0);
         }
+#ifndef PROD
         code->disassemble();
 
         cout << "-------" << endl;
+#endif
         Status* execStatus = code->execute(vars);
         if (execStatus != NULL && execStatus->isError()) {
             printf("Cannot execute expression: error: %s\n",

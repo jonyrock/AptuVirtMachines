@@ -1,5 +1,6 @@
 *** TODO ***
-* function-cast
+* fail additional/casts.mvm
+* double output, see additional/function-cast.mvm
 * all possible test from additional (without contexts)
 * provide outer function contexts as map: [id] -> context (versions)
 

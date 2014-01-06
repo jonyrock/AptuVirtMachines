@@ -156,12 +156,11 @@
       <itemPath>tests/literal.mvm</itemPath>
       <itemPath>tests/mul.expect</itemPath>
       <itemPath>tests/mul.mvm</itemPath>
-      <itemPath>tests/my_test.mvm</itemPath>
       <itemPath>tests/newfile</itemPath>
       <itemPath>tests/run.py</itemPath>
       <itemPath>tests/sub.expect</itemPath>
       <itemPath>tests/sub.mvm</itemPath>
-      <itemPath>tests/var.mvm</itemPath>
+      <itemPath>tests/var.mvm_</itemPath>
       <itemPath>tests/while.expect</itemPath>
       <itemPath>tests/while.mvm</itemPath>
     </logicalFolder>
@@ -465,8 +464,6 @@
       </item>
       <item path="tests/mul.mvm" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="tests/my_test.mvm" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="tests/newfile" ex="false" tool="3" flavor2="0">
       </item>
       <item path="tests/optional/function_native.expect"
@@ -490,7 +487,7 @@
       </item>
       <item path="tests/sub.mvm" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="tests/var.mvm" ex="false" tool="3" flavor2="0">
+      <item path="tests/var.mvm_" ex="false" tool="3" flavor2="0">
       </item>
       <item path="tests/while.expect" ex="false" tool="3" flavor2="0">
       </item>
@@ -782,8 +779,6 @@
       </item>
       <item path="tests/mul.mvm" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="tests/my_test.mvm" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="tests/newfile" ex="false" tool="3" flavor2="0">
       </item>
       <item path="tests/optional/function_native.expect"
@@ -807,7 +802,7 @@
       </item>
       <item path="tests/sub.mvm" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="tests/var.mvm" ex="false" tool="3" flavor2="0">
+      <item path="tests/var.mvm_" ex="false" tool="3" flavor2="0">
       </item>
       <item path="tests/while.expect" ex="false" tool="3" flavor2="0">
       </item>

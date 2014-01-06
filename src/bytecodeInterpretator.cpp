@@ -7,6 +7,7 @@
 #include <inttypes.h>
 #include <stdlib.h>
 #include "mathvm.h"
+#include <iomanip>
 
 using namespace std;
 
@@ -33,7 +34,7 @@ namespace mathvm {
         }
 
         execStatus = NULL;
-        
+
         setRootVars(code, vars);
         execFunction(functions[0]);
 
@@ -290,6 +291,17 @@ namespace mathvm {
                     dv = d.popd();
                     d.pushd(dv / dv2);
                     break;
+                case BC_DCMP:
+                    dv2 = d.popi();
+                    dv = d.popi();
+                    if (dv < dv2)
+                        d.pushi(-1);
+                    if (dv == dv2)
+                        d.pushi(0);
+                    if (dv < dv2)
+                        d.pushi(1);
+                    break;
+
 
                 case BC_IADD:
                     iv2 = d.popi();
@@ -325,6 +337,16 @@ namespace mathvm {
                     iv2 = d.popi();
                     iv = d.popi();
                     d.pushi(iv ^ iv2);
+                    break;
+                case BC_ICMP:
+                    iv2 = d.popi();
+                    iv = d.popi();
+                    if (iv < iv2)
+                        d.pushi(-1);
+                    if (iv == iv2)
+                        d.pushi(0);
+                    if (iv > iv2)
+                        d.pushi(1);
                     break;
 
                     // SWAP
@@ -406,9 +428,8 @@ RETURN:
 
     }
 
-
-    BytecodeInterpretator::~BytecodeInterpretator(){
+    BytecodeInterpretator::~BytecodeInterpretator() {
         delete functions[0];
     }
-    
+
 }

@@ -22,21 +22,21 @@ namespace mathvm {
         }
 
         BytecodeCode* code = new BytecodeCode();
-        
+
         *code_ = code;
-        
+
         BytecodeAstVisitor visitor(code);
         visitor.visitAst(parser.top());
-        
-//        cout << "size::" << code->globalVars()->size() << endl;
-        
+
+        //        cout << "size::" << code->globalVars()->size() << endl;
+
         return visitor.status;
     }
 
     void BytecodeAstVisitor::visitAst(AstFunction* fun) {
         size_t bci = 0;
         Scope::VarIterator varIt(fun->node()->body()->scope());
-        
+
         while (varIt.hasNext()) {
             AstVar* var = varIt.next();
             bci++; // load instruction
@@ -44,9 +44,9 @@ namespace mathvm {
             code->globalVars()->insert(make_pair(name, bci));
             bci += typeToSize(var->type());
         }
-//        cout << "my size:" << code->globalVars()->size() << endl;
-        
-        
+        //        cout << "my size:" << code->globalVars()->size() << endl;
+
+
         visitAstFunction(fun);
     }
 
@@ -188,9 +188,42 @@ namespace mathvm {
         assert((currentBytecode()->length()) != codeLenBefore);
     }
 
-    void BytecodeAstVisitor::ensureType(VarType ts, VarType td, uint32_t pos) {
+    void BytecodeAstVisitor::ensureType(VarType ts, VarType td, uint32_t pos,
+            uint16_t truePos, uint16_t falsePos) {
         if (ts == td || td == VT_VOID)
             return;
+        if (ts == VT_LOGIC) {
+            if (td == VT_STRING) {
+                throw logic_error("Convert bool to string? Are u serious?");
+            }
+
+            currentBytecode()->set(pos, BC_JA);
+            currentBytecode()->setUInt16(pos + 1, current());
+
+            addInsn(BC_JA); // skip for other code
+            addId(current() + 5); // ILOAD + JA + ID
+            setJump(truePos, current());
+            setJump(falsePos, current() + 4); // ILOAD + JA + ID
+            if (td == VT_INT) {
+                addInsn(BC_ILOAD1);
+                addInsn(BC_JA);
+                addId(pos);
+                addInsn(BC_ILOAD0);
+                addInsn(BC_JA);
+                addId(pos);
+            }
+
+            if (td == VT_DOUBLE) {
+                addInsn(BC_DLOAD1);
+                addInsn(BC_JA);
+                addId(pos);
+                addInsn(BC_DLOAD0);
+                addInsn(BC_JA);
+                addId(pos);
+            }
+
+            return;
+        }
         if (ts == VT_INT && td == VT_DOUBLE) {
             int funId = currentFunction->id();
             int vv = currentBytecode()->get(pos);
@@ -220,36 +253,30 @@ namespace mathvm {
 
     void BytecodeAstVisitor::visitBinaryLogicOpNode(BinaryOpNode* node) {
 
-        if (node->kind() == tAND || node->kind() == tOR) {
-            node->left()->visit(this);
-            uint16_t leftTrueIdUnsettedPos = trueIdUnsettedPos;
-            uint16_t leftFalseIdUnsettedPos = falseIdUnsettedPos;
 
-            uint16_t rightBeginId = current();
-            node->right()->visit(this);
-            uint16_t rightTrueIdUnsettedPos = trueIdUnsettedPos;
-            uint16_t rightFalseIdUnsettedPos = falseIdUnsettedPos;
+        node->left()->visit(this);
+        uint16_t leftTrueIdUnsettedPos = trueIdUnsettedPos;
+        uint16_t leftFalseIdUnsettedPos = falseIdUnsettedPos;
 
-            addTrueFalseJumpRegion(BC_JA);
+        uint16_t rightBeginId = current();
+        node->right()->visit(this);
+        uint16_t rightTrueIdUnsettedPos = trueIdUnsettedPos;
+        uint16_t rightFalseIdUnsettedPos = falseIdUnsettedPos;
 
-            if (node->kind() == tAND) {
-                setJump(leftTrueIdUnsettedPos, rightBeginId);
-                // jump located before jump id
-                setJump(leftFalseIdUnsettedPos, falseIdUnsettedPos - 1);
-            } else {
-                setJump(leftTrueIdUnsettedPos, trueIdUnsettedPos - 1);
-                setJump(leftFalseIdUnsettedPos, rightBeginId);
-            }
+        addTrueFalseJumpRegion(BC_JA);
 
-            setJump(rightTrueIdUnsettedPos, trueIdUnsettedPos - 1);
-            setJump(rightFalseIdUnsettedPos, falseIdUnsettedPos - 1);
-            return;
+        if (node->kind() == tAND) {
+            setJump(leftTrueIdUnsettedPos, rightBeginId);
+            // jump located before jump id
+            setJump(leftFalseIdUnsettedPos, falseIdUnsettedPos - 1);
+        } else {
+            setJump(leftTrueIdUnsettedPos, trueIdUnsettedPos - 1);
+            setJump(leftFalseIdUnsettedPos, rightBeginId);
         }
 
-        assert(logicKindToJump.find(node->kind()) != logicKindToJump.end());
-        node->left()->visit(this);
-        node->right()->visit(this);
-        addTrueFalseJumpRegion(logicKindToJump[node->kind()]);
+        setJump(rightTrueIdUnsettedPos, trueIdUnsettedPos - 1);
+        setJump(rightFalseIdUnsettedPos, falseIdUnsettedPos - 1);
+        typesStack.push(VT_LOGIC);
 
     }
 
@@ -267,15 +294,36 @@ namespace mathvm {
         node->left()->visit(this);
         VarType leftType = topType();
         uint32_t leftCastPos = current();
-        addInsn(BC_INVALID); // there will be type cast
+
+        addCastSpace();
+
+
+        // if left was logic expr
+        uint16_t leftTj = trueIdUnsettedPos;
+        uint16_t leftFj = falseIdUnsettedPos;
 
         node->right()->visit(this);
         VarType rightType = topType();
 
         VarType maxType = max(leftType, rightType);
-        ensureType(leftType, maxType, leftCastPos);
-        ensureType(rightType, maxType);
-        addTypedOpInsn(maxType, node->kind());
+        if (maxType == VT_LOGIC)
+            maxType = VT_INT;
+        ensureType(leftType, maxType, leftCastPos, leftTj, leftFj);
+        ensureType(rightType, maxType, trueIdUnsettedPos, falseIdUnsettedPos);
+
+        if (logicCompareKinds.find(node->kind()) != logicCompareKinds.end()) {
+            if (maxType == VT_INT) {
+                addInsn(BC_ICMP);
+            }
+            if (maxType == VT_DOUBLE) {
+                addInsn(BC_DCMP);
+            }
+            addInsn(BC_ILOAD0);
+            addTrueFalseJumpRegion(logicKindToJump[node->kind()]);
+            typesStack.push(VT_LOGIC);
+        } else {
+            addTypedOpInsn(maxType, node->kind());
+        }
         typesStack.push(maxType);
     }
 
@@ -488,10 +536,10 @@ namespace mathvm {
             return;
         }
         assert(fun);
-        
+
         for (int i = node->parametersNumber() - 1; i >= 0; i--) {
             node->parameterAt(i)->visit(this);
-            ensureType(fun->parameterType(i));
+            ensureType(fun->parameterType(i), trueIdUnsettedPos, falseIdUnsettedPos);
         }
         addInsn(BC_CALL);
         addId(fun->id());
@@ -530,7 +578,7 @@ namespace mathvm {
         if (node->returnExpr() != NULL) {
             node->returnExpr()->visit(this);
             if (currentFunction->returnType() != VT_VOID)
-                ensureType(currentFunction->returnType());
+                ensureType(currentFunction->returnType(), trueIdUnsettedPos, falseIdUnsettedPos);
         }
         addInsn(BC_RETURN);
     }
@@ -539,7 +587,7 @@ namespace mathvm {
         pair<uint16_t, uint16_t> ids = findVar(node->var()->name());
         node->value()->visit(this);
         if (node->op() == tINCRSET || node->op() == tDECRSET) {
-            ensureType(topType(), node->var()->type());
+            ensureType(topType(), node->var()->type(), trueIdUnsettedPos, falseIdUnsettedPos);
             loadVar(node->var());
         }
         if (node->op() == tINCRSET) {
@@ -557,7 +605,7 @@ namespace mathvm {
             goto STORE_TO_VAR;
 
 STORE_TO_VAR:
-        ensureType(node->var()->type());
+        ensureType(node->var()->type(), trueIdUnsettedPos, falseIdUnsettedPos);
         const AstVar* var = node->var();
         if (var->type() == VT_DOUBLE) {
             if (ids.first != contextsStack.back())
