@@ -1,7 +1,7 @@
 *** TODO ***
+* int -> logic cast
 * TRANSLATOR check that no expr like int x = y++ (load on stack what stored)
 * check functions declaration with other code mix. 
-* native calls
 * TRANSLATOR for with outer var
 * TRANSLATOR IMOD operation check
 

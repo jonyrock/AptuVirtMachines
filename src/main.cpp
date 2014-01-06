@@ -21,13 +21,14 @@ int main(int argc, char** argv) {
     // const char* script = "tests/for.mvm";
 //    const char* script = "tests/expr.mvm";
 //         const char* script = "tests/mul.mvm";
-     const char* script = "tests/while.mvm";
+//     const char* script = "tests/while.mvm";
     // const char* script = "tests/assign.mvm";
 //     const char* script = NULL;
 
 //        const char* script = "tests/additional/function-cast.mvm";
+//        const char* script = "tests/additional/function-call.mvm";
 //     const char* script = "tests/additional/ackermann.mvm";
-//     const char* script = "tests/additional/casts.mvm";
+     const char* script = "tests/additional/casts.mvm";
     // const char* script = "tests/additional/fib.mvm";
 #else
      const char* script = NULL;

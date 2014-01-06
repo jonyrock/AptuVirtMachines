@@ -68,6 +68,11 @@ namespace mathvm {
         inline void setFalseJump(uint16_t to) {
             setJump(falseIdUnsettedPos, to);
         }
+        
+        inline void addJump(uint16_t to) {
+            addId(0);
+            setJump(current() - 2, to);
+        }
 
         inline void setJump(uint16_t jumpId, uint16_t to) {
             currentBytecode()->setInt16(jumpId, (uint16_t) to - jumpId);

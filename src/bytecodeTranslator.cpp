@@ -197,29 +197,30 @@ namespace mathvm {
                 throw logic_error("Convert bool to string? Are u serious?");
             }
 
-            currentBytecode()->set(pos, BC_JA);
-            currentBytecode()->setUInt16(pos + 1, current());
-
+//            currentBytecode()->set(pos, BC_JA);
+//            uint16_t cur =  current();
+//            currentBytecode()->setUInt16(pos + 1, current());
+//
             addInsn(BC_JA); // skip for other code
-            addId(current() + 5); // ILOAD + JA + ID
+            addJump(current() + 10); 
             setJump(truePos, current());
             setJump(falsePos, current() + 4); // ILOAD + JA + ID
             if (td == VT_INT) {
                 addInsn(BC_ILOAD1);
                 addInsn(BC_JA);
-                addId(pos);
+                addJump(pos);
                 addInsn(BC_ILOAD0);
                 addInsn(BC_JA);
-                addId(pos);
+                addJump(pos);
             }
 
             if (td == VT_DOUBLE) {
                 addInsn(BC_DLOAD1);
                 addInsn(BC_JA);
-                addId(pos);
+                addJump(pos);
                 addInsn(BC_DLOAD0);
                 addInsn(BC_JA);
-                addId(pos);
+                addJump(pos);
             }
 
             return;
@@ -312,6 +313,7 @@ namespace mathvm {
         ensureType(rightType, maxType, trueIdUnsettedPos, falseIdUnsettedPos);
 
         if (logicCompareKinds.find(node->kind()) != logicCompareKinds.end()) {
+//            return;
             if (maxType == VT_INT) {
                 addInsn(BC_ICMP);
             }
@@ -323,8 +325,9 @@ namespace mathvm {
             typesStack.push(VT_LOGIC);
         } else {
             addTypedOpInsn(maxType, node->kind());
+            typesStack.push(maxType);
         }
-        typesStack.push(maxType);
+        
     }
 
     void BytecodeAstVisitor::visitForNode_(ForNode* node) {
@@ -354,7 +357,7 @@ namespace mathvm {
         if (node->var()->type() == VT_DOUBLE) {
             addInsn(BC_STOREDVAR);
             addId(topVar);
-            addInsn(BC_STOREDVAR);
+            addInsn(BC_STOREDVAR);const char* script = "tests/additional/function-cast.mvm";
         }
         //        addId(astVarsContext[node->var()]);
         addId(findVarLocal(node->var()->name()));
@@ -398,8 +401,7 @@ namespace mathvm {
             addId(findVarLocal(node->var()->name()));
         }
         addInsn(BC_JA);
-        addId(0);
-        setJump(current() - 2, forConditionId);
+        addJump(forConditionId);
 
         setTrueJump(bodyBegin);
         setFalseJump(current());

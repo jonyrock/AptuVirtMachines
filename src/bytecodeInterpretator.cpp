@@ -105,7 +105,7 @@ namespace mathvm {
 
         while (bci < len) {
 
-            if (bci == 281) {
+            if (bci == 62) {
                 int kkk = 10;
             }
 
@@ -292,13 +292,13 @@ namespace mathvm {
                     d.pushd(dv / dv2);
                     break;
                 case BC_DCMP:
-                    dv2 = d.popi();
-                    dv = d.popi();
+                    dv2 = d.popd();
+                    dv = d.popd();
                     if (dv < dv2)
                         d.pushi(-1);
                     if (dv == dv2)
                         d.pushi(0);
-                    if (dv < dv2)
+                    if (dv > dv2)
                         d.pushi(1);
                     break;
 
