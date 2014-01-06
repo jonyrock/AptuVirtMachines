@@ -154,15 +154,15 @@ namespace mathvm {
         inline void addCastSpace() {
             // check ensureType() after
             addInsn(BC_INVALID); // basic cast
-            addInsn(BC_INVALID); // or jump id
-            addInsn(BC_INVALID); // if logic
+//            addInsn(BC_INVALID); // or jump id
+//            addInsn(BC_INVALID); // if logic
         }
         
         inline void ensureType(VarType ts, VarType td,
                 uint16_t truePos, uint16_t falsePos) {
             addCastSpace();
             // always look at addCastSpace()
-            ensureType(ts, td, current() - 3, truePos, falsePos);
+            ensureType(ts, td, current() - 1, truePos, falsePos);
         }
 
         void ensureType(VarType ts, VarType td, uint32_t pos,

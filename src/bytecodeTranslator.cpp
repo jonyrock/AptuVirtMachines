@@ -405,7 +405,7 @@ namespace mathvm {
 
         setTrueJump(bodyBegin);
         setFalseJump(current());
-        addInsn(BC_INVALID);
+//        addInsn(BC_INVALID);
 
     }
 
@@ -422,7 +422,7 @@ namespace mathvm {
 
         setTrueJump(bodyBegin);
         setFalseJump(current());
-        addInsn(BC_INVALID);
+//        addInsn(BC_INVALID);
 
         typesStack.push(VT_VOID);
     }
@@ -453,7 +453,7 @@ namespace mathvm {
         uint32_t ifExprEndId = current();
         setJump(thenEndId, (uint16_t) ifExprEndId);
         setJump(elseEndId, (uint16_t) ifExprEndId);
-        addInsn(BC_INVALID); // just idle
+//        addInsn(BC_INVALID); // just idle
 
     }
 

@@ -1,12 +1,12 @@
 *** TODO ***
-* fail additional/casts.mvm
 * double output, see additional/function-cast.mvm
 * all possible test from additional (without contexts)
 * provide outer function contexts as map: [id] -> context (versions)
 
 *** GOOD TODO ***
-* remove INVALID after else (not necessary)
-
 
 *** DONE ***
+* remove INVALID after else (not necessary)
+* remove triple invalid
+* fail additional/casts.mvm
 * try run tests/run.py
