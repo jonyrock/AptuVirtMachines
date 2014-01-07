@@ -65,7 +65,7 @@ namespace mathvm {
     }
 
     void BytecodeInterpretator::execFunction(const BytecodeFunction* fun, OuterContexts contexts) {
-        
+
         double dv;
         double dv2;
         int64_t iv;
@@ -85,7 +85,7 @@ namespace mathvm {
 
         // read params 
         for (uint16_t i = 0; i < fun->parametersNumber(); i++) {
-            bci++; // load instruction
+            
             VarType type = fun->parameterType(i);
             if (type == VT_DOUBLE) {
                 dv = d.popd();
@@ -99,7 +99,7 @@ namespace mathvm {
                 idv = d.popid();
                 context.seti(bci, idv);
             }
-            bci += typeToSize(type);
+            bci++; // def instruction
         }
         // end read params
 
@@ -110,6 +110,7 @@ namespace mathvm {
 
         while (bci < len) {
 
+
             if (bci == 52) {
                 int kkk = 10;
             }
@@ -118,6 +119,8 @@ namespace mathvm {
             Instruction insn = b.getInsn(bci);
             const char* name = bytecodeName(insn, &length);
             bool jumpCase = false;
+
+            size_t tttlen = dstack.length();
             switch (insn) {
                 case BC_INVALID:
                     break;
@@ -137,25 +140,29 @@ namespace mathvm {
                     d.pushd(S64(constants[iv]->c_str()));
                     break;
 
-                    // STACK LOAD (new vars)
+                    // NEW VARS
+                case BC_DDEF:
+                    context.setd(bci, 0);
+                    break;
+                case BC_IDEF:
+                    context.seti(bci, 0);
+                    break;
+                case BC_SDEF:
+                    context.sets(bci, 0);
+                    break;
+                    
+                    // STACK LOAD
                 case BC_DLOAD:
                     dv = b.getDouble(bci + 1);
                     d.pushd(dv);
-                    context.setd(bci + 1, dv);
                     break;
                 case BC_ILOAD:
                     iv = b.getInt64(bci + 1);
                     d.pushi(iv);
-                {
-                    if (bci + 1 == 1)
-                        int kkkk = 12;
-                }
-                    context.seti(bci + 1, iv);
                     break;
                 case BC_SLOAD:
                     idv = b.getUInt16(bci + 1);
                     d.pushid(idv);
-                    context.sets(bci + 1, idv);
                     break;
 
                     // STACK LOAD
@@ -172,7 +179,7 @@ namespace mathvm {
                     d.pushd(1);
                     break;
 
-                    // VAR  LOADS
+                    // VAR LOADS
                 case BC_LOADIVAR:
                     idv = b.getUInt16(bci + 1);
                     dstack.pushi(context.geti(idv));
@@ -432,7 +439,7 @@ namespace mathvm {
 
                 case BC_CALL:
                     idv = b.getUInt16(bci + 1);
-
+//                    cout << "stack size: " << dstack.length() << endl;
                     execFunction(functions[idv], deeperContexts);
                     break;
                 case BC_CALLNATIVE:

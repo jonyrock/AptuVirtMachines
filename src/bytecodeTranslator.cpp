@@ -39,10 +39,9 @@ namespace mathvm {
 
         while (varIt.hasNext()) {
             AstVar* var = varIt.next();
-            bci++; // load instruction
             string name(var->name());
             code->globalVars()->insert(make_pair(name, bci));
-            bci += typeToSize(var->type());
+            bci++; // load instruction
         }
 
 
@@ -70,19 +69,16 @@ namespace mathvm {
 
         for (int i = 0; i < function->parametersNumber(); i++) {
             if (function->parameterType(i) == VT_DOUBLE) {
-                fun->bytecode()->addInsn(BC_DLOAD);
-                paramIds[function->parameterName(i)] = fun->bytecode()->length();
-                fun->bytecode()->addDouble(0);
+                fun->bytecode()->addInsn(BC_DDEF);
+                paramIds[function->parameterName(i)] = fun->bytecode()->length() - 1;
             }
             if (function->parameterType(i) == VT_INT) {
-                fun->bytecode()->addInsn(BC_ILOAD);
-                paramIds[function->parameterName(i)] = fun->bytecode()->length();
-                fun->bytecode()->addInt64(0);
+                fun->bytecode()->addInsn(BC_IDEF);
+                paramIds[function->parameterName(i)] = fun->bytecode()->length() - 1;
             }
             if (function->parameterType(i) == VT_STRING) {
-                fun->bytecode()->addInsn(BC_SLOAD);
-                paramIds[function->parameterName(i)] = fun->bytecode()->length();
-                fun->bytecode()->addInt16(0);
+                fun->bytecode()->addInsn(BC_SDEF);
+                paramIds[function->parameterName(i)] = fun->bytecode()->length() - 1;
             }
         }
 
@@ -144,21 +140,18 @@ namespace mathvm {
     }
 
     uint16_t BytecodeAstVisitor::allocateVar(AstVar& var) {
-        uint32_t beginIndex = current() + 1;
+        uint32_t beginIndex = current();
         contextVarIds[currentContext][var.name()] = beginIndex;
         if (var.type() == VT_DOUBLE) {
-            addInsn(BC_DLOAD);
-            currentBytecode()->addDouble(0);
+            addInsn(BC_DDEF);
             return beginIndex;
         }
         if (var.type() == VT_INT) {
-            addInsn(BC_ILOAD);
-            currentBytecode()->addInt64(0);
+            addInsn(BC_IDEF);
             return beginIndex;
         }
         if (var.type() == VT_STRING) {
-            addInsn(BC_SLOAD);
-            addId(0);
+            addInsn(BC_SDEF);
             return beginIndex;
         }
         assert(false);
@@ -357,15 +350,13 @@ namespace mathvm {
     void BytecodeAstVisitor::visitForNode_(ForNode* node) {
         uint16_t topVar = 0;
         if (node->var()->type() == VT_INT) {
-            addInsn(BC_ILOAD);
             topVar = current();
-            currentBytecode()->addInt64(0);
+            addInsn(BC_IDEF);
         }
 
         if (node->var()->type() == VT_DOUBLE) {
-            addInsn(BC_DLOAD);
             topVar = current();
-            currentBytecode()->addDouble(0);
+            addInsn(BC_DDEF);
         }
 
         assert(topVar != 0);
@@ -446,7 +437,6 @@ namespace mathvm {
 
         setTrueJump(bodyBegin);
         setFalseJump(current());
-        //        addInsn(BC_INVALID);
 
         typesStack.push(VT_VOID);
     }

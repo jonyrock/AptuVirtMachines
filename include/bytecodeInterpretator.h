@@ -77,18 +77,18 @@ namespace mathvm {
     };
     
     class FunctionContex {
-        vector<double> ddata;
-        vector<int64_t> idata;
-        vector<uint16_t> sdata;        
+        map<uint32_t, double> ddata;
+        map<uint32_t, int64_t> idata;
+        map<uint32_t, uint16_t> sdata;        
     public:
 
         inline FunctionContex(size_t size) {
-            ddata = vector<double>();
-            idata = vector<int64_t>();
-            sdata = vector<uint16_t>();
-            ddata.resize(size);
-            idata.resize(size);
-            sdata.resize(size);
+//            ddata = vector<double>();
+//            idata = vector<int64_t>();
+//            sdata = vector<uint16_t>();
+//            ddata.resize(size);
+//            idata.resize(size);
+//            sdata.resize(size);
         }
 
         inline void setd(uint32_t id, double v) {

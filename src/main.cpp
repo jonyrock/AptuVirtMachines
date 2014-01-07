@@ -10,8 +10,6 @@
 using namespace mathvm;
 using namespace std;
 
-//#define PROD
-
 int main(int argc, char** argv) {
 
     string impl = "";
@@ -30,7 +28,7 @@ int main(int argc, char** argv) {
     // non-context tests
 //     const char* script = "tests/additional/function.mvm";
     // const char* script = "tests/additional/function-call.mvm";
-     const char* script = "tests/additional/fib.mvm";
+//     const char* script = "tests/additional/fib.mvm";
     // const char* script = "tests/additional/ackermann.mvm";
     // const char* script = "tests/additional/casts.mvm";
     //     const char* script = "tests/additional/function-cast.mvm";
@@ -41,7 +39,7 @@ int main(int argc, char** argv) {
 //    const char* script = "tests/additional/complex.mvm";
     
 //    const char* script = "tests/additional/complex2.mvm";
-    //     const char* script = "tests/additional/fib_closure.mvm";
+         const char* script = "tests/additional/fib_closure.mvm";
     //     const char* script = "tests/additional/ackermann_closure.mvm";
 
 
