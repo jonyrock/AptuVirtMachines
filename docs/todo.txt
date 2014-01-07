@@ -1,10 +1,8 @@
 *** TODO ***
-* additional/fib_closure.mvm fail
 * additional/complex.mvm fail
 * additional/complex2.mvm fail
-* double output, see additional/function-cast.mvm
+* additional/fib_closure.mvm fail
 * all possible test from additional (without contexts)
-
 
 *** GOOD TODO ***
 

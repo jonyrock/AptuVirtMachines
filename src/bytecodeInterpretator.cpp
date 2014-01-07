@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include "mathvm.h"
 #include <iomanip>
+#include <stdio.h>
 
 using namespace std;
 
@@ -64,7 +65,9 @@ namespace mathvm {
     }
 
     void BytecodeInterpretator::execFunction(const BytecodeFunction* fun, OuterContexts contexts) {
-
+        
+        int iddd = fun->id();
+        
         double dv;
         double dv2;
         int64_t iv;

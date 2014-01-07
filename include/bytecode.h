@@ -53,8 +53,7 @@ namespace mathvm {
             if (index >= _data.size()) {
                 _data.resize(index + 1);
             }
-            _data[index] = b;
-            
+            _data[index] = b;            
         }
 
         void add(uint8_t b) {

@@ -101,7 +101,7 @@ namespace mathvm {
 #undef VISITOR_FUNCTION
 
         void visitBinaryLogicOpNode(BinaryOpNode* node);
-        void visitAstFunction(AstFunction*);
+        void fillAstFunction(AstFunction*, BytecodeFunction*);
 
     private:
 

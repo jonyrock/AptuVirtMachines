@@ -16,6 +16,7 @@
 * bytecode for visit function beginning (signature)
 * get bug with function names collision
 * assert(false); in the end of each visitor
+* double output, see additional/function-cast.mvm
 
 *** DONE ***
 * providing values from main

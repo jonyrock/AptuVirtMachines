@@ -79,7 +79,7 @@ namespace mathvm {
     class FunctionContex {
         vector<double> ddata;
         vector<int64_t> idata;
-        vector<uint16_t> sdata;
+        vector<uint16_t> sdata;        
     public:
 
         inline FunctionContex(size_t size) {
