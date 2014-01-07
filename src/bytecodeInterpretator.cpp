@@ -66,8 +66,6 @@ namespace mathvm {
 
     void BytecodeInterpretator::execFunction(const BytecodeFunction* fun, OuterContexts contexts) {
         
-        int iddd = fun->id();
-        
         double dv;
         double dv2;
         int64_t iv;
@@ -112,7 +110,7 @@ namespace mathvm {
 
         while (bci < len) {
 
-            if (bci == 1820022) {
+            if (bci == 52) {
                 int kkk = 10;
             }
 

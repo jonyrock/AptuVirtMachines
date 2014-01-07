@@ -1,12 +1,12 @@
 *** TODO ***
-* additional/complex.mvm fail
-* additional/complex2.mvm fail
 * additional/fib_closure.mvm fail
-* all possible test from additional (without contexts)
 
 *** GOOD TODO ***
 
 *** DONE ***
+* all possible test from additional (without contexts)
+* additional/complex2.mvm fail
+* additional/complex.mvm fail
 * provide outer function contexts as map: [id] -> context (versions)
 * remove INVALID after else (not necessary)
 * remove triple invalid
