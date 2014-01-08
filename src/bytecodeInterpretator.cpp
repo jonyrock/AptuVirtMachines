@@ -72,10 +72,12 @@ namespace mathvm {
         int64_t iv2;
         uint16_t idv;
         uint16_t idv2;
+        
+        int id = fun->id();
 
         size_t bci = 0;
 
-        FunctionContex context(fun->bytecode()->length());
+        FunctionContex context(fun);
         OuterContexts deeperContexts(contexts);
         deeperContexts[fun->id()] = &context;
 
@@ -142,13 +144,13 @@ namespace mathvm {
 
                     // NEW VARS
                 case BC_DDEF:
-                    context.setd(bci, 0);
+//                    context.setd(bci, 0);
                     break;
                 case BC_IDEF:
-                    context.seti(bci, 0);
+//                    context.seti(bci, 0);
                     break;
                 case BC_SDEF:
-                    context.sets(bci, 0);
+//                    context.sets(bci, 0);
                     break;
                     
                     // STACK LOAD

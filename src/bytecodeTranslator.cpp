@@ -29,8 +29,113 @@ namespace mathvm {
         visitor.visitAst(parser.top());
 
         //        cout << "size::" << code->globalVars()->size() << endl;
+        if (visitor.status != NULL && visitor.status->isError()) {
+            return visitor.status;
+        }
 
-        return visitor.status;
+        optimize(code);
+
+        return NULL;
+
+    }
+
+    void BytecodeTranslator::optimize(BytecodeCode* code) {
+
+        vector<map<uint32_t, uint32_t>*> funAll;
+        Code::FunctionIterator fi(code);
+        while (fi.hasNext()) {
+            map<uint32_t, uint32_t>* myAll = new map<uint32_t, uint32_t>();
+            collectDefs((BytecodeFunction*) fi.next(), myAll);
+            funAll.push_back(myAll);
+        }
+        fi = Code::FunctionIterator(code);
+        while (fi.hasNext()) {
+            optimizeDefs((BytecodeFunction*) fi.next(), &funAll);
+        }
+
+        for (size_t i = 0; i < funAll.size(); i++) {
+            delete funAll[i];
+        }
+    }
+
+    void BytecodeTranslator::collectDefs(BytecodeFunction* fun,
+            map<uint32_t, uint32_t>* reallocation) {
+
+        size_t curDouble = 0;
+        size_t curInt = 0;
+        size_t curStr = 0;
+
+        for (size_t bci = 0; bci < fun->bytecode()->length();) {
+            size_t length;
+            Instruction insn = fun->bytecode()->getInsn(bci);
+            bytecodeName(insn, &length);
+            switch (insn) {
+                case BC_DDEF:
+                    reallocation->insert(make_pair(bci, curDouble));
+                    curDouble++;
+                    break;
+
+                case BC_IDEF:
+                    reallocation->insert(make_pair(bci, curInt));
+                    curInt++;
+                    break;
+
+                case BC_SDEF:
+                    reallocation->insert(make_pair(bci, curStr));
+                    curStr++;
+                    break;
+
+                default:
+                    break;
+
+            }
+            bci += length;
+        }
+        
+        fun->sizeDoubles = curDouble;
+        fun->sizeInts = curInt;
+        fun->sizeStrings = curStr;
+        
+
+    }
+
+    void BytecodeTranslator::optimizeDefs(BytecodeFunction* fun,
+            vector<map<uint32_t, uint32_t>*>* funAll) {
+
+        for (size_t bci = 0; bci < fun->bytecode()->length();) {
+            size_t length;
+            Instruction insn = fun->bytecode()->getInsn(bci);
+            bytecodeName(insn, &length);
+
+            uint16_t ctxId = 0;
+            uint16_t id = 0;
+            uint16_t idFix = 0;
+            switch (insn) {
+
+                case BC_LOADIVAR:
+                case BC_LOADDVAR:
+                case BC_LOADSVAR:
+                    id = fun->bytecode()->getUInt16(bci + 1);
+                    idFix = funAll->at(fun->id())->find(id)->second;
+                    fun->bytecode()->setInt16(bci + 1, idFix);
+                    break;
+
+                case BC_LOADCTXDVAR:
+                case BC_LOADCTXIVAR:
+                case BC_LOADCTXSVAR:
+                    ctxId = fun->bytecode()->getUInt16(bci + 1);
+                    id = fun->bytecode()->getUInt16(bci + 3);
+                    idFix = funAll->at(ctxId)->find(id)->second;
+                    fun->bytecode()->setInt16(bci + 3, idFix);
+                    break;
+
+                default:
+                    break;
+
+            }
+            bci += length;
+        }
+
     }
 
     void BytecodeAstVisitor::visitAst(AstFunction* fun) {
@@ -47,24 +152,24 @@ namespace mathvm {
 
         BytecodeFunction* bfun = new BytecodeFunction(fun);
         code->addFunction(bfun);
-        
+
         fillAstFunction(fun, bfun);
-        
+
         currentContext = 0; // I know it.
         currentFunction = bfun;
 
         functionsStack.push_back(currentContext);
         contextsStack.push_back(currentContext);
 
-        
+
         fun->node()->visit(this);
-        
+
         // I will not drop something from stacks
-        
+
     }
 
     void BytecodeAstVisitor::fillAstFunction(AstFunction* function, BytecodeFunction* fun) {
-        
+
         map<string, uint16_t> paramIds;
 
         for (int i = 0; i < function->parametersNumber(); i++) {
@@ -489,7 +594,7 @@ namespace mathvm {
 
             if (stackI == 0)
                 break;
-            
+
             stackI--;
 
         }

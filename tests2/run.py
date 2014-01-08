@@ -4,6 +4,7 @@ import subprocess
 import sys
 import os
 import optparse
+import time
 
 class Options:
   pass
@@ -59,6 +60,7 @@ diff = '/usr/bin/diff'
 
 def runTest(mvm, root, test, doublerun):
     try:
+        start = time.time()
         expectFile = None
         testFile = os.path.join(root, test+'.mvm')
         if doublerun:
@@ -68,13 +70,15 @@ def runTest(mvm, root, test, doublerun):
             result = runProg(mvm, expectFile)
         else:
             expectFile = os.path.join(root, test+'.expect')
-            print("run mvm: " + mvm)
+            print("run test: " + test)
             result = runProg(mvm, testFile)
         expect = readFile(expectFile)
 
        
         if expect == result:
-            print 'Test "'+test+'" has PASSED'
+            # print 'Test "'+test+'" has PASSED'
+            end = time.time()
+            print 'PASSED ' + str(end - start)
         else:
             print 'Test "'+test+'" has FAILED'
             print 'Expected: '           
@@ -90,6 +94,7 @@ def runTest(mvm, root, test, doublerun):
             print out
             exit(1)
     except Exception, e:
+	print test
         print "Failed to execute the test " + test
         exit(1)
 
@@ -103,7 +108,7 @@ def main(argv):
   mvm = options.executable
   tests = glob.glob(os.path.join(testdir, '*.mvm'))
   for t in tests:
-    m = re.search(r"([\w]+)\.mvm", t)
+    m = re.search(r"([\w-]+)\.mvm", t)
     if m is None:
       continue
     t = m.group(1)

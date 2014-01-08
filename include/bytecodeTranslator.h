@@ -25,6 +25,10 @@ namespace mathvm {
         }
 
         virtual Status* translate(const string& program, Code** code);
+        
+        void optimize(BytecodeCode* code);
+        void collectDefs(BytecodeFunction* fun, map<uint32_t, uint32_t>*); 
+        void optimizeDefs(BytecodeFunction* fun, vector<map<uint32_t, uint32_t>*>* funAll);
 
     };
 
@@ -173,6 +177,8 @@ namespace mathvm {
         uint16_t currentContext; // aka function
         uint16_t trueIdUnsettedPos;
         uint16_t falseIdUnsettedPos;
+        
+        
 
 
     };

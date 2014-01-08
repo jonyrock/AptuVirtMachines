@@ -71,24 +71,27 @@ namespace mathvm {
         }
 
         inline void dropToSize(size_t to) {
+//            if(_data.size() != to){
+//                size_t ooo = _data.size();
+//                cout << "FUCK YOU NOOB." << endl;
+//            }
+//            assert(_data.size() == to);
             _data.resize(to);
         }
 
     };
-    
+
     class FunctionContex {
         map<uint32_t, double> ddata;
         map<uint32_t, int64_t> idata;
-        map<uint32_t, uint16_t> sdata;        
+        map<uint32_t, uint16_t> sdata;
+
     public:
 
-        inline FunctionContex(size_t size) {
-//            ddata = vector<double>();
-//            idata = vector<int64_t>();
-//            sdata = vector<uint16_t>();
-//            ddata.resize(size);
-//            idata.resize(size);
-//            sdata.resize(size);
+        inline FunctionContex(const BytecodeFunction* fun) {
+//            ddata.resize(fun->sizeDoubles);
+//            idata.resize(fun->sizeInts);
+//            sdata.resize(fun->sizeStrings);
         }
 
         inline void setd(uint32_t id, double v) {
@@ -115,14 +118,14 @@ namespace mathvm {
             return sdata[id];
         }
 
-//        inline ~FunctionContex() {
-//            delete _data;
-//        }
+        //        inline ~FunctionContex() {
+        //            delete _data;
+        //        }
 
     };
-    
+
     typedef map<uint16_t, FunctionContex*> OuterContexts;
-    
+
     class BytecodeInterpretator {
         DataBytecode dstack;
         vector<const BytecodeFunction*> functions;

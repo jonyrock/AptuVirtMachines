@@ -277,6 +277,12 @@ public:
     }
     uint16_t id() const { return _id; }
     virtual void disassemble(ostream& out) const = 0;
+    
+    
+    size_t sizeDoubles;
+    size_t sizeInts;
+    size_t sizeStrings;
+    
 };
 
 class FunctionFilter {
