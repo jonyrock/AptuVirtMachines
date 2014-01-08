@@ -72,7 +72,7 @@ namespace mathvm {
         int64_t iv2;
         uint16_t idv;
         uint16_t idv2;
-        
+
         int id = fun->id();
 
         size_t bci = 0;
@@ -86,22 +86,23 @@ namespace mathvm {
 
 
         // read params 
-        for (uint16_t i = 0; i < fun->parametersNumber(); i++) {
-            
-            VarType type = fun->parameterType(i);
-            if (type == VT_DOUBLE) {
-                dv = d.popd();
-                context.setd(bci, dv);
+        {
+            size_t dc = 0, ic = 0, sc = 0;
+            for (uint16_t i = 0; i < fun->parametersNumber(); i++) {
+                VarType type = fun->parameterType(i);
+                if (type == VT_DOUBLE) {
+                    dv = d.popd();
+                    context.setd(dc++, dv);
+                }
+                if (type == VT_INT) {
+                    iv = d.popi();
+                    context.seti(ic++, iv);
+                }
+                if (type == VT_STRING) {
+                    idv = d.popid();
+                    context.sets(sc++, idv);
+                }
             }
-            if (type == VT_INT) {
-                iv = d.popi();
-                context.seti(bci, iv);
-            }
-            if (type == VT_STRING) {
-                idv = d.popid();
-                context.seti(bci, idv);
-            }
-            bci++; // def instruction
         }
         // end read params
 
@@ -110,7 +111,7 @@ namespace mathvm {
 
         //        cout << "stack before" << dstack.length() << endl;
 
-        while (bci < len) {
+        for (size_t bci = 0; bci < len;) {
 
 
             if (bci == 52) {
@@ -142,17 +143,6 @@ namespace mathvm {
                     d.pushd(S64(constants[iv]->c_str()));
                     break;
 
-                    // NEW VARS
-                case BC_DDEF:
-//                    context.setd(bci, 0);
-                    break;
-                case BC_IDEF:
-//                    context.seti(bci, 0);
-                    break;
-                case BC_SDEF:
-//                    context.sets(bci, 0);
-                    break;
-                    
                     // STACK LOAD
                 case BC_DLOAD:
                     dv = b.getDouble(bci + 1);
@@ -441,7 +431,7 @@ namespace mathvm {
 
                 case BC_CALL:
                     idv = b.getUInt16(bci + 1);
-//                    cout << "stack size: " << dstack.length() << endl;
+                    //                    cout << "stack size: " << dstack.length() << endl;
                     execFunction(functions[idv], deeperContexts);
                     break;
                 case BC_CALLNATIVE:

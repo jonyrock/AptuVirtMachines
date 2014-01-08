@@ -15,7 +15,7 @@ int main(int argc, char** argv) {
     string impl = "";
 #ifndef PROD
     // const char* script = "tests/while.mvm";
-    // const char* script = "tests/function.mvm";
+     const char* script = "tests/function.mvm";
 //     const char* script = "tests/for.mvm";
     // const char* script = "tests/expr.mvm";
     // const char* script = "tests/mul.mvm";
@@ -36,7 +36,7 @@ int main(int argc, char** argv) {
 
     // context tests
 //        const char* script = "tests/additional/closure.mvm";
-    const char* script = "tests/additional/complex.mvm";
+//    const char* script = "tests/additional/complex.mvm";
     
 //    const char* script = "tests/additional/complex2.mvm";
 //         const char* script = "tests/additional/fib_closure.mvm";

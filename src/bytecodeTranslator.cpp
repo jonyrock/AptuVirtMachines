@@ -33,108 +33,7 @@ namespace mathvm {
             return visitor.status;
         }
 
-        optimize(code);
-
         return NULL;
-
-    }
-
-    void BytecodeTranslator::optimize(BytecodeCode* code) {
-
-        vector<map<uint32_t, uint32_t>*> funAll;
-        Code::FunctionIterator fi(code);
-        while (fi.hasNext()) {
-            map<uint32_t, uint32_t>* myAll = new map<uint32_t, uint32_t>();
-            collectDefs((BytecodeFunction*) fi.next(), myAll);
-            funAll.push_back(myAll);
-        }
-        fi = Code::FunctionIterator(code);
-        while (fi.hasNext()) {
-            optimizeDefs((BytecodeFunction*) fi.next(), &funAll);
-        }
-
-        for (size_t i = 0; i < funAll.size(); i++) {
-            delete funAll[i];
-        }
-    }
-
-    void BytecodeTranslator::collectDefs(BytecodeFunction* fun,
-            map<uint32_t, uint32_t>* reallocation) {
-
-        size_t curDouble = 0;
-        size_t curInt = 0;
-        size_t curStr = 0;
-
-        for (size_t bci = 0; bci < fun->bytecode()->length();) {
-            size_t length;
-            Instruction insn = fun->bytecode()->getInsn(bci);
-            bytecodeName(insn, &length);
-            switch (insn) {
-                case BC_DDEF:
-                    reallocation->insert(make_pair(bci, curDouble));
-                    curDouble++;
-                    break;
-
-                case BC_IDEF:
-                    reallocation->insert(make_pair(bci, curInt));
-                    curInt++;
-                    break;
-
-                case BC_SDEF:
-                    reallocation->insert(make_pair(bci, curStr));
-                    curStr++;
-                    break;
-
-                default:
-                    break;
-
-            }
-            bci += length;
-        }
-        
-        fun->sizeDoubles = curDouble;
-        fun->sizeInts = curInt;
-        fun->sizeStrings = curStr;
-        
-
-    }
-
-    void BytecodeTranslator::optimizeDefs(BytecodeFunction* fun,
-            vector<map<uint32_t, uint32_t>*>* funAll) {
-
-        for (size_t bci = 0; bci < fun->bytecode()->length();) {
-            size_t length;
-            Instruction insn = fun->bytecode()->getInsn(bci);
-            bytecodeName(insn, &length);
-
-            uint16_t ctxId = 0;
-            uint16_t id = 0;
-            uint16_t idFix = 0;
-            switch (insn) {
-
-                case BC_LOADIVAR:
-                case BC_LOADDVAR:
-                case BC_LOADSVAR:
-                    id = fun->bytecode()->getUInt16(bci + 1);
-                    idFix = funAll->at(fun->id())->find(id)->second;
-                    fun->bytecode()->setInt16(bci + 1, idFix);
-                    break;
-
-                case BC_LOADCTXDVAR:
-                case BC_LOADCTXIVAR:
-                case BC_LOADCTXSVAR:
-                    ctxId = fun->bytecode()->getUInt16(bci + 1);
-                    id = fun->bytecode()->getUInt16(bci + 3);
-                    idFix = funAll->at(ctxId)->find(id)->second;
-                    fun->bytecode()->setInt16(bci + 3, idFix);
-                    break;
-
-                default:
-                    break;
-
-            }
-            bci += length;
-        }
 
     }
 
@@ -171,21 +70,19 @@ namespace mathvm {
     void BytecodeAstVisitor::fillAstFunction(AstFunction* function, BytecodeFunction* fun) {
 
         map<string, uint16_t> paramIds;
-
+        
         for (int i = 0; i < function->parametersNumber(); i++) {
             if (function->parameterType(i) == VT_DOUBLE) {
-                fun->bytecode()->addInsn(BC_DDEF);
-                paramIds[function->parameterName(i)] = fun->bytecode()->length() - 1;
+                paramIds[function->parameterName(i)] = fun->sizeDoubles++;
             }
             if (function->parameterType(i) == VT_INT) {
-                fun->bytecode()->addInsn(BC_IDEF);
-                paramIds[function->parameterName(i)] = fun->bytecode()->length() - 1;
+                paramIds[function->parameterName(i)] = fun->sizeInts++;
             }
             if (function->parameterType(i) == VT_STRING) {
-                fun->bytecode()->addInsn(BC_SDEF);
-                paramIds[function->parameterName(i)] = fun->bytecode()->length() - 1;
+                paramIds[function->parameterName(i)] = fun->sizeStrings++;
             }
         }
+        
 
         functionParamIds[fun->id()] = paramIds;
         contextVarIds[fun->id()] = map<string, uint16_t>();
@@ -245,19 +142,20 @@ namespace mathvm {
     }
 
     uint16_t BytecodeAstVisitor::allocateVar(AstVar& var) {
-        uint32_t beginIndex = current();
-        contextVarIds[currentContext][var.name()] = beginIndex;
         if (var.type() == VT_DOUBLE) {
-            addInsn(BC_DDEF);
-            return beginIndex;
+            contextVarIds[currentContext][var.name()] = 
+                    currentFunction->sizeDoubles;
+            return currentFunction->sizeDoubles++;
         }
         if (var.type() == VT_INT) {
-            addInsn(BC_IDEF);
-            return beginIndex;
+            contextVarIds[currentContext][var.name()] = 
+                    currentFunction->sizeInts;
+            return currentFunction->sizeInts++;
         }
         if (var.type() == VT_STRING) {
-            addInsn(BC_SDEF);
-            return beginIndex;
+            contextVarIds[currentContext][var.name()] = 
+                    currentFunction->sizeStrings;
+            return currentFunction->sizeStrings++;
         }
         assert(false);
     }
@@ -455,13 +353,13 @@ namespace mathvm {
     void BytecodeAstVisitor::visitForNode_(ForNode* node) {
         uint16_t topVar = 0;
         if (node->var()->type() == VT_INT) {
-            topVar = current();
-            addInsn(BC_IDEF);
+            topVar = currentFunction->sizeInts;
+            currentFunction->sizeInts++;
         }
 
         if (node->var()->type() == VT_DOUBLE) {
-            topVar = current();
-            addInsn(BC_DDEF);
+            topVar = currentFunction->sizeDoubles;
+            currentFunction->sizeDoubles++;
         }
 
         assert(topVar != 0);

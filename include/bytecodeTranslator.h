@@ -26,10 +26,6 @@ namespace mathvm {
 
         virtual Status* translate(const string& program, Code** code);
         
-        void optimize(BytecodeCode* code);
-        void collectDefs(BytecodeFunction* fun, map<uint32_t, uint32_t>*); 
-        void optimizeDefs(BytecodeFunction* fun, vector<map<uint32_t, uint32_t>*>* funAll);
-
     };
 
     class BytecodeAstVisitor : public AstVisitor {

@@ -82,16 +82,16 @@ namespace mathvm {
     };
 
     class FunctionContex {
-        map<uint32_t, double> ddata;
-        map<uint32_t, int64_t> idata;
-        map<uint32_t, uint16_t> sdata;
+        vector<double> ddata;
+        vector<int64_t> idata;
+        vector<uint16_t> sdata;
 
     public:
 
         inline FunctionContex(const BytecodeFunction* fun) {
-//            ddata.resize(fun->sizeDoubles);
-//            idata.resize(fun->sizeInts);
-//            sdata.resize(fun->sizeStrings);
+            ddata.resize(fun->sizeDoubles);
+            idata.resize(fun->sizeInts);
+            sdata.resize(fun->sizeStrings);
         }
 
         inline void setd(uint32_t id, double v) {

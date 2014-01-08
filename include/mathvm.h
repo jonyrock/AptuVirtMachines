@@ -17,9 +17,6 @@ using namespace std;
 
 #define FOR_BYTECODES(DO)                                               \
         DO(INVALID, "Invalid instruction.", 1)                          \
-        DO(IDEF, "Define new int var.", 1)                              \
-        DO(DDEF, "Define new double var.", 1)                           \
-        DO(SDEF, "Define new string id var.", 1)                        \
         DO(DLOAD, "Load double on TOS, inlined into insn stream.", 9)   \
         DO(ILOAD, "Load int on TOS, inlined into insn stream.", 9)      \
         DO(SLOAD, "Load string reference on TOS, next two bytes - constant id.", 3)   \
