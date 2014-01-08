@@ -9,10 +9,19 @@
 #include "mathvm.h"
 #include <iomanip>
 #include <stdio.h>
+#include <stack>
 
 using namespace std;
 
 namespace mathvm {
+    
+    struct ExecContext {
+        size_t beforeBci;
+        size_t bci;
+        FunctionContex* context;
+        const BytecodeFunction* fun;
+        OuterContexts contexts;
+    };
 
     int64_t S64(const char *s) {
         return (int64_t) strtoll(s, NULL, 0);
@@ -77,15 +86,25 @@ namespace mathvm {
         DataBytecode* d = &dstack;
         FunctionContex* context;
         size_t beforeBci;
+        size_t bci;
+
+        stack<ExecContext> execStack;
+        
 
 EXECFUNCTION:
+
+//        cout << "call " << fun->id() << endl;
 
         context = new FunctionContex(fun);
         OuterContexts deeperContexts(contexts);
         deeperContexts[fun->id()] = context;
 
+        int id = fun->id();
+        if (id == 1) {
+            int kkk = 10;
+        }
+
         const Bytecode* b = fun->bytecode();
-        
 
         {
             // read params 
@@ -109,19 +128,23 @@ EXECFUNCTION:
 
         beforeBci = dstack.length();
 
-        for (size_t bci = 0; bci < b->length();) {
+        size_t length;
+        Instruction insn;
+        const char* name;
+        bool jumpCase;
+
+        for (bci = 0; bci < b->length();) {
 
 
-            if (bci == 52) {
+
+            if (bci == 30 && fun->id() == 1) {
                 int kkk = 10;
             }
 
-            size_t length;
-            Instruction insn = b->getInsn(bci);
-            const char* name = bytecodeName(insn, &length);
-            bool jumpCase = false;
+            insn = b->getInsn(bci);
+            name = bytecodeName(insn, &length);
+            jumpCase = false;
 
-            size_t tttlen = dstack.length();
             switch (insn) {
                 case BC_INVALID:
                     break;
@@ -429,8 +452,54 @@ EXECFUNCTION:
 
                 case BC_CALL:
                     idv = b->getUInt16(bci + 1);
-                    //                    cout << "stack size: " << dstack.length() << endl;
-                    execFunction(functions[idv], deeperContexts);
+                    // cout << "stack size: " << dstack.length() << endl;
+
+                    
+                    {
+                        ExecContext ec;
+                        ec.beforeBci = beforeBci;
+                        ec.bci = bci;
+                        ec.context = context;
+                        ec.fun = fun;
+                        ec.contexts = contexts;
+                        execStack.push(ec);
+                    }
+
+                    fun = functions[idv];
+                    contexts = deeperContexts;
+                    // execFunction(functions[idv], deeperContexts);
+
+                    if (id == 1 && idv == 3) {
+                        int ikkkasdf = 12;
+                    }
+                    if (id == 1 && idv == 2) {
+                        int ikkkasdf = 12;
+                    }
+
+                    goto EXECFUNCTION;
+
+RETURNFROMEXE:  
+                    
+                    
+//                    cout << "exit " << fun->id() << "by " <<  execStack.top().fun->id() << endl;
+                    
+                    deeperContexts = contexts;
+                    
+                    {
+                        ExecContext ec = execStack.top();
+                        execStack.pop();
+                        beforeBci = ec.beforeBci;
+                        bci = ec.bci;
+                        context = ec.context;
+                        fun = ec.fun;
+                        contexts = ec.contexts;
+                    }
+
+                    b = fun->bytecode();
+                    insn = b->getInsn(bci);
+                    name = bytecodeName(insn, &length);
+                    jumpCase = false;
+
                     break;
                 case BC_CALLNATIVE:
                     execStatus = new Status("Can't call a native function", 0);
@@ -470,6 +539,11 @@ RETURN:
             d->pushid(idv);
 
         delete context;
+        
+//        cout << "exit " << fun->id() << endl;
+        
+        if (!execStack.empty())
+            goto RETURNFROMEXE;
 
     }
 
