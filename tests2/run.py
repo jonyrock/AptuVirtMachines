@@ -94,7 +94,7 @@ def runTest(mvm, root, test, doublerun):
             print out
             exit(1)
     except Exception, e:
-	print test
+        print test
         print "Failed to execute the test " + test
         exit(1)
 

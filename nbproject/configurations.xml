@@ -185,7 +185,7 @@
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
-    <conf name="Debug" type="1">
+    <conf name="Release" type="1">
       <toolsSet>
         <remote-sources-mode>LOCAL_SOURCES</remote-sources-mode>
         <compilerSet>default</compilerSet>
@@ -193,12 +193,25 @@
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
       <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+        </cTool>
         <ccTool>
+          <developmentMode>5</developmentMode>
           <incDir>
             <pElem>include</pElem>
             <pElem>libs</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>PROD</Elem>
+          </preprocessorList>
         </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
       </compileType>
       <item path="docs/history.txt" ex="false" tool="3" flavor2="0">
       </item>
@@ -494,7 +507,7 @@
       <item path="tests/while.mvm" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
-    <conf name="Release" type="1">
+    <conf name="Debug" type="1">
       <toolsSet>
         <remote-sources-mode>LOCAL_SOURCES</remote-sources-mode>
         <compilerSet>default</compilerSet>
@@ -502,25 +515,12 @@
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
       <compileType>
-        <cTool>
-          <developmentMode>5</developmentMode>
-        </cTool>
         <ccTool>
-          <developmentMode>5</developmentMode>
           <incDir>
             <pElem>include</pElem>
             <pElem>libs</pElem>
           </incDir>
-          <preprocessorList>
-            <Elem>PROD</Elem>
-          </preprocessorList>
         </ccTool>
-        <fortranCompilerTool>
-          <developmentMode>5</developmentMode>
-        </fortranCompilerTool>
-        <asmTool>
-          <developmentMode>5</developmentMode>
-        </asmTool>
       </compileType>
       <item path="docs/history.txt" ex="false" tool="3" flavor2="0">
       </item>
