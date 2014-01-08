@@ -39,6 +39,8 @@ namespace mathvm {
         setRootVars(code, vars);
         execFunction(functions[0], OuterContexts());
 
+        callDepth = 0;
+
         return execStatus;
     }
 
@@ -72,46 +74,42 @@ namespace mathvm {
         int64_t iv2;
         uint16_t idv;
         uint16_t idv2;
+        DataBytecode* d = &dstack;
+        FunctionContex* context;
+        size_t beforeBci;
 
-        int id = fun->id();
+EXECFUNCTION:
 
-        size_t bci = 0;
-
-        FunctionContex context(fun);
+        context = new FunctionContex(fun);
         OuterContexts deeperContexts(contexts);
-        deeperContexts[fun->id()] = &context;
+        deeperContexts[fun->id()] = context;
 
-        const Bytecode& b = *(fun->bytecode());
-        DataBytecode& d = dstack;
+        const Bytecode* b = fun->bytecode();
+        
 
-
-        // read params 
         {
+            // read params 
             size_t dc = 0, ic = 0, sc = 0;
             for (uint16_t i = 0; i < fun->parametersNumber(); i++) {
                 VarType type = fun->parameterType(i);
                 if (type == VT_DOUBLE) {
-                    dv = d.popd();
-                    context.setd(dc++, dv);
+                    dv = d->popd();
+                    context->setd(dc++, dv);
                 }
                 if (type == VT_INT) {
-                    iv = d.popi();
-                    context.seti(ic++, iv);
+                    iv = d->popi();
+                    context->seti(ic++, iv);
                 }
                 if (type == VT_STRING) {
-                    idv = d.popid();
-                    context.sets(sc++, idv);
+                    idv = d->popid();
+                    context->sets(sc++, idv);
                 }
             }
         }
-        // end read params
 
-        size_t len = b.length();
-        size_t beforeBci = dstack.length();
+        beforeBci = dstack.length();
 
-        //        cout << "stack before" << dstack.length() << endl;
-
-        for (size_t bci = 0; bci < len;) {
+        for (size_t bci = 0; bci < b->length();) {
 
 
             if (bci == 52) {
@@ -119,7 +117,7 @@ namespace mathvm {
             }
 
             size_t length;
-            Instruction insn = b.getInsn(bci);
+            Instruction insn = b->getInsn(bci);
             const char* name = bytecodeName(insn, &length);
             bool jumpCase = false;
 
@@ -130,186 +128,186 @@ namespace mathvm {
 
                     // CASTS
                 case BC_I2D:
-                    iv = d.popi();
-                    d.pushd((double) iv);
+                    iv = d->popi();
+                    d->pushd((double) iv);
                     break;
                 case BC_D2I:
-                    dv = d.popd();
-                    d.pushi((int64_t) iv);
+                    dv = d->popd();
+                    d->pushi((int64_t) iv);
                     break;
                 case BC_S2I:
-                    idv = d.popid();
-                    idv = b.getInt16(bci + 1) + bci + 1;
-                    d.pushd(S64(constants[iv]->c_str()));
+                    idv = d->popid();
+                    idv = b->getInt16(bci + 1) + bci + 1;
+                    d->pushd(S64(constants[iv]->c_str()));
                     break;
 
                     // STACK LOAD
                 case BC_DLOAD:
-                    dv = b.getDouble(bci + 1);
-                    d.pushd(dv);
+                    dv = b->getDouble(bci + 1);
+                    d->pushd(dv);
                     break;
                 case BC_ILOAD:
-                    iv = b.getInt64(bci + 1);
-                    d.pushi(iv);
+                    iv = b->getInt64(bci + 1);
+                    d->pushi(iv);
                     break;
                 case BC_SLOAD:
-                    idv = b.getUInt16(bci + 1);
-                    d.pushid(idv);
+                    idv = b->getUInt16(bci + 1);
+                    d->pushid(idv);
                     break;
 
                     // STACK LOAD
                 case BC_ILOAD0:
-                    d.pushi(0);
+                    d->pushi(0);
                     break;
                 case BC_ILOAD1:
-                    d.pushi(1);
+                    d->pushi(1);
                     break;
                 case BC_DLOAD0:
-                    d.pushd(0);
+                    d->pushd(0);
                     break;
                 case BC_DLOAD1:
-                    d.pushd(1);
+                    d->pushd(1);
                     break;
 
                     // VAR LOADS
                 case BC_LOADIVAR:
-                    idv = b.getUInt16(bci + 1);
-                    dstack.pushi(context.geti(idv));
+                    idv = b->getUInt16(bci + 1);
+                    dstack.pushi(context->geti(idv));
                     break;
                 case BC_LOADDVAR:
-                    idv = b.getUInt16(bci + 1);
-                    dstack.pushd(context.getd(idv));
+                    idv = b->getUInt16(bci + 1);
+                    dstack.pushd(context->getd(idv));
                     break;
                 case BC_LOADSVAR:
-                    idv = b.getUInt16(bci + 1);
-                    dstack.pushid(context.gets(idv));
+                    idv = b->getUInt16(bci + 1);
+                    dstack.pushid(context->gets(idv));
                     break;
 
                     // VAR STORES
                 case BC_STOREDVAR:
-                    idv = b.getUInt16(bci + 1);
+                    idv = b->getUInt16(bci + 1);
                     dv = dstack.popd();
-                    context.setd(idv, dv);
+                    context->setd(idv, dv);
                     break;
                 case BC_STOREIVAR:
-                    idv = b.getUInt16(bci + 1);
+                    idv = b->getUInt16(bci + 1);
                     iv = dstack.popi();
-                    context.seti(idv, iv);
+                    context->seti(idv, iv);
                     break;
                 case BC_STORESVAR:
-                    idv = b.getUInt16(bci + 1);
+                    idv = b->getUInt16(bci + 1);
                     idv2 = dstack.popid();
-                    context.sets(idv, idv2);
+                    context->sets(idv, idv2);
                     break;
 
                     // VAR LOAD (outer context)
                 case BC_LOADCTXDVAR:
                 {
-                    uint16_t idContext = b.getUInt16(bci + 1);
-                    uint16_t idVar = b.getUInt16(bci + 3);
+                    uint16_t idContext = b->getUInt16(bci + 1);
+                    uint16_t idVar = b->getUInt16(bci + 3);
                     dv = contexts[idContext]->getd(idVar);
                 }
-                    d.pushd(dv);
+                    d->pushd(dv);
                     break;
                 case BC_LOADCTXIVAR:
                 {
-                    uint16_t idContext = b.getUInt16(bci + 1);
-                    uint16_t idVar = b.getUInt16(bci + 3);
+                    uint16_t idContext = b->getUInt16(bci + 1);
+                    uint16_t idVar = b->getUInt16(bci + 3);
                     iv = contexts[idContext]->geti(idVar);
                 }
-                    d.pushi(iv);
+                    d->pushi(iv);
                     break;
                 case BC_LOADCTXSVAR:
                 {
-                    uint16_t idContext = b.getUInt16(bci + 1);
-                    uint16_t idVar = b.getUInt16(bci + 3);
+                    uint16_t idContext = b->getUInt16(bci + 1);
+                    uint16_t idVar = b->getUInt16(bci + 3);
                     idv = contexts[idContext]->gets(idVar);
                 }
-                    d.pushid(idv);
+                    d->pushid(idv);
                     break;
 
                     // VAR STORE (outer context)
                 case BC_STORECTXDVAR:
-                    dv = d.popd();
+                    dv = d->popd();
                 {
-                    uint16_t idContext = b.getUInt16(bci + 1);
-                    uint16_t idVar = b.getUInt16(bci + 3);
+                    uint16_t idContext = b->getUInt16(bci + 1);
+                    uint16_t idVar = b->getUInt16(bci + 3);
                     contexts[idContext]->setd(idVar, dv);
                 }
                     break;
                 case BC_STORECTXIVAR:
-                    iv = d.popi();
+                    iv = d->popi();
                 {
-                    uint16_t idContext = b.getUInt16(bci + 1);
-                    uint16_t idVar = b.getUInt16(bci + 3);
+                    uint16_t idContext = b->getUInt16(bci + 1);
+                    uint16_t idVar = b->getUInt16(bci + 3);
                     contexts[idContext]->seti(idVar, iv);
                 }
                     break;
                 case BC_STORECTXSVAR:
-                    idv = d.popid();
+                    idv = d->popid();
                 {
-                    uint16_t idContext = b.getUInt16(bci + 1);
-                    uint16_t idVar = b.getUInt16(bci + 3);
+                    uint16_t idContext = b->getUInt16(bci + 1);
+                    uint16_t idVar = b->getUInt16(bci + 3);
                     contexts[idContext]->sets(idVar, idv);
                 }
                     break;
 
                     // JUMPS
                 case BC_JA:
-                    idv = b.getInt16(bci + 1) + bci + 1;
+                    idv = b->getInt16(bci + 1) + bci + 1;
                     bci = idv;
                     jumpCase = true;
                     break;
 
                 case BC_IFICMPNE:
-                    idv = b.getInt16(bci + 1) + bci + 1;
-                    iv2 = d.popi();
-                    iv = d.popi();
+                    idv = b->getInt16(bci + 1) + bci + 1;
+                    iv2 = d->popi();
+                    iv = d->popi();
                     if (iv != iv2) {
                         bci = idv;
                         jumpCase = true;
                     }
                     break;
                 case BC_IFICMPE:
-                    idv = b.getInt16(bci + 1) + bci + 1;
-                    iv2 = d.popi();
-                    iv = d.popi();
+                    idv = b->getInt16(bci + 1) + bci + 1;
+                    iv2 = d->popi();
+                    iv = d->popi();
                     if (iv == iv2) {
                         bci = idv;
                         jumpCase = true;
                     }
                     break;
                 case BC_IFICMPG:
-                    idv = b.getInt16(bci + 1) + bci + 1;
-                    iv2 = d.popi();
-                    iv = d.popi();
+                    idv = b->getInt16(bci + 1) + bci + 1;
+                    iv2 = d->popi();
+                    iv = d->popi();
                     if (iv > iv2) {
                         bci = idv;
                         jumpCase = true;
                     }
                     break;
                 case BC_IFICMPGE:
-                    idv = b.getInt16(bci + 1) + bci + 1;
-                    iv2 = d.popi();
-                    iv = d.popi();
+                    idv = b->getInt16(bci + 1) + bci + 1;
+                    iv2 = d->popi();
+                    iv = d->popi();
                     if (iv >= iv2) {
                         bci = idv;
                         jumpCase = true;
                     }
                     break;
                 case BC_IFICMPL:
-                    idv = b.getInt16(bci + 1) + bci + 1;
-                    iv2 = d.popi();
-                    iv = d.popi();
+                    idv = b->getInt16(bci + 1) + bci + 1;
+                    iv2 = d->popi();
+                    iv = d->popi();
                     if (iv < iv2) {
                         bci = idv;
                         jumpCase = true;
                     }
                     break;
                 case BC_IFICMPLE:
-                    idv = b.getInt16(bci + 1) + bci + 1;
-                    iv2 = d.popi();
-                    iv = d.popi();
+                    idv = b->getInt16(bci + 1) + bci + 1;
+                    iv2 = d->popi();
+                    iv = d->popi();
                     if (iv <= iv2) {
                         bci = idv;
                         jumpCase = true;
@@ -318,119 +316,119 @@ namespace mathvm {
 
                     // ARITHMETIC
                 case BC_DADD:
-                    dv2 = d.popd();
-                    dv = d.popd();
-                    d.pushd(dv + dv2);
+                    dv2 = d->popd();
+                    dv = d->popd();
+                    d->pushd(dv + dv2);
                     break;
                 case BC_DSUB:
-                    dv2 = d.popd();
-                    dv = d.popd();
-                    d.pushd(dv - dv2);
+                    dv2 = d->popd();
+                    dv = d->popd();
+                    d->pushd(dv - dv2);
                     break;
                 case BC_DMUL:
-                    dv2 = d.popd();
-                    dv = d.popd();
-                    d.pushd(dv * dv2);
+                    dv2 = d->popd();
+                    dv = d->popd();
+                    d->pushd(dv * dv2);
                     break;
                 case BC_DDIV:
-                    dv2 = d.popd();
-                    dv = d.popd();
-                    d.pushd(dv / dv2);
+                    dv2 = d->popd();
+                    dv = d->popd();
+                    d->pushd(dv / dv2);
                     break;
                 case BC_DCMP:
-                    dv2 = d.popd();
-                    dv = d.popd();
+                    dv2 = d->popd();
+                    dv = d->popd();
                     if (dv < dv2)
-                        d.pushi(-1);
+                        d->pushi(-1);
                     if (dv == dv2)
-                        d.pushi(0);
+                        d->pushi(0);
                     if (dv > dv2)
-                        d.pushi(1);
+                        d->pushi(1);
                     break;
 
 
                 case BC_IADD:
-                    iv2 = d.popi();
-                    iv = d.popi();
-                    d.pushi(iv + iv2);
+                    iv2 = d->popi();
+                    iv = d->popi();
+                    d->pushi(iv + iv2);
                     break;
                 case BC_ISUB:
-                    iv2 = d.popi();
-                    iv = d.popi();
-                    d.pushi(iv - iv2);
+                    iv2 = d->popi();
+                    iv = d->popi();
+                    d->pushi(iv - iv2);
                     break;
                 case BC_IMUL:
-                    iv2 = d.popi();
-                    iv = d.popi();
-                    d.pushi(iv * iv2);
+                    iv2 = d->popi();
+                    iv = d->popi();
+                    d->pushi(iv * iv2);
                     break;
                 case BC_IDIV:
-                    iv2 = d.popi();
-                    iv = d.popi();
-                    d.pushi(iv / iv2);
+                    iv2 = d->popi();
+                    iv = d->popi();
+                    d->pushi(iv / iv2);
                     break;
                 case BC_IAAND:
-                    iv2 = d.popi();
-                    iv = d.popi();
-                    d.pushi(iv & iv2);
+                    iv2 = d->popi();
+                    iv = d->popi();
+                    d->pushi(iv & iv2);
                     break;
                 case BC_IAOR:
-                    iv2 = d.popi();
-                    iv = d.popi();
-                    d.pushi(iv | iv2);
+                    iv2 = d->popi();
+                    iv = d->popi();
+                    d->pushi(iv | iv2);
                     break;
                 case BC_IAXOR:
-                    iv2 = d.popi();
-                    iv = d.popi();
-                    d.pushi(iv ^ iv2);
+                    iv2 = d->popi();
+                    iv = d->popi();
+                    d->pushi(iv ^ iv2);
                     break;
                 case BC_ICMP:
-                    iv2 = d.popi();
-                    iv = d.popi();
+                    iv2 = d->popi();
+                    iv = d->popi();
                     if (iv < iv2)
-                        d.pushi(-1);
+                        d->pushi(-1);
                     if (iv == iv2)
-                        d.pushi(0);
+                        d->pushi(0);
                     if (iv > iv2)
-                        d.pushi(1);
+                        d->pushi(1);
                     break;
 
                     // SWAP
                 case BC_ISWAP:
-                    iv = d.popi();
-                    iv2 = d.popi();
-                    d.pushi(iv);
-                    d.pushi(iv2);
+                    iv = d->popi();
+                    iv2 = d->popi();
+                    d->pushi(iv);
+                    d->pushi(iv2);
                     break;
                 case BC_DSWAP:
-                    dv = d.popd();
-                    dv2 = d.popd();
-                    d.pushi(dv);
-                    d.pushi(dv2);
+                    dv = d->popd();
+                    dv2 = d->popd();
+                    d->pushi(dv);
+                    d->pushi(dv2);
                     break;
                 case BC_SSWAP:
-                    idv = d.popid();
-                    idv2 = d.popid();
-                    d.pushid(idv);
-                    d.pushid(idv2);
+                    idv = d->popid();
+                    idv2 = d->popid();
+                    d->pushid(idv);
+                    d->pushid(idv2);
                     break;
 
                     // PRINT
                 case BC_DPRINT:
-                    dv = d.popd();
+                    dv = d->popd();
                     cout << dv;
                     break;
                 case BC_IPRINT:
-                    iv = d.popi();
+                    iv = d->popi();
                     cout << iv;
                     break;
                 case BC_SPRINT:
-                    idv = d.popid() - 1;
+                    idv = d->popid() - 1;
                     cout << *constants[idv];
                     break;
 
                 case BC_CALL:
-                    idv = b.getUInt16(bci + 1);
+                    idv = b->getUInt16(bci + 1);
                     //                    cout << "stack size: " << dstack.length() << endl;
                     execFunction(functions[idv], deeperContexts);
                     break;
@@ -456,22 +454,22 @@ RETURN:
         // dropping everything except return value
 
         if (fun->returnType() == VT_DOUBLE)
-            dv = d.popd();
+            dv = d->popd();
         if (fun->returnType() == VT_INT)
-            iv = d.popi();
+            iv = d->popi();
         if (fun->returnType() == VT_STRING)
-            idv = d.popid();
+            idv = d->popid();
 
         dstack.dropToSize(beforeBci);
 
         if (fun->returnType() == VT_DOUBLE)
-            d.pushd(dv);
+            d->pushd(dv);
         if (fun->returnType() == VT_INT)
-            d.pushi(iv);
+            d->pushi(iv);
         if (fun->returnType() == VT_STRING)
-            d.pushid(idv);
+            d->pushid(idv);
 
-        return;
+        delete context;
 
     }
 

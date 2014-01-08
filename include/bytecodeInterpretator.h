@@ -82,16 +82,16 @@ namespace mathvm {
     };
 
     class FunctionContex {
-        vector<double> ddata;
-        vector<int64_t> idata;
-        vector<uint16_t> sdata;
+        double* ddata;
+        int64_t* idata;
+        uint16_t* sdata;
 
     public:
 
-        inline FunctionContex(const BytecodeFunction* fun) {
-            ddata.resize(fun->sizeDoubles);
-            idata.resize(fun->sizeInts);
-            sdata.resize(fun->sizeStrings);
+        inline FunctionContex(const BytecodeFunction* fun)  {
+            ddata = new double[fun->sizeDoubles];
+            idata = new int64_t[fun->sizeInts];
+            sdata = new uint16_t[fun->sizeStrings];
         }
 
         inline void setd(uint32_t id, double v) {
@@ -117,10 +117,12 @@ namespace mathvm {
         inline uint16_t gets(uint32_t id) {
             return sdata[id];
         }
-
-        //        inline ~FunctionContex() {
-        //            delete _data;
-        //        }
+        
+        inline ~FunctionContex(){
+            delete[] ddata;
+            delete[] idata;
+            delete[] sdata;
+        }
 
     };
 
@@ -139,6 +141,9 @@ namespace mathvm {
     public:
         Status* interpretate(const BytecodeCode& code, vector<Var*>& vars);
         ~BytecodeInterpretator();
+        
+        size_t callDepth;
+        
     };
 }
 
